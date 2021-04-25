@@ -316,14 +316,18 @@ var
   AMalloc: IMalloc;
   FolderId : integer;
 begin
-  Path := System.AnsiStrings.AnsiStrAlloc(MAX_PATH);
+  Path := AnsiStrAlloc(MAX_PATH);
   FolderId := ACBSystemFolderId[Folder];
   SHGetSpecialFolderLocation(ApplicationHandle, FolderId, PIDL);
   if SHGetPathFromIDListA(PIDL, Path) then
     Result := String(Path);
   SHGetMalloc(AMalloc);
   AMalloc.Free(PIDL);
+  {$IFDEF DXE6+}
   System.AnsiStrings.StrDispose(Path);
+  {$ELSE}
+  StrDispose(Path);
+  {$ENDIF}
 end;
 
 procedure RealizeSystemPath(ApplicationHandle : HWND; var Path : string);

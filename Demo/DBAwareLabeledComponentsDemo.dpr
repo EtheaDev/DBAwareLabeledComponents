@@ -16,7 +16,9 @@ uses
   Vcl.LabeledCheckLst in '..\Source\Vcl.LabeledCheckLst.pas',
   Vcl.DbAwareLabeledUtils in '..\Source\Vcl.DbAwareLabeledUtils.pas',
   Vcl.DbAwareLabeledConsts in '..\Source\Vcl.DbAwareLabeledConsts.pas',
-  Vcl.BoundLabel in '..\Source\Vcl.BoundLabel.pas';
+  Vcl.BoundLabel in '..\Source\Vcl.BoundLabel.pas',
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 

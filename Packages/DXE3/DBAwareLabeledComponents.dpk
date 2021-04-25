@@ -1,0 +1,60 @@
+package DBAwareLabeledComponents;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO ON}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Dataaware Labeled Components by Ethea'}
+{$LIBSUFFIX '_DXE3'}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  bindengine,
+  vclx,
+  dbrtl,
+  vcldb,
+  VclSmp,
+  dsnap;
+
+contains
+  Vcl.BoundLabel in '..\..\Source\Vcl.BoundLabel.pas',
+  Vcl.DbAwareLabeledConsts in '..\..\Source\Vcl.DbAwareLabeledConsts.pas',
+  Vcl.DbAwareLabeledUtils in '..\..\Source\Vcl.DbAwareLabeledUtils.pas',
+  Vcl.LabeledCheckLst in '..\..\Source\Vcl.LabeledCheckLst.pas',
+  Vcl.LabeledColorGrd in '..\..\Source\Vcl.LabeledColorGrd.pas',
+  Vcl.LabeledComCtrls in '..\..\Source\Vcl.LabeledComCtrls.pas',
+  Vcl.LabeledCtrls in '..\..\Source\Vcl.LabeledCtrls.pas',
+  Vcl.LabeledDBCtrls in '..\..\Source\Vcl.LabeledDBCtrls.pas',
+  Vcl.LabeledDbImage in '..\..\Source\Vcl.LabeledDbImage.pas',
+  Vcl.LabeledExtCtrls in '..\..\Source\Vcl.LabeledExtCtrls.pas',
+  Vcl.LabeledMask in '..\..\Source\Vcl.LabeledMask.pas',
+  Vcl.LabeledDBListView in '..\..\Source\Vcl.LabeledDBListView.pas',
+  Vcl.LabeledShellUtils in '..\..\Source\Vcl.LabeledShellUtils.pas',
+  Vcl.LabeledCurrencyEdit in '..\..\Source\Vcl.LabeledCurrencyEdit.pas';
+
+end.
+

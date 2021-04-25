@@ -20,7 +20,7 @@ object MainForm: TMainForm
     Top = 0
     Width = 858
     Height = 424
-    ActivePage = NumberBoxTabSheet
+    ActivePage = DBTabSheet
     Align = alClient
     TabOrder = 0
     object DBTabSheet: TTabSheet
@@ -31,7 +31,7 @@ object MainForm: TMainForm
         Top = 153
         Width = 144
         Height = 20
-        Color = clWhite
+        Color = clWindow
         DataField = 'StringField'
         DataSource = DataSource
         ParentColor = False
@@ -88,7 +88,6 @@ object MainForm: TMainForm
         Font.Style = []
         ScrollBars = ssVertical
         TabOrder = 3
-        Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
         BoundLabel.Top = 10
@@ -392,7 +391,6 @@ object MainForm: TMainForm
         ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 7
-        Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
         BoundLabel.Top = 102

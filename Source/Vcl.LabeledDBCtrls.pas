@@ -369,7 +369,9 @@ Type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
     function GetBorderStyle: TBorderStyle;
+    {$IF CompilerVersion > 32}
     procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
+    {$IFEND}
   public
     procedure StandardTitleClick(Column : TColumn);
     procedure UpdateColumnVisibility;
@@ -1612,6 +1614,7 @@ begin
   FIncrementalSearch := Value;
 end;
 
+{$IF CompilerVersion > 32}
 procedure TLabeledDbGrid.ChangeScale(M, D: Integer; isDpiChange: Boolean);
 begin
   if not ((csLoading in ComponentState) and ParentFont) then
@@ -1619,6 +1622,7 @@ begin
   else
     FCurrentPPI := MulDiv(96, M, D);
 end;
+{$Endif}
 
 procedure TLabeledDbGrid.ChangeStrSearch(const str : string);
 var
