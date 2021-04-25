@@ -309,7 +309,6 @@ Type
     FHighlightCurrRow: boolean;
     FIncrementalSearch: boolean;
     StrRicercaIncrementale: string;
-    FLayoutName: string;
     FOnBkCellColorAssign: TCBBkCellColorAssign;
     FAlternateRowColor: boolean;
     FSearchTimer: TTimer;
@@ -407,12 +406,11 @@ Type
     property HighlightCurrRow : boolean read FHighlightCurrRow write SetHighlightCurrRow default True;
     property AlternateRowColor : boolean read FAlternateRowColor write SetAlternateRowColor default True;
     property OnColWidthsChanged: TNotifyEvent read FOnColWidthsChanged write FOnColWidthsChanged;
-    property ShowSortOrder: Boolean read FShowSortOrder write SetShowSortOrder default False;
+    property ShowSortOrder: Boolean read FShowSortOrder write SetShowSortOrder default True;
     property OnSortedField: TCBSortedFieldEvent read FOnSortedField write FOnSortedField;
     property OnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent read FOnIsCheckBoxedColumn write FOnIsCheckBoxedColumn;
     property IncrementalSearch : boolean read FIncrementalSearch write SetIncrementalSearch default False;
     property IncrementalSearchDelay : integer read GetIncrementalSearchDelay write SetIncrementalSearchDelay default INCREMENTAL_DELAY_DEFAULT;
-    property LayoutName : string read FLayoutName write FLayoutName;
     property OnBkCellColorAssign : TCBBkCellColorAssign read FOnBkCellColorAssign write SetOnBkCellColorAssign;
     property CheckBoxedFields: string read FCheckBoxedFields write SetCheckBoxedFields;
     property DrawCheckBoxImages: Boolean read FDrawCheckBoxImages write SetDrawCheckBoxImages default True;
@@ -1067,6 +1065,8 @@ begin
   FHighlightCurrRow := True;
   FAlternateRowColor := True;
   FDrawCheckBoxImages := True;
+  FShowSortOrder := True;
+  FIncrementalSearch := False;
   FSearchTimer := TTimer.Create(nil);
   FSearchTimer.Interval := INCREMENTAL_DELAY_DEFAULT;
   FSearchTimer.Enabled := False;
