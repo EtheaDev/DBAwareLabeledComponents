@@ -8,10 +8,13 @@ With this small library of VCL components it is possible to have the classic VCL
 
 It is no longer necessary to keep the Label "connected" and "aligned" by hand to the editor: on every component you can specify 3 simple properties:
 - BoundCaption
-- BoundLabel.Labelposition (default lpTopLeft)
+- BoundLabel.Labelposition
 - BoundCaption.LabelSpacing (default 1)
 
-*Look at those examples, showing all the components with different Label alignments:*
+The label can be positioned in 12 posizioni:
+**lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
+
+*Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
 
 | Sample | Description |
 | ------ | ----------- |
@@ -79,7 +82,7 @@ for all Delphi versions (from XE3)
 - TLabeledSpinEdit
 - TLabeledRichEdit
 - TLabeledCheckListBox
-- TLabeledEditEx
+- TLabeledEditEx (similar to TLabeledEdit)
 - TLabeledComboBox
 - TLabeledListBox
 - TLabeledMemo
