@@ -30,12 +30,14 @@ interface
 
 uses
   SysUtils
-  , Windows
-  , ShlObj
-  , ActiveX
-  , Classes
-  , ShellAPI
-  , Registry;
+  , WinApi.Windows
+  , WinApi.ShlObj
+  , WinApi.ActiveX
+  , System.Classes
+  , WinApi.ShellAPI
+  , System.Win.Registry
+  , Vcl.Graphics
+  ;
 
 const
   APP_PATH = '{app}';
@@ -204,11 +206,20 @@ function GetImageLinkPath : string;
 procedure SetDefaultBlobFilePath(const Path : string);
 function GetDefaultBlobFilePath: string;
 
+function OpenDialogExecute(var FileName : string; const Title : string = ''; const Filter : string = '';
+  BeforeDialogExecute : TNotifyEvent = nil) : boolean;
+
+function ColorDialogExecute(var Color : TColor; const Title : string = '';
+  CustomColors: TStrings = nil;
+  BeforeDialogExecute : TNotifyEvent = nil) : boolean;
+
 implementation
 
 uses
   System.AnsiStrings
+  , Vcl.Dialogs
   , Vcl.DbAwareLabeledUtils
+  , Vcl.DbAwareLabeledConsts
   ;
 
 var
@@ -673,6 +684,69 @@ begin
   FileNameEx := RealizeAliasPath(Handle, FileName);
   //Lancio ShellExecute in modalità Open e Show
   ShellExecute( Handle, 'open' , PChar(FileNameEx), nil, nil, SW_SHOW );
+end;
+
+function OpenDialogExecute(var FileName : string; const Title : string = ''; const Filter : string = '';
+  BeforeDialogExecute : TNotifyEvent = nil) : boolean;
+var
+  od : TOpenDialog;
+begin
+  Result := False;
+  od := TOpenDialog.Create(nil);
+  Try
+    if Filter = '' then
+      od.Filter := ALL_FILES_FILTER
+    else
+      od.Filter := Filter;
+    if Title = '' then
+      od.Title := DEFAULT_DIALOG_TITLE
+    else
+      od.Title := Title;
+    od.InitialDir := ExtractFilePath(FileName);
+    od.FileName := ExtractFileName(FileName);
+    od.DefaultExt := ExtractFileExt(FileName);
+    if Assigned(BeforeDialogExecute) then
+      BeforeDialogExecute(od);
+    if od.Execute then
+    begin
+      FileName := od.FileName;
+      Result := True;
+    end;
+  Finally
+    od.Free;
+  End;
+end;
+
+function ColorDialogExecute(var Color : TColor; const Title : string = '';
+  CustomColors: TStrings = nil;
+  BeforeDialogExecute : TNotifyEvent = nil) : boolean;
+var
+  cd : TColorDialog;
+begin
+  Result := False;
+  cd := TColorDialog.Create(nil);
+  Try
+    cd.Options := [cdAnyColor];
+
+    cd.Color := Color;
+    if CustomColors <> nil then
+      cd.CustomColors.Assign(CustomColors);
+(*
+    if Title = '' then
+      cd.Title := DEFAULT_COLORDIALOG_TITLE
+    else
+      cd.Title := Title;
+*)
+    if Assigned(BeforeDialogExecute) then
+      BeforeDialogExecute(cd);
+    if cd.Execute then
+    begin
+      Color := cd.Color;
+      Result := True;
+    end;
+  Finally
+    cd.Free;
+  End;
 end;
 
 initialization

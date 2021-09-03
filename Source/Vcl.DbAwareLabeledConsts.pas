@@ -39,6 +39,12 @@ resourcestring
   CLEAR_CAPTION = 'Clear reference';
   ERR_MAX_LENGTH = 'MaxLength property accepts only positive values';
   ERR_NUM_VALUES = 'Cannot set NumberValues without elements';
+  EXT_FILES_FILTER = '%s file types|*.%s';
+  ALL_FILES_FILTER = 'All files|*.*';
+  ALL_IMAGES_FILTER = 'All images files (%s)|%s';
+  ALL_DOCS_FILTER = 'All documents (%s)|%s';
+  DEFAULT_DIALOG_TITLE = 'Select the file to open';
+  UNSUPPORTED_FILE = 'Unsupported file format';
 
 implementation
 

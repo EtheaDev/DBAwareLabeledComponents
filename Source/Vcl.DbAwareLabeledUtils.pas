@@ -47,6 +47,11 @@ function KillSubString( const SubStr, S : string; CaseSensitive : Boolean = Fals
 function PosChar( Ch : Char; const S : string; CaseSensitive : Boolean = False; StartIndex : Integer = 1 ) : Integer;
 function PosStr( const SubStr, S : string; CaseSensitive : Boolean = False; StartIndex : Integer = 1 ) : Integer;
 function GetValidChars( const S : string; ValidChars : TSetOfChar ) : string;
+function DATE_FORMAT : string;
+function TIME_HH_MM_SS_FORMAT : string;
+function TIME_HH_MM_FORMAT : string;
+function DATE_TIME_HH_MM_FORMAT : string;
+function DATE_TIME_HH_MM_SS_FORMAT : string;
 
 implementation
 
@@ -264,6 +269,39 @@ begin
     end;
   end;
   SetLength( Result, Count ); // imposta la lunghezza della stringa con i caratteri effettivamente copiati
+end;
+
+function DATE_FORMAT : string;
+begin
+  if LowerCase(FormatSettings.ShortDateFormat[1]) = 'd' then
+    Result := 'dd'+FormatSettings.DateSeparator+'mm'
+  else
+    Result := 'mm'+FormatSettings.DateSeparator+'dd';
+
+  if pos(LowerCase('yyyy'),LowerCase(FormatSettings.ShortDateFormat)) <> 0 then
+    Result := Result + FormatSettings.DateSeparator + 'yyyy'
+  else
+    Result := Result + FormatSettings.DateSeparator + 'yy';
+end;
+
+function TIME_HH_MM_SS_FORMAT : string;
+begin
+  Result := 'hh'+FormatSettings.TimeSeparator+'mm'+FormatSettings.TimeSeparator+'ss';
+end;
+
+function TIME_HH_MM_FORMAT : string;
+begin
+  Result := 'hh'+FormatSettings.TimeSeparator+'mm';
+end;
+
+function DATE_TIME_HH_MM_FORMAT : string;
+begin
+  Result := DATE_FORMAT + ' '+TIME_HH_MM_FORMAT;
+end;
+
+function DATE_TIME_HH_MM_SS_FORMAT : string;
+begin
+  Result := DATE_FORMAT + ' '+TIME_HH_MM_SS_FORMAT;
 end;
 
 end.

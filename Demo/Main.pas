@@ -59,6 +59,7 @@ uses
   , Vcl.LabeledCheckLst
   , Vcl.LabeledDBListView
   , Vcl.Samples.Spin
+//  , Vcl.LabeledButtonEdit
   , Vcl.BoundLabel;
 
 type
@@ -272,7 +273,7 @@ begin
   LDBNumberBox.SetBounds(ALeft,ATop,131,21);
   LDBNumberBox.Hint := 'Hint';
   LDBNumberBox.Alignment := taRightJustify;
-  LDBNumberBox.CurrencyFormat := 2;
+//  LDBNumberBox.CurrencyFormat := 2;
 //  LDBNumberBox.MaxValue := 999999999;
 //  LDBNumberBox.MinValue := -999999999;
   LDBNumberBox.TextHint := GetEnumName(TypeInfo(TFieldType), Ord(AField.DataType));

@@ -10,7 +10,6 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   ShowHint = True
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -31,7 +30,7 @@ object MainForm: TMainForm
         Top = 153
         Width = 144
         Height = 20
-        Color = clWindow
+        Color = clWhite
         DataField = 'StringField'
         DataSource = DataSource
         ParentColor = False
@@ -201,7 +200,6 @@ object MainForm: TMainForm
         BoundLabel.Alignment = taCenter
         BoundLabel.LabelPosition = lpTopCenter
         BoundLabel.LabelSpacing = 3
-        ShowSortOrder = True
         UnsortableFields = 'ExtendedField'
         Columns = <
           item
