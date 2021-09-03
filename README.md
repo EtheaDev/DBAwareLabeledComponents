@@ -11,7 +11,7 @@ It is no longer necessary to keep the Label "connected" and "aligned" by hand to
 - BoundLabel.Labelposition
 - BoundCaption.LabelSpacing (default 1)
 
-The label can be positioned in 12 posizioni:
+The label can be positioned in 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
 
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
