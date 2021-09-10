@@ -11,7 +11,7 @@ It is no longer necessary to keep the Label "connected" and "aligned" by hand to
 - BoundLabel.Labelposition
 - BoundCaption.LabelSpacing (default 1)
 
-The label can be positioned in 12 posizioni:
+The label can be positioned in 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
 
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
@@ -41,9 +41,9 @@ TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label
 - Alternate row-color
 - Custom row-colors
 
-### Available from Delphi XE3 to Delphi 10.4 (32bit and 64bit platforms)
+### Available from Delphi XE3 to Delphi 11.0 (32bit and 64bit platforms)
 
-![Delphi 10.4 Sydney Support](./Images/SupportingDelphi.jpg)
+![Delphi 11.0 Sydney Support](./Images/SupportingDelphi.jpg)
 
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
@@ -66,11 +66,14 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+03 Sep 2021:
+- Added support for Delphi 11
+
 25 Apr 2021: version 1.0.0
 
 Components released:
 
-only for D10.4.2
+only for D10.4.2 and above
 - TDBNumberBox
 - TLabeledNumberBox
 - TLabeledDBNumberBox
