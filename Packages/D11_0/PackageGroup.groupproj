@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{91E8F76F-D7FD-4859-A4BB-633ED3B34033}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DBAwareLabeledComponents.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="dclDBAwareLabeledComponents.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DBAwareLabeledComponents">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj"/>
+    </Target>
+    <Target Name="DBAwareLabeledComponents:Clean">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DBAwareLabeledComponents:Make">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents:Clean">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents:Make">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DBAwareLabeledComponents;dclDBAwareLabeledComponents"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DBAwareLabeledComponents:Clean;dclDBAwareLabeledComponents:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DBAwareLabeledComponents:Make;dclDBAwareLabeledComponents:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
