@@ -66,6 +66,10 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+10 Oct 2021:
+- Fixed LabeledDbGrid for Rendering selected cell with Windows 11
+- Fixex LabeledDbGrid columns draw in High-DPI app
+
 03 Sep 2021:
 - Added support for Delphi 11
 
