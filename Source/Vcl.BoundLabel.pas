@@ -83,18 +83,6 @@ type
     property ParentFont;
     property Font;
   published
-(*
-    //Hides those properties to object inspector
-    property Cursor: Tcursor read GetCursor;
-    property Height: integer read GetHeight;
-    property Left: integer read GetLeft;
-    property Top: integer read GetTop;
-    property Tag: Longint read GetTag;
-    property HelpContext: THelpContext read GetHelpContext;
-    property HelpKeyword: string read GetHelpKeyword;
-    property HelpType: THelpType read GetHelpType;
-    property Hint: string read GetHint;
-*)
     property Color;
     property Transparent default True;
     property ParentColor;
@@ -122,7 +110,7 @@ function CalcTextBounds( var X: integer; ClientRect : TRect; const Text : string
 
 //Calcola l'altezza standard di un componente di edit in base al suo font e al tipo di 3D
 procedure CalcStandardEditSize(Font : TFont;
-Ctl3D : boolean; out Width, Height : integer);
+  Ctl3D : boolean; out Width, Height : integer);
 
 function GetEditControlFont(AEditControl: TControl): TFont;
 procedure SetEditControlLabelPosition(AEditControl: TControl;
@@ -151,14 +139,11 @@ uses
 procedure CalcStandardEditSize(Font : TFont;
   Ctl3D : boolean; out Width, Height : integer);
 var
-  //VCL
   DC: HDC;
   SaveFont: HFont;
   I: Integer;
   SysMetrics, Metrics: TTextMetric;
 begin
-  //VCL: questo pezzo è copiato da TCustomEdit.AdjustHeight per calcolare l'altezza
-  //Standard di un controllo di edit come fa la VCL
   DC := GetDC(0);
   GetTextMetrics(DC, SysMetrics);
   SaveFont := SelectObject(DC, Font.Handle);
@@ -176,7 +161,7 @@ begin
     I := I div 4 + GetSystemMetrics(SM_CYBORDER) * 4;
   end;
   Height := Metrics.tmHeight + I;
-  Width := Metrics.tmAveCharWidth + 2; //2 l'ho determinato a mano!
+  Width := Metrics.tmAveCharWidth + 2;
 end;
 
 function IsVCLStyled: boolean;
@@ -208,10 +193,11 @@ var
   CaptionHeight, CaptionWidth : integer;
 begin
 
-  //ricalcola le coordinate:
-  //se l'owner è allineato alClient e la BoundLabel è valorizzata
-  //crea lo spazio per mostrare la BoundLabel
-  if (Owner.Align = alClient) and (BoundLabel <> nil) and (BoundLabel.Caption <> '') then
+  //recalculate coordinates:
+  //if owner is aligned to alClient and assigned/visible BoundLabel
+  //calculate space in client-area to place the BouldLabel
+  if (Owner.Align = alClient) and (BoundLabel <> nil)
+    and (BoundLabel.Caption <> '') and (BoundLabel.Visible) then
   begin
     CaptionHeight := (BoundLabel.Height + BoundLabel.LabelSpacing);
     CaptionWidth  := (BoundLabel.Width + BoundLabel.LabelSpacing);
@@ -258,8 +244,6 @@ begin
   //Label outside editor
   BoundLabel.Parent := Owner.Parent;
   BoundLabel.Transparent := True;
-//  BoundLabel.Color := clDkGray;
-//  BoundLabel.Font.Color := clBlack;
 
   ATop    := BoundLabel.Top;
   ALeft   := BoundLabel.Left;
@@ -270,7 +254,7 @@ begin
   OWidth  := Owner.Width;
   OHeight := Owner.Height;
 
-  //imposta coordinata left
+  //Setting left
   case BoundLabel.LabelPosition of
     lpTopLeft, lpBottomLeft :
       ALeft := OLeft;
@@ -284,7 +268,7 @@ begin
       ALeft := OLeft + OWidth + BoundLabel.LabelSpacing;
   end;
 
-  //imposta coordinata Top
+  //Setting Top
   case BoundLabel.LabelPosition of
     lpTopLeft, lpTopCenter, lpTopRight :
       ATop := OTop - BoundLabel.LabelSpacing - BoundLabel.Height;
@@ -298,7 +282,7 @@ begin
       ATop := OTop + OHeight - AHeight;
   end;
 
-  //imposta tipo di giustificazione: solo se AutoSize della label è true!
+  //Setting justify if label AutoSize is True!
   if BoundLabel.AutoSize then
   begin
     case BoundLabel.LabelPosition of
@@ -311,11 +295,11 @@ begin
     end;
   end;
 
-  //caso particolare con TopOffset valorizzato
+  //if TopOffset is present
   if BoundLabel.LabelPosition in [lpTopLeft,lpTopCenter,lpTopRight] then
     ATop := ATop+BoundLabel.TopOffSet;
 
-  //posiziona il componente
+  //Positioning component
   BoundLabel.SetBounds(ALeft, ATop, AWidth, AHeight)
 
 end;
@@ -324,7 +308,7 @@ procedure ChangeBoundCaption(Value : TCaption; var BoundLabel : TControlBoundLab
   Owner : TControl);
 begin
   if (csDestroying in Owner.ComponentState) then exit;
-  //imposta la caption alla label
+  //Setting Label Caption
   if Value <> BoundLabel.Caption then
   begin
     BoundLabel.Caption := Value;
@@ -349,7 +333,7 @@ end;
 constructor TControlBoundLabel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  Name := '';  //non dò un nome altrimenti lo usa quando no ha caption
+  Name := '';  //no name so, no "auto" caption
   SetSubComponent(True);
   if Assigned(AOwner) then
     FOwner := AOwner as TControl;
@@ -385,13 +369,12 @@ end;
 function CalcTextBounds( var X: integer; ClientRect : TRect; const Text : string;
   Font : TFont) : TRect;
 var
-  //VCL
   DC: HDC;
   Canvas : TCanvas;
   Str : string;
   Flags: Integer;
 begin
-  Str := ' '+Text; //Aggiungo uno spazio perché ho dei problemi sui font grandi
+  Str := 'W'+Text;
   //VCL
   Canvas := TCanvas.Create;
   Try

@@ -130,6 +130,7 @@ type
     procedure VisibleCheckBoxClick(Sender: TObject);
   private
     FMemoText: string;
+    procedure CreateControls;
     procedure CreateAndFillDataSets;
     {$IFDEF D10_4+}
     procedure CreateNumberBoxForField(const AField: TField;
@@ -140,7 +141,10 @@ type
     procedure FillEditors;
     procedure SetControlsLabelPosition(ARootControl: TWinControl;
       APosition: TControlLabelPosition; AVisible: Boolean);
+  protected
+    procedure Loaded; override;
   public
+    constructor Create(AOwner: TComponent); override;
   end;
 
 var
@@ -232,6 +236,17 @@ begin
   LDBCurrencyEdit.parent := NumberBoxTabSheet;
 end;
 
+procedure TMainForm.Loaded;
+begin
+  CreateControls;
+  inherited;
+end;
+
+constructor TMainForm.Create(AOwner: TComponent);
+begin
+  inherited;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   Caption := Application.Title;
@@ -269,8 +284,8 @@ var
 begin
   LDBNumberBox := TLabeledDBNumberBox.Create(Self);
   LDBNumberBox.BoundCaption := AField.DisplayLabel;
-  LDBNumberBox.BoundLabel.SetPosition(lpLeftMiddle);
   LDBNumberBox.SetBounds(ALeft,ATop,131,21);
+  LDBNumberBox.BoundLabel.SetPosition(lpLeftMiddle);
   LDBNumberBox.Hint := 'Hint';
   LDBNumberBox.Alignment := taRightJustify;
 //  LDBNumberBox.CurrencyFormat := 2;
@@ -284,6 +299,25 @@ begin
   LDBNumberBox.parent := NumberBoxTabSheet;
 end;
 {$ENDIF}
+
+procedure TMainForm.CreateControls;
+begin
+  CreateDBCurrencyEdit(ClientDataSetIntegerField, 20,110);
+  CreateDBCurrencyEdit(ClientDataSetFloatField, 60,110);
+  CreateDBCurrencyEdit(ClientDataSetCurrencyField, 100,110);
+  CreateDBCurrencyEdit(ClientDataSetBCDField, 140,110);
+  CreateDBCurrencyEdit(ClientDataSetExtendedField, 180,110);
+  CreateDBCurrencyEdit(ClientDataSetFmtBCDField, 220,110);
+
+  {$IFDEF D10_4+}
+  CreateNumberBoxForField(ClientDataSetIntegerField, 20,360);
+  CreateNumberBoxForField(ClientDataSetFloatField, 60,360);
+  CreateNumberBoxForField(ClientDataSetCurrencyField, 100,360);
+  CreateNumberBoxForField(ClientDataSetBCDField, 140,360);
+  CreateNumberBoxForField(ClientDataSetExtendedField, 180,360);
+  CreateNumberBoxForField(ClientDataSetFmtBCDField, 220,360);
+  {$ENDIF}
+end;
 
 procedure TMainForm.CreateAndFillDataSets;
 var
@@ -305,22 +339,6 @@ begin
   ClientDataSetFloatField.DisplayFormat := '#,###.000';
   ClientDataSetCurrencyField.DisplayFormat := '€ #,###.00';
   ClientDataSetBCDField.DisplayFormat := '€ #,###.00';
-
-  CreateDBCurrencyEdit(ClientDataSetIntegerField, 20,110);
-  CreateDBCurrencyEdit(ClientDataSetFloatField, 60,110);
-  CreateDBCurrencyEdit(ClientDataSetCurrencyField, 100,110);
-  CreateDBCurrencyEdit(ClientDataSetBCDField, 140,110);
-  CreateDBCurrencyEdit(ClientDataSetExtendedField, 180,110);
-  CreateDBCurrencyEdit(ClientDataSetFmtBCDField, 220,110);
-
-  {$IFDEF D10_4+}
-  CreateNumberBoxForField(ClientDataSetIntegerField, 20,360);
-  CreateNumberBoxForField(ClientDataSetFloatField, 60,360);
-  CreateNumberBoxForField(ClientDataSetCurrencyField, 100,360);
-  CreateNumberBoxForField(ClientDataSetBCDField, 140,360);
-  CreateNumberBoxForField(ClientDataSetExtendedField, 180,360);
-  CreateNumberBoxForField(ClientDataSetFmtBCDField, 220,360);
-  {$ENDIF}
 
   //Fill ClientDataSet
   LStream := nil;

@@ -51,7 +51,6 @@ uses
 
 const
   DB_LABEL_OFFSET = 2;
-  GRID_SCROLL_BAR_WIDTH = 21;
   INCREMENTAL_DELAY_DEFAULT = 700;
 
 Type
@@ -318,7 +317,6 @@ Type
     FCanEditColumn: TCBCanEditColumn;
     FCursorIsDefault: Boolean;
     FOnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent;
-    FAfterCreateColumnByLayout: TColumnNotifyEvent;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
     procedure SetShowSortOrder(const Value: Boolean);
@@ -368,65 +366,51 @@ Type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
     function GetBorderStyle: TBorderStyle;
-    {$IF CompilerVersion > 32}
-    procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
-    {$IFEND}
   public
     procedure StandardTitleClick(Column : TColumn);
-    procedure UpdateColumnVisibility;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
     function FindColumnByField(Field : TField; out Column : TColumn) : boolean;
     function FindColumnByFieldName(const FieldName : string; out Column : TColumn) : boolean;
     procedure ShowColumnByField(Field : TField; Visible : boolean);
-    function GetVisibleColumnsWidth : integer;
-    procedure DrawCheckImage(Rect: TRect; Column: TColumn);
+    procedure DrawCheckImage(Rect: TRect; Column: TColumn; const State: TGridDrawState);
     procedure CellClick(Column: TColumn); override;
     function CanEditShow: Boolean; override;
     function ChangeColumnFieldName(const OldFieldName, NewFieldName : string) : boolean;
     property DrawingCurrentRecord : boolean read FDrawingCurrentRecord;
     property LeftCol;
     property ScrollBars;
-    // Dato il nome di un campo, restituisce un riferimento alla prima colonna
-    // della griglia che fa riferimento a quel campo, oppure nil.
     function ColumnByFieldName(const AFieldName: string): TColumn;
-    // Dato il nome di un campo, restituisce il numero della prima colonna della
-    // griglia che fa riferimento a quel campo.
     function ColumnIndexByFieldName(const AFieldName: string): Integer;
-    // Date le coordinate del mouse restituisce il campo sottostante
     function GetMouseOverField(X, Y: Integer): TField;
     property DefaultRowHeight;
   published
     property TitleFont: TFont read GetTitleFont write SetTitleFont stored False;
     property IsEmpty: Boolean read GetIsEmpty;
     property Options default [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete];
-    property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    property BoundCaption: TCaption read FBoundCaption write SetBoundCaption;
     property BoundLabel: TControlBoundLabel read FBoundLabel;
-    property HighlightCurrRow : boolean read FHighlightCurrRow write SetHighlightCurrRow default True;
-    property AlternateRowColor : boolean read FAlternateRowColor write SetAlternateRowColor default True;
+    property HighlightCurrRow: boolean read FHighlightCurrRow write SetHighlightCurrRow default True;
+    property AlternateRowColor: boolean read FAlternateRowColor write SetAlternateRowColor default True;
     property OnColWidthsChanged: TNotifyEvent read FOnColWidthsChanged write FOnColWidthsChanged;
     property ShowSortOrder: Boolean read FShowSortOrder write SetShowSortOrder default True;
     property OnSortedField: TCBSortedFieldEvent read FOnSortedField write FOnSortedField;
     property OnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent read FOnIsCheckBoxedColumn write FOnIsCheckBoxedColumn;
-    property IncrementalSearch : boolean read FIncrementalSearch write SetIncrementalSearch default False;
-    property IncrementalSearchDelay : integer read GetIncrementalSearchDelay write SetIncrementalSearchDelay default INCREMENTAL_DELAY_DEFAULT;
-    property OnBkCellColorAssign : TCBBkCellColorAssign read FOnBkCellColorAssign write SetOnBkCellColorAssign;
+    property IncrementalSearch: boolean read FIncrementalSearch write SetIncrementalSearch default False;
+    property IncrementalSearchDelay: integer read GetIncrementalSearchDelay write SetIncrementalSearchDelay default INCREMENTAL_DELAY_DEFAULT;
+    property OnBkCellColorAssign: TCBBkCellColorAssign read FOnBkCellColorAssign write SetOnBkCellColorAssign;
     property CheckBoxedFields: string read FCheckBoxedFields write SetCheckBoxedFields;
     property DrawCheckBoxImages: Boolean read FDrawCheckBoxImages write SetDrawCheckBoxImages default True;
     property UnsortableFields: string read FUnsortableFields write FUnsortableFields;
     property CanEditColumn: TCBCanEditColumn read FCanEditColumn write FCanEditColumn;
-    property AfterCreateColumnByLayout: TColumnNotifyEvent read FAfterCreateColumnByLayout write FAfterCreateColumnByLayout;
   end;
 
   TNavInsMode = (imInsert, imAppend);
 
-  //Registrazione colore per le righe pari
-  procedure RegisterGridOddRowsColor(Color : TColor);
+  //Color registration for Odd Rows
+  procedure RegisterGridOddRowsColor(Color: TColor);
 
-  procedure UpdateColumnsView(Columns: TDBGridColumns;
-    maxSize: integer; const ColumnFieldsToHide: string = '');
-  
 implementation
 
 uses
@@ -434,59 +418,31 @@ uses
   DBClient, Math, TypInfo, Variants, Consts, Themes,
   //VCL
   DBActns, UxTheme, UITypes,
-  //CB
+  //Labeled components
   Vcl.DbAwareLabeledUtils, Vcl.LabeledCtrls;
 
 var
-  DbGridPrintSupport : TStringList;
-  StandardOddRowsColor : TColor;
+  DbGridPrintSupport: TStringList;
+  StandardOddRowsColor: TColor;
 
-procedure UpdateColumnsView(Columns: TDBGridColumns;
-  maxSize: integer; const ColumnFieldsToHide: string = '');
-var
-  i: integer;
-  Field: TField;
-begin
-  if not Assigned(Columns) then
-    Exit;
-  for i := 0 to Columns.Count - 1 do
-  begin
-    if (Columns[i].Width > maxSize) or (Columns[i].Width=64) then
-      Columns[i].Width := maxSize;
-    Field := Columns[i].Field;
-    if Assigned(Field) then
-    begin
-      if Pos(Field.FieldName+';', ColumnFieldsToHide+';') > 0 then
-        Columns[i].Visible := False
-      else
-        Columns[i].Visible := True;
-      if Field is TBooleanField then
-      begin
-        Columns[i].Title.Alignment := taCenter;
-        Columns[i].Alignment := taCenter;
-      end;
-    end;
-  end;
-end;
-
-procedure RegisterGridOddRowsColor(Color : TColor);
+procedure RegisterGridOddRowsColor(Color: TColor);
 begin
   StandardOddRowsColor := Color;
 end;
 
-procedure DrawSortedShape(Canvas : TCanvas; ARect: TRect; Ascending: Boolean); {min width rect -> dxGridSortedShapeMinWidth}
+procedure DrawSortedShape(Canvas: TCanvas; ARect: TRect; Ascending: Boolean); {min width rect -> dxGridSortedShapeMinWidth}
 var
   Width: Integer;
   Height: Integer;
   Points2: array [0..1] of TPoint;
   Points3: array [0..2] of TPoint;
-  OldColor : TColor;
+  OldColor: TColor;
   LRect: TRect;
 begin
   Width  := Round((ARect.Bottom - ARect.Top) / 2);
   Height := Width;
   LRect := Rect(ARect.Left,ARect.Top+1,ARect.Right,ARect.Bottom-1);
-  //sbianco la parte della cella che conterrà il triangolino
+  //empty cell with sorted shape
   Canvas.FillRect(LRect);
   ARect.Left := ((ARect.Left + ARect.Right) div 2) - (Width div 2);
   ARect.Right := ARect.Left + Width;
@@ -597,7 +553,6 @@ end;
 
 procedure TLabeledDBEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
-  //Previene la pressione di canc che modifica il testo anche se non si potrebbe fare editing
   if (Key = VK_DELETE) and (DataSource <> nil) and (DataSource.State = dsBrowse) and not (DataSource.AutoEdit) then
     Key := 0
   else
@@ -697,7 +652,7 @@ function TLabeledDBComboBox.GetItemPos(List: TStrings; const AString: string): i
 var
   i: Integer;
 begin
-  //Prima tenta una ricerca case-sensitive (potrebbero esserci dei doppioni)
+  //First make a case-sensitive search
   Result := -1;
   for i := 0 to List.Count - 1 do
   begin
@@ -1094,7 +1049,7 @@ begin
     FOnIsCheckBoxedColumn(Column, Result);
 end;
 
-function TLabeledDbGrid.isCheckBoxedField(Field : TField): boolean;
+function TLabeledDbGrid.isCheckBoxedField(Field: TField): boolean;
 const
   SEP = ';';
 begin
@@ -1171,7 +1126,7 @@ end;
 procedure TLabeledDbGrid.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   inherited;
-  //gestione CTRL-SPAZIO nelle griglie con multiselect
+  //Ctrl-space for selection of row in multiselect grid
   if (Key = VK_SPACE)
   and (ssCtrl in Shift) and (dgMultiSelect in Options) and (SelectedRows <> nil) then
     SelectedRows.CurrentRowSelected := not SelectedRows.CurrentRowSelected;
@@ -1180,15 +1135,15 @@ end;
 procedure TLabeledDbGrid.DrawCell(ACol, ARow: Integer; ARect: TRect;
   AState: TGridDrawState);
 var
-  Offset : integer;
+  Offset: integer;
   LRect: TRect;
-  SortOrder : TCBSortOrder;
-  Column : TColumn;
+  SortOrder: TCBSortOrder;
+  Column: TColumn;
   dxGridSortedShapeMinWidth: Integer;
 begin
-  dxGridSortedShapeMinWidth := ARect.Bottom - ARect.Top; //16
-  //se è il record corrente aggiorno il flag in modo tale che nell'evento
-  //ondrawcolumncell il programmatore può testate questo flag!
+  dxGridSortedShapeMinWidth := ARect.Bottom - ARect.Top;
+  //Updating DrawingCurrentRecord so it is possible to check this flag
+  //into ondrawcolumncell event
   Dec(ACol, IndicatorOffset);
   if not ((gdFixed in AState) and (ACol < 0)) and
     (DataLink <> nil) and
@@ -1201,13 +1156,13 @@ begin
 
   Inc(ACol, IndicatorOffset);
 
-  inherited; //disegno il resto
+  inherited; //default drawing
 
   if dgIndicator in Options then
     Offset := 1 else
     Offset := 0;
 
-  //stampa il triangolino se è una colonna di sort
+  //if it's a sort column, draw the shape
   if (FShowSortOrder) and
     (ACol-Offset >= 0) and
     (not (csLoading in ComponentState)) and
@@ -1216,7 +1171,7 @@ begin
     (gdFixed in AState) then
   begin
     Column := Columns[ACol-Offset];
-    //verifica che la colonna faccia parte del sort attuale
+    //verify if the column is included in actual sort
     SortOrder := soNone;
     if (Column.Field <> nil) then
     begin
@@ -1231,12 +1186,12 @@ begin
       begin
         if (Right - Left) >= dxGridSortedShapeMinWidth then
         begin
-          //c'è spazio per disegnare il triangolino
+          //there is space to draw the shape
           if Column.Title.Alignment = taRightJustify then
             LRect := Rect(Left, Top, Left + dxGridSortedShapeMinWidth, Bottom) else
             LRect := Rect(Right - dxGridSortedShapeMinWidth, Top, Right, Bottom);
           Dec(Right, dxGridSortedShapeMinWidth);
-          //disegno il triangolino
+          //Draw the Shape
           DrawSortedShape(Canvas, LRect, (SortOrder = soAscending));
         end;
       end;
@@ -1260,8 +1215,8 @@ end;
 
 procedure TLabeledDbGrid.StandardSort(Field: TField; var SortOrder: TCBSortOrder);
 var
-  DataSet : TDataSet;
-  IndexFields : string;
+  DataSet: TDataSet;
+  IndexFields: string;
 begin
   SortOrder := soNone;
   DataSet := Field.DataSet;
@@ -1274,7 +1229,7 @@ begin
 
   if IndexFields <> '' then
   begin
-    //Se il campo è contenuto nell'indice corrente il sort è ascendente
+    //determining ascending or descending sort
     if SameText(Field.FieldName,IndexFields) then
     begin
       SortOrder := soAscending;
@@ -1290,8 +1245,6 @@ procedure TLabeledDbGrid.TitleClick(Column: TColumn);
 begin
   inherited;
 {$IFDEF D14+}
-  //N.B. fino a D2007 se OnTitleClick era assegnato veniva attivato in "inherited"
-  //da D2010 viene lanciato solo se l'opzione dgTitleClick è a true: devo forzarlo
   if Assigned(OnTitleClick) and not (dgTitleClick in Options) then
     OnTitleClick( Column );
 {$ENDIF}
@@ -1301,11 +1254,10 @@ end;
 
 procedure TLabeledDbGrid.StandardTitleClick(Column: TColumn);
 var
-  Field : TField;
-  Value : Variant;
-  NewOrderBy, ActualOrderBy : string;
+  Field: TField;
+  Value: Variant;
+  NewOrderBy, ActualOrderBy: string;
 begin
-  //Se non visualizzo l'ordine sul titolo non faccio nulla
   if not FShowSortOrder then exit;
   Screen.Cursor := crHourGlass;
   Try
@@ -1367,26 +1319,6 @@ begin
   end;
 end;
 
-procedure TLabeledDbGrid.UpdateColumnVisibility;
-var
-  i : integer;
-  Field : TField;
-begin
-  inherited;
-  if AcquireLayoutLock then
-  Try
-    //Aggiorno la visibilità delle colonne in base al valore visible dei campi
-    for i := 0 to Columns.Count -1 do
-    begin
-      Field := Columns.Items[i].Field;
-      if Field = nil then continue;
-      Columns[i].Visible := Field.Visible;
-    end;
-  Finally
-    EndLayout;
-  End;
-end;
-
 function TLabeledDbGrid.CanApplyCustomColors: boolean;
 begin
   Result := not StyleServices.Enabled or (TStyleManager.ActiveStyle.Name = 'Windows');
@@ -1395,9 +1327,9 @@ end;
 procedure TLabeledDbGrid.DrawColumnCell(const Rect: TRect; DataCol: Integer;
   Column: TColumn; State: TGridDrawState);
 var
-  CellColor : TColor;
+  CellColor: TColor;
 
-  function GetCellColor : TColor;
+  function GetCellColor: TColor;
   begin
     if IsCurrentRowOdd then
     begin
@@ -1434,7 +1366,12 @@ begin
         Brush.Color := CellColor;
       end
       else
+      begin
         CellColor := GetCellColor;
+        //Resolve bad painting in W11
+        if not StyleServices.Enabled or (StyleServices.IsSystemStyle) and Self.Focused then
+          Brush.Color := clHighlight;
+      end;
     end;
   end
   else
@@ -1462,7 +1399,7 @@ begin
   begin
     if Assigned(OnDrawColumnCell) then
       OnDrawColumnCell(Self, Rect, DataCol, Column, State);
-    DrawCheckImage(Rect, Column);
+    DrawCheckImage(Rect, Column, State);
   end
   else
   begin
@@ -1475,29 +1412,27 @@ begin
   Result := inherited BorderStyle;
 end;
 
-function TLabeledDbGrid.GetCheckBounds(Rect : TRect; Alignment : TAlignment) : TRect;
+function TLabeledDbGrid.GetCheckBounds(Rect: TRect; Alignment: TAlignment): TRect;
 var
-  Check_Size : integer;
+  Check_Size: integer;
 begin
-  Check_Size := Rect.Bottom-Rect.Top-1;
+  Check_Size := Rect.Bottom-Rect.Top - 4;
   case Alignment of
-    taLeftJustify : Result.Left := Rect.Left;
-    taRightJustify : Result.Left := Rect.Right - Check_Size;
-    taCenter : Result.Left := Rect.Left + ((Rect.Right-Rect.Left+1) div 2) - 8;
+    taLeftJustify: Result.Left := Rect.Left;
+    taRightJustify: Result.Left := Rect.Right - Check_Size;
+    taCenter: Result.Left := Rect.Left + ((Rect.Right-Rect.Left+1) div 2) - (Check_Size div 2);
   end;
   Result.Right := Result.Left+Check_Size;
   Result.Top := Rect.Top + ((Rect.Bottom-Rect.Top+1) div 2) - (Check_Size div 2);
   Result.Bottom := Result.Top + Check_Size;
 end;
 
-procedure TLabeledDbGrid.DrawCheckImage(Rect : TRect; Column : TColumn);
-const
-  CtrlState: array[Boolean] of integer = (DFCS_BUTTONCHECK, DFCS_BUTTONCHECK or DFCS_CHECKED);
-
+procedure TLabeledDbGrid.DrawCheckImage(Rect: TRect; Column: TColumn;
+  const State: TGridDrawState);
 var
   LState: TCheckBoxState;
   LDetails: TThemedElementDetails;
-  LOutRect : TRect;
+  LOutRect: TRect;
 
   function GetDrawState(AState: TCheckBoxState): TThemedButton;
   begin
@@ -1509,20 +1444,6 @@ var
         cbChecked: Result := tbCheckBoxCheckedDisabled;
         cbGrayed: Result := tbCheckBoxMixedDisabled;
       end
-(*
-    else if Pressed and MouseInControl then
-      case AState of
-        cbUnChecked: Result := tbCheckBoxUncheckedPressed;
-        cbChecked: Result := tbCheckBoxCheckedPressed;
-        cbGrayed: Result := tbCheckBoxMixedPressed;
-      end
-    else if MouseInControl then
-      case AState of
-        cbUnChecked: Result := tbCheckBoxUncheckedHot;
-        cbChecked: Result := tbCheckBoxCheckedHot;
-        cbGrayed: Result := tbCheckBoxMixedHot;
-      end
-*)
     else
       case AState of
         cbUnChecked: Result := tbCheckBoxUncheckedNormal;
@@ -1546,9 +1467,9 @@ begin
   Canvas.Brush.Style := bsClear;
 end;
 
-function TLabeledDbGrid.FindColumnByField(Field : TField; out Column : TColumn) : boolean;
+function TLabeledDbGrid.FindColumnByField(Field: TField; out Column: TColumn): boolean;
 var
-  i : integer;
+  i: integer;
 begin
   Result := False;
   for i := 0 to Columns.Count -1 do
@@ -1561,9 +1482,9 @@ begin
   end;
 end;
 
-function TLabeledDbGrid.FindColumnByFieldName(const FieldName : string; out Column : TColumn) : boolean;
+function TLabeledDbGrid.FindColumnByFieldName(const FieldName: string; out Column: TColumn): boolean;
 var
-  i : integer;
+  i: integer;
 begin
   Result := False;
   for i := 0 to Columns.Count -1 do
@@ -1576,24 +1497,12 @@ begin
   end;
 end;
 
-procedure TLabeledDbGrid.ShowColumnByField(Field : TField; Visible : boolean);
+procedure TLabeledDbGrid.ShowColumnByField(Field: TField; Visible: boolean);
 var
-  Column : TColumn;
+  Column: TColumn;
 begin
   if FindColumnByField(Field, Column) then
     Column.Visible := Visible;
-end;
-
-function TLabeledDbGrid.GetVisibleColumnsWidth : integer;
-var
-  i : integer;
-begin
-  Result := 0;
-  for i := 0 to Columns.Count -1 do
-  begin
-    if Columns[i].Visible then
-      Result := Result + Columns[i].Width;
-  end;
 end;
 
 function TLabeledDbGrid.IsCurrentRowOdd: boolean;
@@ -1614,20 +1523,10 @@ begin
   FIncrementalSearch := Value;
 end;
 
-{$IF CompilerVersion > 32}
-procedure TLabeledDbGrid.ChangeScale(M, D: Integer; isDpiChange: Boolean);
-begin
-  if not ((csLoading in ComponentState) and ParentFont) then
-    inherited
-  else
-    FCurrentPPI := MulDiv(96, M, D);
-end;
-{$Endif}
-
-procedure TLabeledDbGrid.ChangeStrSearch(const str : string);
+procedure TLabeledDbGrid.ChangeStrSearch(const str: string);
 var
-  S : String;
-  I : Integer;
+  S: String;
+  I: Integer;
 begin
   if (SelectedIndex < 0) or (Columns.Count < SelectedIndex) then
     Exit;
@@ -1643,8 +1542,8 @@ end;
 
 procedure TLabeledDbGrid.CheckIncrementalSearch(var Key: Word; Shift: TShiftState);
 var
-  Tasto : char;
-  KeyPressed : Word;
+  Tasto: char;
+  KeyPressed: Word;
 begin
   KeyPressed := Key;
   //Workaround per il tastierino numerico
@@ -1676,7 +1575,7 @@ end;
 
 procedure TLabeledDbGrid.ToggleBooleanField;
 var
-  Field : TField;
+  Field: TField;
 begin
   Field := SelectedField;
   if inherited CanEditModify then
@@ -1696,7 +1595,7 @@ begin
     inherited;
 end;
 
-procedure TLabeledDbGrid.doIncrementalSearch(Key : Char);
+procedure TLabeledDbGrid.doIncrementalSearch(Key: Char);
 const
   ValidKeys = ['0'..'9','A'..'Z','a'..'z',' ','.',',','-','/',#8,'_',#128..#255];
 begin
@@ -1724,8 +1623,8 @@ end;
 
 procedure TLabeledDbGrid.doIncrementalLocate;
 var
-  IntValue : Integer;
-  DateValue : TDateTime;
+  IntValue: Integer;
+  DateValue: TDateTime;
 begin
   FSearchTimer.Enabled := False;
   if StrRicercaIncrementale <> '' then
@@ -1807,13 +1706,13 @@ begin
     ToggleBooleanField;
 end;
 
-function TLabeledDbGrid.isMouseOverCheck(X, Y: Integer) : boolean;
+function TLabeledDbGrid.isMouseOverCheck(X, Y: Integer): boolean;
 var
-  Rect : TRect;
-  OutRect : TRect;
+  Rect: TRect;
+  OutRect: TRect;
   Cell: TGridCoord;
-  ColIndex : integer;
-  RowIndex : integer;
+  ColIndex: integer;
+  RowIndex: integer;
 begin
   Result := False;
   //Verifico se entro nello spazio della cella selezionata
@@ -1850,7 +1749,7 @@ begin
   Result := (Cell.X >= IndicatorOffset) and (Cell.Y >= 0) and (Cell.Y < FTitleOffset);
 end;
 
-function TLabeledDbGrid.CanEditCell(X, Y: integer) : boolean;
+function TLabeledDbGrid.CanEditCell(X, Y: integer): boolean;
 var
   Cell: TGridCoord;
   Column: TColumn;
@@ -1958,7 +1857,7 @@ end;
 function TLabeledDbGrid.ChangeColumnFieldName(const OldFieldName,
   NewFieldName: string): boolean;
 var
-  Column : TColumn;
+  Column: TColumn;
 begin
   Result := FindColumnByFieldName(OldfieldName, Column);
   if Result then
@@ -2009,7 +1908,7 @@ end;
 
 procedure TLabeledDBLabel.DoDrawText(var Rect: TRect; Flags: Integer);
 var
-  XOffSet : integer;
+  XOffSet: integer;
 begin
   if ((BiDiMode = bdRightToLeft) and (Alignment = taRightJustify)) or
      ((BiDiMode = bdLeftToRight) and (Alignment = taLeftJustify)) then
@@ -2083,9 +1982,9 @@ end;
 
 procedure TLabeledDBLabel.AdjustHeight;
 var
-  X : integer;
-  W : integer;
-  Rect : TRect;
+  X: integer;
+  W: integer;
+  Rect: TRect;
 begin
   if Parent = nil then exit;
   if not (csReading in ComponentState) and FAutoHeight then

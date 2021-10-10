@@ -10,6 +10,7 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   ShowHint = True
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -87,6 +88,7 @@ object MainForm: TMainForm
         Font.Style = []
         ScrollBars = ssVertical
         TabOrder = 3
+        Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
         BoundLabel.Top = 10
@@ -206,6 +208,7 @@ object MainForm: TMainForm
             Alignment = taCenter
             Expanded = False
             FieldName = 'BooleanField'
+            Width = 80
             Visible = True
           end
           item
@@ -389,6 +392,7 @@ object MainForm: TMainForm
         ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 7
+        Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
         BoundLabel.Top = 102
