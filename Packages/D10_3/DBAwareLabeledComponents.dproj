@@ -61,7 +61,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.0.0.0;InternalName=;LegalCopyright=Copyright (c) 2021 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.0;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_Description>Dataaware Labeled Components by Ethea</DCC_Description>
+        <DCC_Description>Ethea: Dataaware Labeled Components</DCC_Description>
         <RuntimeOnlyPackage>true</RuntimeOnlyPackage>
         <DllSuffix>_D10.3</DllSuffix>
     </PropertyGroup>
