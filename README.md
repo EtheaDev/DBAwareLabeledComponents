@@ -14,13 +14,16 @@ It is no longer necessary to keep the Label "connected" and "aligned" by hand to
 The label can be positioned in 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
 
-PLUS: an advanced DbGrid component with many features:
-- HighLightCurrentRow
-- Alternate row colors
+## PLUS: An advanced TDbGrid component
+
+TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label, plus some extra features:
+- ShowSortOrder: shows an indicator of sorting column
+- Embedeed CheckBox for boolean fields
+- Incremental search, when typing into a ReadOnly DbGrid
+- Alternate row-color
+- Custom row-colors
 - Show sort order
 - Incremental search
-- Custom Draw with custom background colors
-- Draw checkbox for boolean fields
 - Lines per Rows (to show memo fields with multiple lines)
 - RowMargin (to enlarge heigh fo rows)
 
@@ -43,15 +46,6 @@ PLUS: an advanced DbGrid component with many features:
 - TDBNumberBox: the standard component with classic DataAeware support (DataSource + DataField) without Label.
 - TLabeledNumberBox: a TNumberBox component with boudary label
 - TLabeledDBNumberBox: a TDBNumberBox with boudary label
-
-## An advanced TDbGrid component
-
-TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label, plus some extra features:
-- ShowSortOrder: shows an indicator of sorting column
-- Embedeed CheckBox for boolean fields
-- Incremental search, when typing into a ReadOnly DbGrid
-- Alternate row-color
-- Custom row-colors
 
 ### Available from Delphi XE3 to Delphi 11.0 (32bit and 64bit platforms)
 
