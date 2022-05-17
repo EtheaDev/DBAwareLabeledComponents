@@ -14,6 +14,16 @@ It is no longer necessary to keep the Label "connected" and "aligned" by hand to
 The label can be positioned in 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
 
+PLUS: an advanced DbGrid component with many features:
+- HighLightCurrentRow
+- Alternate row colors
+- Show sort order
+- Incremental search
+- Custom Draw with custom background colors
+- Draw checkbox for boolean fields
+- Lines per Rows (to show memo fields with multiple lines)
+- RowMargin (to enlarge heigh fo rows)
+
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
 
 | Sample | Description |
