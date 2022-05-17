@@ -24,7 +24,7 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := 'Normal and DataAware Labeled Components Editors Demo - Copyright (c) 2021 Ethea S.r.l.';
+  Application.Title := 'Normal and DataAware Labeled Components Editors Demo - Copyright (c) 2021-2022 Ethea S.r.l.';
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;

@@ -2,27 +2,355 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'DataAwareLabeledComponents Demo'
-  ClientHeight = 483
-  ClientWidth = 858
+  ClientHeight = 507
+  ClientWidth = 820
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = True
   ShowHint = True
+  WindowState = wsMaximized
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  OnShow = FormShow
   TextHeight = 13
   object PageControl: TPageControl
     Left = 0
     Top = 0
-    Width = 858
-    Height = 424
-    ActivePage = DBTabSheet
+    Width = 820
+    Height = 448
+    ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
+    object DbGridTabSheet: TTabSheet
+      Caption = 'Labeled and Advanced DbGrid'
+      ImageIndex = 2
+      object DbGrid: TLabeledDbGrid
+        Left = 0
+        Top = 16
+        Width = 812
+        Height = 186
+        Cursor = crHandPoint
+        Align = alClient
+        DataSource = DataSource
+        TabOrder = 0
+        BoundCaption = 'Labeled and Advanced DbGrid'
+        BoundLabel.Left = 334
+        BoundLabel.Top = 0
+        BoundLabel.Width = 144
+        BoundLabel.Height = 13
+        BoundLabel.Alignment = taCenter
+        BoundLabel.LabelPosition = lpTopCenter
+        BoundLabel.LabelSpacing = 3
+        UnsortableFields = 'ExtendedField'
+        Columns = <
+          item
+            Alignment = taCenter
+            Expanded = False
+            FieldName = 'BooleanField'
+            Width = 80
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'IntegerField'
+            Title.Alignment = taRightJustify
+            Width = 91
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FloatField'
+            Title.Alignment = taRightJustify
+            Width = 88
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'CurrencyField'
+            Title.Alignment = taRightJustify
+            Width = 109
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'BCDField'
+            Title.Alignment = taRightJustify
+            Width = 103
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'ExtendedField'
+            Title.Alignment = taRightJustify
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'FmtBCDField'
+            Title.Alignment = taRightJustify
+            Width = 99
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'StringField'
+            Width = 171
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'DateField'
+            Width = 74
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TimeField'
+            Width = 83
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'DateTimeField'
+            Width = 90
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'SQLTimeStampField'
+            Width = 116
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'MemoField'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'RichTextField'
+            Width = 100
+            Visible = True
+          end>
+      end
+      object DbGridOptionsPanel: TPanel
+        Left = 0
+        Top = 202
+        Width = 812
+        Height = 218
+        Align = alBottom
+        TabOrder = 1
+        object FontLabel: TLabel
+          Left = 346
+          Top = 122
+          Width = 60
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Font Height:'
+        end
+        object RowLinesLabel: TLabel
+          Left = 354
+          Top = 154
+          Width = 52
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Row Lines:'
+        end
+        object RowMarginLabel: TLabel
+          Left = 346
+          Top = 186
+          Width = 60
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Row Margin:'
+        end
+        object cbHcr: TCheckBox
+          Left = 8
+          Top = 10
+          Width = 129
+          Height = 13
+          Caption = 'HighLight current row'
+          TabOrder = 0
+          OnClick = cbHcrClick
+        end
+        object cbSort: TCheckBox
+          Left = 8
+          Top = 61
+          Width = 112
+          Height = 13
+          Caption = 'Show Sort Order'
+          TabOrder = 2
+          OnClick = cbSortClick
+        end
+        object DbGridOptionsGroupBox: TGroupBox
+          Left = 143
+          Top = 6
+          Width = 185
+          Height = 130
+          Caption = 'Custom Background color'
+          TabOrder = 5
+          object cbCurrColor: TColorBox
+            Left = 16
+            Top = 51
+            Width = 145
+            Height = 22
+            Selected = clRed
+            TabOrder = 1
+            OnChange = cbCurrColorChange
+          end
+          object cbEvenColor: TColorBox
+            Left = 16
+            Top = 95
+            Width = 145
+            Height = 22
+            Selected = clAqua
+            TabOrder = 2
+          end
+          object cbActivateCustomColor: TCheckBox
+            Left = 16
+            Top = 21
+            Width = 72
+            Height = 13
+            Caption = 'Activate'
+            TabOrder = 0
+            OnClick = cbActivateCustomColorClick
+          end
+        end
+        object cbIncremental: TCheckBox
+          Left = 8
+          Top = 80
+          Width = 124
+          Height = 13
+          Caption = 'Incremental search'
+          TabOrder = 3
+          OnClick = cbIncrementalClick
+        end
+        object cbAltColors: TCheckBox
+          Left = 8
+          Top = 29
+          Width = 129
+          Height = 13
+          Caption = 'Alternate row colors'
+          TabOrder = 1
+          OnClick = cbAltColorsClick
+        end
+        object cbCustomDraw: TCheckBox
+          Left = 8
+          Top = 112
+          Width = 96
+          Height = 13
+          Caption = 'Custom Draw'
+          TabOrder = 4
+          OnClick = cbCustomDrawClick
+        end
+        object FontTrackBar: TTrackBar
+          Left = 412
+          Top = 119
+          Width = 133
+          Height = 25
+          Max = 30
+          Min = 10
+          Position = 11
+          TabOrder = 11
+          OnChange = FontTrackBarChange
+        end
+        object cbEditing: TCheckBox
+          Left = 340
+          Top = 8
+          Width = 102
+          Height = 13
+          Caption = 'Inplace Editing'
+          TabOrder = 6
+          OnClick = cbEditingClick
+        end
+        object cbAutoEdit: TCheckBox
+          Left = 340
+          Top = 29
+          Width = 131
+          Height = 13
+          Caption = 'AutoEdit Datasource'
+          TabOrder = 7
+          OnClick = cbAutoEditClick
+        end
+        object lbOptions: TCheckListBox
+          Left = 591
+          Top = 17
+          Width = 201
+          Height = 193
+          ItemHeight = 13
+          TabOrder = 10
+          OnClickCheck = lbOptionsClickCheck
+        end
+        object cbDrawCheckBoxImages: TCheckBox
+          Left = 340
+          Top = 48
+          Width = 195
+          Height = 13
+          Caption = 'Draw CheckBox for Boolean Fields'
+          TabOrder = 8
+          OnClick = cbDrawCheckBoxImagesClick
+        end
+        object rgCtl3D: TRadioGroup
+          Left = 340
+          Top = 67
+          Width = 178
+          Height = 41
+          Caption = 'Ctl3D'
+          Columns = 2
+          ItemIndex = 0
+          Items.Strings = (
+            'True'
+            'False')
+          TabOrder = 9
+          OnClick = rgCtl3DClick
+        end
+        object LineTrackBar: TTrackBar
+          Left = 412
+          Top = 150
+          Width = 133
+          Height = 25
+          Max = 5
+          Min = 1
+          Position = 1
+          TabOrder = 12
+          OnChange = LineTrackBarChange
+        end
+        object RowMarginTrackBar: TTrackBar
+          Left = 412
+          Top = 181
+          Width = 133
+          Height = 25
+          Max = 20
+          TabOrder = 13
+          OnChange = RowMarginTrackBarChange
+        end
+        object filterDataEdit: TLabeledEdit
+          Left = 8
+          Top = 155
+          Width = 297
+          Height = 21
+          EditLabel.Width = 108
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Filter data expression:'
+          TabOrder = 14
+          Text = ''
+          OnExit = filterDataEditExit
+        end
+        object btSelectStyle: TButton
+          Left = 8
+          Top = 182
+          Width = 162
+          Height = 25
+          Caption = 'Change Application Style...'
+          TabOrder = 15
+          OnClick = btSelectStyleClick
+        end
+      end
+    end
     object DBTabSheet: TTabSheet
       Caption = 'DataAware Editors'
       ImageIndex = 3
@@ -88,7 +416,6 @@ object MainForm: TMainForm
         Font.Style = []
         ScrollBars = ssVertical
         TabOrder = 3
-        Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
         BoundLabel.Top = 10
@@ -181,109 +508,6 @@ object MainForm: TMainForm
     end
     object NumberBoxTabSheet: TTabSheet
       Caption = 'Number Editors'
-    end
-    object DbGridTabSheet: TTabSheet
-      Caption = 'Labeled DbGrid'
-      ImageIndex = 2
-      object LabeledDbGrid1: TLabeledDbGrid
-        Left = 0
-        Top = 16
-        Width = 850
-        Height = 380
-        Cursor = crHandPoint
-        Align = alClient
-        DataSource = DataSource
-        TabOrder = 0
-        BoundCaption = 'Labeled DbGrid'
-        BoundLabel.Left = 389
-        BoundLabel.Top = 0
-        BoundLabel.Width = 72
-        BoundLabel.Height = 13
-        BoundLabel.Alignment = taCenter
-        BoundLabel.LabelPosition = lpTopCenter
-        BoundLabel.LabelSpacing = 3
-        UnsortableFields = 'ExtendedField'
-        Columns = <
-          item
-            Alignment = taCenter
-            Expanded = False
-            FieldName = 'BooleanField'
-            Width = 80
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'IntegerField'
-            Title.Alignment = taRightJustify
-            Width = 91
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'FloatField'
-            Title.Alignment = taRightJustify
-            Width = 88
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'CurrencyField'
-            Title.Alignment = taRightJustify
-            Width = 109
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'BCDField'
-            Title.Alignment = taRightJustify
-            Width = 103
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'ExtendedField'
-            Title.Alignment = taRightJustify
-            Width = 100
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'FmtBCDField'
-            Title.Alignment = taRightJustify
-            Width = 99
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'StringField'
-            Width = 171
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'DateField'
-            Width = 74
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TimeField'
-            Width = 83
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'DateTimeField'
-            Width = 90
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'SQLTimeStampField'
-            Width = 116
-            Visible = True
-          end>
-      end
     end
     object StdControlsTabSheet: TTabSheet
       Caption = 'No-dataware Editors'
@@ -392,7 +616,6 @@ object MainForm: TMainForm
         ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 7
-        Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
         BoundLabel.Top = 102
@@ -5139,30 +5362,18 @@ object MainForm: TMainForm
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 424
-    Width = 858
+    Top = 448
+    Width = 820
     Height = 59
     Align = alBottom
     TabOrder = 1
-    DesignSize = (
-      858
-      59)
-    object DBNavigator: TDBNavigator
-      Left = 552
-      Top = 6
-      Width = 290
-      Height = 43
-      DataSource = DataSource
-      Anchors = [akLeft, akTop, akRight]
-      TabOrder = 0
-    end
     object OpenButton: TButton
       Left = 8
       Top = 14
       Width = 85
       Height = 25
       Caption = 'Reload data'
-      TabOrder = 1
+      TabOrder = 0
       OnClick = OpenButtonClick
     end
     object PositionLabeledComboBox: TLabeledComboBox
@@ -5206,8 +5417,15 @@ object MainForm: TMainForm
       Caption = 'Show label'
       Checked = True
       State = cbChecked
-      TabOrder = 3
+      TabOrder = 1
       OnClick = VisibleCheckBoxClick
+    end
+    object DBNavigator: TDBNavigator
+      Left = 469
+      Top = 13
+      Width = 240
+      Height = 25
+      TabOrder = 3
     end
   end
   object ClientDataSet: TClientDataSet
@@ -5215,7 +5433,7 @@ object MainForm: TMainForm
     Params = <>
     AfterEdit = ClientDataSetAfterEdit
     Left = 568
-    Top = 400
+    Top = 401
     object ClientDataSetIntegerField: TIntegerField
       DisplayLabel = 'Integer Field:'
       FieldName = 'IntegerField'
@@ -5281,6 +5499,7 @@ object MainForm: TMainForm
       BlobType = ftMemo
     end
     object ClientDataSetRichTextField: TMemoField
+      DisplayLabel = 'RichTextField:'
       FieldName = 'RichTextField'
       BlobType = ftMemo
     end

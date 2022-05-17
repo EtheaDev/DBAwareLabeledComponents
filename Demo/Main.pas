@@ -60,7 +60,8 @@ uses
   , Vcl.LabeledDBListView
   , Vcl.Samples.Spin
 //  , Vcl.LabeledButtonEdit
-  , Vcl.BoundLabel;
+  , Vcl.BoundLabel
+  ;
 
 type
   TMainForm = class(TForm)
@@ -84,9 +85,8 @@ type
     ClientDataSetBlobField: TBlobField;
     ClientDataSetMemoField: TMemoField;
     DbGridTabSheet: TTabSheet;
-    LabeledDbGrid1: TLabeledDbGrid;
+    DbGrid: TLabeledDbGrid;
     BottomPanel: TPanel;
-    DBNavigator: TDBNavigator;
     OpenButton: TButton;
     LabeledEditEx: TLabeledEditEx;
     LabeledCurrencyEdit: TLabeledCurrencyEdit;
@@ -120,16 +120,63 @@ type
     LabeledColorGrid: TLabeledColorGrid;
     LabeledColorBox: TLabeledColorBox;
     VisibleCheckBox: TCheckBox;
+    DbGridOptionsPanel: TPanel;
+    FontLabel: TLabel;
+    RowLinesLabel: TLabel;
+    RowMarginLabel: TLabel;
+    cbHcr: TCheckBox;
+    cbSort: TCheckBox;
+    DbGridOptionsGroupBox: TGroupBox;
+    cbCurrColor: TColorBox;
+    cbEvenColor: TColorBox;
+    cbActivateCustomColor: TCheckBox;
+    cbIncremental: TCheckBox;
+    cbAltColors: TCheckBox;
+    cbCustomDraw: TCheckBox;
+    FontTrackBar: TTrackBar;
+    cbEditing: TCheckBox;
+    cbAutoEdit: TCheckBox;
+    lbOptions: TCheckListBox;
+    cbDrawCheckBoxImages: TCheckBox;
+    rgCtl3D: TRadioGroup;
+    LineTrackBar: TTrackBar;
+    RowMarginTrackBar: TTrackBar;
+    filterDataEdit: TLabeledEdit;
+    DBNavigator: TDBNavigator;
+    btSelectStyle: TButton;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
     procedure OpenButtonClick(Sender: TObject);
     procedure ClientDataSetIntegerFieldChange(Sender: TField);
     procedure ClientDataSetBooleanFieldGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
+    procedure cbHcrClick(Sender: TObject);
+    procedure cbSortClick(Sender: TObject);
+    procedure cbCurrColorChange(Sender: TObject);
+    procedure cbActivateCustomColorClick(Sender: TObject);
+    procedure cbIncrementalClick(Sender: TObject);
+    procedure cbAltColorsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure gridDrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure cbCustomDrawClick(Sender: TObject);
+    procedure FontTrackBarChange(Sender: TObject);
+    procedure cbEditingClick(Sender: TObject);
+    procedure cbAutoEditClick(Sender: TObject);
+    procedure lbOptionsClickCheck(Sender: TObject);
+    procedure btSelectStyleClick(Sender: TObject);
+    procedure cbDrawCheckBoxImagesClick(Sender: TObject);
+    procedure FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+      NewDPI: Integer);
+    procedure rgCtl3DClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure LineTrackBarChange(Sender: TObject);
+    procedure RowMarginTrackBarChange(Sender: TObject);
+    procedure filterDataEditExit(Sender: TObject);
     procedure PositionLabeledComboBoxSelect(Sender: TObject);
     procedure VisibleCheckBoxClick(Sender: TObject);
   private
     FMemoText: string;
+    procedure BkCellColorAssign(Column : TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor);
     procedure CreateControls;
     procedure CreateAndFillDataSets;
     {$IFDEF D10_4+}
@@ -162,7 +209,9 @@ uses
   , Vcl.DBNumberBox
   , Vcl.LabeledNumberBox
   {$ENDIF}
-  , System.TypInfo;
+  , System.TypInfo
+  , Vcl.SelectOptionsForm
+  , Vcl.Themes;
 
 procedure TMainForm.OpenButtonClick(Sender: TObject);
 begin
@@ -248,8 +297,26 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  DbGridOptions, OptName: string;
+  I: TDBGridOption;
 begin
   Caption := Application.Title;
+
+  cbHcr.Checked := DbGrid.HighlightCurrRow;
+  cbAltColors.Checked := DbGrid.AlternateRowColor;
+  cbSort.Checked := DbGrid.ShowSortOrder;
+  cbIncremental.Checked := DbGrid.IncrementalSearch;
+  cbCustomDraw.Checked := Assigned(DbGrid.OnDrawColumnCell);
+  cbDrawCheckBoxImages.Checked := DbGrid.DrawCheckBoxImages;
+
+  DbGridOptions := GetPropValue(DbGrid, 'Options');
+  for i := Low(TDBGridOption) to High(TDBGridOption) do
+  begin
+    OptName := GetEnumName(TypeInfo(TDBGridOption), Ord(i));
+    lbOptions.AddItem(OptName,nil);
+    lbOptions.Checked[lbOptions.Items.Count-1] := Pos(OptName, DbGridOptions) > 0;
+  end;
 
   FMemoText := 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'+sLineBreak+
     'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
@@ -416,7 +483,182 @@ begin
   DataSource.DataSet := ClientDataSet;
 end;
 
+procedure TMainForm.BkCellColorAssign(Column: TColumn;
+  DrawingCurrentRecord: boolean; var CellColor: TColor);
+begin
+  if DrawingCurrentRecord and DbGrid.HighlightCurrRow then
+    CellColor := cbCurrColor.Selected
+  else
+  begin
+    if not Odd(ClientDataSet.RecNo) then
+      CellColor := cbEvenColor.Selected
+    else
+      CellColor := DbGrid.Color;
+  end;
+end;
+
+procedure TMainForm.cbActivateCustomColorClick(Sender: TObject);
+begin
+  if cbActivateCustomColor.Checked then
+    DbGrid.OnBkCellColorAssign := BkCellColorAssign
+  else
+    DbGrid.OnBkCellColorAssign := nil;
+  DbGrid.Invalidate;
+end;
+
+procedure TMainForm.cbAltColorsClick(Sender: TObject);
+begin
+  DbGrid.AlternateRowColor := cbAltColors.Checked;
+end;
+
+procedure TMainForm.cbCurrColorChange(Sender: TObject);
+begin
+  DbGrid.Invalidate;
+end;
+
+procedure TMainForm.cbHcrClick(Sender: TObject);
+begin
+  DbGrid.HighlightCurrRow := cbHcr.Checked;
+end;
+
+procedure TMainForm.cbIncrementalClick(Sender: TObject);
+begin
+  DbGrid.IncrementalSearch := cbIncremental.Checked;
+end;
+
+procedure TMainForm.cbSortClick(Sender: TObject);
+begin
+  DbGrid.ShowSortOrder := cbSort.Checked;
+end;
+
+procedure TMainForm.filterDataEditExit(Sender: TObject);
+begin
+  if filterDataEdit.Text <> '' then
+  begin
+    ClientDataSet.Filter := filterDataEdit.Text;
+    ClientDataSet.Filtered := True;
+  end
+  else
+    ClientDataSet.Filtered := False;
+end;
+
+procedure TMainForm.btSelectStyleClick(Sender: TObject);
+var
+  NewStyleName: string;
+begin
+  NewStyleName := CBSelectStyleName(Self.Font);
+  if StyleServices.Enabled then
+  begin
+    TStyleManager.SetStyle(NewStyleName);
+  end;
+end;
+
+procedure TMainForm.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
+  NewDPI: Integer);
+begin
+  //Quando la main-form cambia di dimensione
+  //Il defaultfont dell'oggetto Application non si adatta
+  //perciò tutte le form create successivamente non acquisiscono il defaultfont corretto
+  Application.DefaultFont.Assign(Font);
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  FontTrackBar.Position := -DbGrid.Font.Height;
+  FontTrackBarChange(FontTrackBar);
+  LineTrackBar.Position := DbGrid.LinesPerRow;
+  LineTrackBarChange(LineTrackBar);
+  RowMarginTrackBar.Position := DbGrid.RowMargin;
+  RowMarginTrackBarChange(RowMarginTrackBar);
+end;
+
+procedure TMainForm.gridDrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+begin
+  if (State = []) and not (DbGrid.HighlightCurrRow and DbGrid.DrawingCurrentRecord) then
+  begin
+    DbGrid.Canvas.Brush.Color := ClientDataSetIntegerField.Value div 255;
+  end;
+  DbGrid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TMainForm.cbCustomDrawClick(Sender: TObject);
+begin
+  if cbCustomDraw.Checked then
+    DbGrid.OnDrawColumnCell := gridDrawColumnCell
+  else
+    DbGrid.OnDrawColumnCell := nil;
+  DbGrid.Invalidate;
+end;
+
+procedure TMainForm.cbDrawCheckBoxImagesClick(Sender: TObject);
+begin
+  DbGrid.DrawCheckBoxImages := cbDrawCheckBoxImages.Checked;
+end;
+
+procedure TMainForm.FontTrackBarChange(Sender: TObject);
+begin
+  DbGrid.Font.Height := -FontTrackBar.position;
+  DbGrid.TitleFont.Height := -FontTrackBar.position;
+  FontLabel.Caption := Format('Font Height: %d',[-DbGrid.Font.Height]);
+end;
+
+procedure TMainForm.cbEditingClick(Sender: TObject);
+begin
+  if cbEditing.Checked then
+  begin
+    DbGrid.Options := DbGrid.Options + [dgEditing,dgAlwaysShowEditor];
+  end
+  else
+  begin
+    DbGrid.Options := DbGrid.Options - [dgEditing,dgAlwaysShowEditor];
+  end;
+end;
+
+procedure TMainForm.cbAutoEditClick(Sender: TObject);
+begin
+  DataSource.AutoEdit := cbAutoEdit.Checked;
+end;
+
+procedure TMainForm.lbOptionsClickCheck(Sender: TObject);
+var
+  DbGridOptions : string;
+  i : integer;
+begin
+  DbGridOptions := '';
+  for i := 0 to lbOptions.Items.Count -1 do
+  begin
+    if lbOptions.Checked[i] then
+    begin
+      if DbGridOptions <> '' then
+        DbGridOptions := DbGridOptions + ',';
+      DbGridOptions := DbGridOptions + lbOptions.Items[i];
+    end;
+  end;
+  SetPropValue(DbGrid, 'Options', DbGridOptions);
+end;
+
+procedure TMainForm.LineTrackBarChange(Sender: TObject);
+begin
+  DbGrid.LinesPerRow := LineTrackBar.Position;
+  RowLinesLabel.Caption := Format('Lines per Row: %d',[DbGrid.LinesPerRow]);
+end;
+
+procedure TMainForm.rgCtl3DClick(Sender: TObject);
+begin
+  DbGrid.Ctl3D := rgCtl3D.ItemIndex = 0;
+end;
+
+procedure TMainForm.RowMarginTrackBarChange(Sender: TObject);
+begin
+  DbGrid.RowMargin := RowMarginTrackBar.Position;
+  RowMarginLabel.Caption := Format('Row Margin: %d',[DbGrid.RowMargin]);
+end;
+
 initialization
+  RegisterGridOddRowsColor(cl3DLight);
+  RegisterGridRowMargin(4);
+
   {$IFDEF DEBUG}
   ReportMemoryLeaksOnShutdown := True;
   {$ENDIF}
