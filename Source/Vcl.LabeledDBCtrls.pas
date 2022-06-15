@@ -373,7 +373,11 @@ Type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
     function GetBorderStyle: TBorderStyle;
+    {$IF DEFINE DXE8+}
     procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
+    {$ELSE}
+    procedure ChangeScale(M, D: Integer); override;
+    {$ENDIF}
   public
     procedure StandardTitleClick(Column : TColumn);
     constructor Create(AOwner: TComponent); override;
@@ -1710,7 +1714,11 @@ begin
   end;
 end;
 
+{$IF DEFINE DXE8+}
 procedure TLabeledDbGrid.ChangeScale(M, D: Integer; isDpiChange: Boolean);
+{$ELSE}
+procedure TLabeledDbGrid.ChangeScale(M, D: Integer);
+{$ENDIF}
 var
   I: Integer;
 begin
@@ -1721,7 +1729,9 @@ begin
     TitleFont.Assign(Font);
     for I := 0 to Columns.Count - 1 do
       Columns[I].Title.Font.Height := TitleFont.Height;
+    {$IF DEFINE DXE8+}
     FCurrentPPI := M;
+    {$ENDIF}
   end;
 end;
 

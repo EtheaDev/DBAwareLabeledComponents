@@ -30,6 +30,13 @@ const
   INTEGER_FORMAT  = '###0';
   CURRENCY_FORMAT = '#,##0.00';
   FLOAT_FORMAT = '#,##0.00';
+  TIME_MASK = '!99:99:99;1; ';
+  DATE_MASK = '!99/99/9999;1; ';
+  DATE_TIME_HH_MM_MASK = '!99/99/9999 99:99;1; ';
+  DATE_TIME_HH_MM_SS_MASK = '!99/99/9999 99:99:99;1; ';
+  TIME_HH_MM_MASK = '!99:99;1; ';
+  COLOR_MASK = '>aaaaaa;1; ';
+  STYLE_WINDOWS = 'Windows';
 
 resourcestring
   ERR_NO_CHANGE_DIR = 'Warning: is not possible to save data in a different folder';
@@ -45,6 +52,7 @@ resourcestring
   ALL_DOCS_FILTER = 'All documents (%s)|%s';
   DEFAULT_DIALOG_TITLE = 'Select the file to open';
   UNSUPPORTED_FILE = 'Unsupported file format';
+  TIME_LABEL = 'Time:';
 
 implementation
 

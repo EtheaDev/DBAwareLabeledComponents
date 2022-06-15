@@ -59,7 +59,7 @@ uses
   , Vcl.LabeledCheckLst
   , Vcl.LabeledDBListView
   , Vcl.Samples.Spin
-//  , Vcl.LabeledButtonEdit
+  , Vcl.LabeledButtonEdit
   , Vcl.BoundLabel
   ;
 
@@ -144,6 +144,12 @@ type
     filterDataEdit: TLabeledEdit;
     DBNavigator: TDBNavigator;
     btSelectStyle: TButton;
+    LabeledDBButtonEditFind: TLabeledDBButtonEdit;
+    LabeledDBButtonEditCalendar: TLabeledDBButtonEdit;
+    LabeledDBButtonEditColor: TLabeledDBButtonEdit;
+    LabeledButtonEditFind: TLabeledButtonEdit;
+    LabeledButtonEditCalendar: TLabeledButtonEdit;
+    LabeledButtonEditColor: TLabeledButtonEdit;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
     procedure OpenButtonClick(Sender: TObject);
     procedure ClientDataSetIntegerFieldChange(Sender: TField);
@@ -174,6 +180,7 @@ type
     procedure filterDataEditExit(Sender: TObject);
     procedure PositionLabeledComboBoxSelect(Sender: TObject);
     procedure VisibleCheckBoxClick(Sender: TObject);
+    procedure LabeledDBButtonEditFindButtonEditClick(Sender: TObject);
   private
     FMemoText: string;
     procedure BkCellColorAssign(Column : TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor);
@@ -580,6 +587,11 @@ begin
     DbGrid.Canvas.Brush.Color := ClientDataSetIntegerField.Value div 255;
   end;
   DbGrid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TMainForm.LabeledDBButtonEditFindButtonEditClick(Sender: TObject);
+begin
+  ShowMessage('OnButtonEditClick event');
 end;
 
 procedure TMainForm.cbCustomDrawClick(Sender: TObject);

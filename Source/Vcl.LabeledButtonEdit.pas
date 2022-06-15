@@ -23,8 +23,9 @@
 {                                                                              }
 {******************************************************************************}
 unit Vcl.LabeledButtonEdit;
-
 {$I 'DBAwareLabeledComponents.inc'}
+{$WARN UNIT_PLATFORM OFF}
+{$WARNINGS OFF}
 
 interface
 
@@ -65,7 +66,7 @@ Type
     constructor Create(AControl: TWinControl); override;
   end;
 
-  TButtonEditStyle = (besEllipsis, besDate, besDateHHMM, besDateHHMMSS, besTime, besTimeHHMMSS, besFind, besCalc, besFolder, besFile, besColor);
+  TButtonEditStyle = (besFind, besDate, besDateHHMM, besDateHHMMSS, besCalc, besFolder, besFile, besColor);
 
   { TLabeledButtonEdit }
   TLabeledButtonEdit = class(TLabeledMaskEdit)
@@ -84,6 +85,7 @@ Type
     FShortCut: TShortCut;
     FCollapsed: boolean;
     FBeforeDialogExecute: TNotifyEvent;
+    FDialogFilter: string;
 
     procedure UpdateEditMask;
     Procedure ClearEditMask;
@@ -145,12 +147,13 @@ Type
     /// <summary>Specifies the width of the search indicator button.</summary>
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default DEFAULT_BUTTON_WIDTH;
     /// <summary>Specifies the type of indicator icon to display.
-    /// besEllipsis - Magnifier icon to indicate text based searching
+    /// besFind - Magnifier icon to indicate text based searching
     /// sbiAudio - Microphone icon to indicate audio based searching</summary>
-    property ButtonEditStyle: TButtonEditStyle read FButtonEditStyle write SetButtonEditStyle default besEllipsis;
-    /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besEllipsis,
+    property ButtonEditStyle: TButtonEditStyle read FButtonEditStyle write SetButtonEditStyle default besFind;
+    /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besFind,
     /// the OnButtonEditClick event also occurs when the Enter key is pressed.</summary>
     property OnButtonEditClick: TNotifyEvent read FOnButtonEditClick write FOnButtonEditClick;
+    property DialogFilter: string read FDialogFilter write FDialogFilter;
     property ShortCut: TShortCut read FShortCut write FShortCut default VK_F3;
     property Collapsed: boolean read FCollapsed write SetCollapsed default False;
     property BeforeDialogExecute : TNotifyEvent read FBeforeDialogExecute write FBeforeDialogExecute;
@@ -174,6 +177,7 @@ Type
     FShortCut: TShortCut;
     FCollapsed: boolean;
     FBeforeDialogExecute: TNotifyEvent;
+    FDialogFilter: string;
 
     //Data field access
     function GetDataField: string;
@@ -241,12 +245,13 @@ Type
     /// <summary>Specifies the width of the search indicator button.</summary>
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default DEFAULT_BUTTON_WIDTH;
     /// <summary>Specifies the type of indicator icon to display.
-    /// besEllipsis - Magnifier icon to indicate text based searching
+    /// besFind - Magnifier icon to indicate text based searching
     /// sbiAudio - Microphone icon to indicate audio based searching</summary>
-    property ButtonEditStyle: TButtonEditStyle read FButtonEditStyle write SetButtonEditStyle default besEllipsis;
-    /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besEllipsis,
+    property ButtonEditStyle: TButtonEditStyle read FButtonEditStyle write SetButtonEditStyle default besFind;
+    /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besFind,
     /// the OnButtonEditClick event also occurs when the Enter key is pressed.</summary>
     property OnButtonEditClick: TNotifyEvent read FOnButtonEditClick write FOnButtonEditClick;
+    property DialogFilter: string read FDialogFilter write FDialogFilter;
     property ShortCut: TShortCut read FShortCut write FShortCut default VK_F3;
     property DataField: string read GetDataField write SetDataField;
     property Collapsed: boolean read FCollapsed write SetCollapsed default False;
@@ -266,6 +271,7 @@ uses
   , Vcl.DbAwareLabeledUtils
   , Vcl.LabeledGraphicUtils
   , Vcl.ImgList
+  , Vcl.Form.CalendarView
   ;
 
 procedure SetEditRect(Handle : THandle; ButtonWidth : integer );
@@ -448,7 +454,7 @@ begin
   if TStyleManager.IsCustomStyleActive then
   begin
     case LButtonEditStyle of
-      besEllipsis, besFind, besCalc, besFolder, besFile, besColor:
+      besFind, besCalc, besFolder, besFile, besColor:
         begin
           if not AWinControl.Enabled then
             ElementDetails := StyleServices.GetElementDetails(tsiTextDisabled)
@@ -462,7 +468,7 @@ begin
           StyleServices.DrawElement(ACanvas.Handle, ElementDetails, LButtonRect,
             LButtonRect {$IF CompilerVersion > 32}, ACurrentPPI{$IFEND});
         end;
-      besDate, besDateHHMM, besDateHHMMSS, besTime, besTimeHHMMSS:
+      besDate, besDateHHMM, besDateHHMMSS: //besTime, besTimeHHMMSS:
         begin
           if not AWinControl.Enabled then
             ElementDetails := StyleServices.GetElementDetails(tcDropDownButtonDisabled)
@@ -506,12 +512,12 @@ begin
     ACanvas.FillRect(LButtonRect);
 
     case LButtonEditStyle of
-      besEllipsis, besFind, besCalc, besFolder, besFile, besColor:
+      besFind, besCalc, besFolder, besFile, besColor:
       //besDate, besDateHHMM, besDateHHMMSS, besTime, besTimeHHMMSS:
       begin
         LTextIndicatorImages.Draw(ACanvas, LButtonRect.Left, LButtonRect.Top, ImageIndex);
       end;
-      besDate, besDateHHMM, besDateHHMMSS, besTime, besTimeHHMMSS:
+      besDate, besDateHHMM, besDateHHMMSS: // besTime, besTimeHHMMSS:
       begin
         LCalendarIndicatorImages.Draw(ACanvas, LButtonRect.Left, LButtonRect.Top, 0);
       end;
@@ -672,13 +678,15 @@ begin
     if ButtonEditStyle in [besDate, besDateHHMM, besDateHHMMSS] then
     begin
       //crea la form di scelta della data
-      //CalendarViewPopUp(self, ButtonEditStyle); TODO
+      CalendarViewPopUp(self, ButtonEditStyle);
     end
+    (*
     else if ButtonEditStyle in [besTime, besTimeHHMMSS] then
     begin
       //crea la form di scelta dell'ora
       //ClockPopUp(self, ButtonEditStyle); //TODO
     end
+    *)
     else if ButtonEditStyle in [besFile] then
       SelectFileByDialog(self, BeforeDialogExecute, DEFAULT_DIALOG_TITLE, ALL_FILES_FILTER)
     else if ButtonEditStyle in [besFolder] then
@@ -715,7 +723,7 @@ begin
 
   LoadImagesIntoControl(Self,1,1);
 
-  ButtonEditStyle := besEllipsis;
+  ButtonEditStyle := besFind;
   FButtonWidth := DEFAULT_BUTTON_WIDTH;
   FShortCut := VK_F3;
 end;
@@ -796,7 +804,7 @@ end;
 procedure TLabeledButtonEdit.KeyPress(var Key: Char);
 begin
   inherited;
-  if (Ord(Key) = vk_Return) and (FButtonEditStyle = besEllipsis) then
+  if (Ord(Key) = vk_Return) and (FButtonEditStyle = besFind) then
   begin
     Key := #0;
     ButtonEditClick;
@@ -876,7 +884,7 @@ begin
       Try
         case FButtonEditStyle of
           besDate       : Text := FormatDateTime(DATE_FORMAT,StrToDateTime(Text));
-          besTime       : Text := Copy(FormatDateTime(TIME_HH_MM_SS_FORMAT,StrToDateTime(Text)),1,5);
+          //besTime       : Text := Copy(FormatDateTime(TIME_HH_MM_SS_FORMAT,StrToDateTime(Text)),1,5);
           besDateHHMM   : Text := FormatDateTime(DATE_TIME_HH_MM_FORMAT,StrToDateTime(Text));
           besDateHHMMSS : Text := FormatDateTime(DATE_TIME_HH_MM_SS_FORMAT,StrToDateTime(Text));
         end;
@@ -898,12 +906,12 @@ end;
 
 procedure TLabeledButtonEdit.UpdateEditMask;
 begin
-  //imposta la editmask
+  //setting editmask
   case FButtonEditStyle of
     besDate : EditMask := DATE_MASK;
     besDateHHMM : EditMask := DATE_TIME_HH_MM_MASK;
     besDateHHMMSS : EditMask := DATE_TIME_HH_MM_SS_MASK;
-    besTime : EditMask := TIME_HH_MM_MASK;
+    //besTime : EditMask := TIME_HH_MM_MASK;
     besColor : EditMask := COLOR_MASK;
   end;
 end;
@@ -946,7 +954,7 @@ end;
 procedure TLabeledButtonEdit.WMSetCursor(var Msg: TWMSetCursor);
 begin
   if FMouseOverButton then
-    Msg.HitTest := Windows.HTNOWHERE;
+    Msg.HitTest := WinApi.Windows.HTNOWHERE;
 
   inherited;
 end;
@@ -970,7 +978,7 @@ end;
 
 function TLabeledButtonEdit.isDateTimeInput: boolean;
 begin
-  Result := FButtonEditStyle in [besDate,besDateHHMM,besDateHHMMSS, besTime];
+  Result := FButtonEditStyle in [besDate,besDateHHMM,besDateHHMMSS(*, besTime*)];
 end;
 
 procedure TLabeledButtonEdit.SetCollapsed(const Value: boolean);
@@ -1015,17 +1023,17 @@ end;
 
 procedure TLabeledDBButtonEdit.ButtonEditClick;
 var
-  Title, DialogFilter, FileName: string;
+  LFileName: string;
 begin
   //Se il controllo non è enabled non lancia l'onclick ma apre il file, se è valorizzato
   if not Enabled or ReadOnly then
   begin
-    if (ButtonEditStyle = besFile) and isFileNameField(Field) then
+    if (ButtonEditStyle = besFile) then
     begin
-      FileName := Field.Value;
+      LFileName := Field.Value;
       //Apro il file
-      if FileName <> '' then
-        ShowFileByShellExecute(Handle, FileName);
+      if LFileName <> '' then
+        ShowFileByShellExecute(Handle, LFileName);
     end;
     Exit;
   end;
@@ -1045,30 +1053,15 @@ begin
       //crea la form di scelta della data
       CalendarViewPopUp(self, ButtonEditStyle);
     end
+    (*
     else if ButtonEditStyle in [besTime, besTimeHHMMSS] then
     begin
       //crea la form di scelta dell'ora
       ClockPopUp(self, ButtonEditStyle);
     end
+    *)
     else if ButtonEditStyle = besFile then
-    begin
-      if Field is TCBStringField then
-      begin
-        Title := TCBStringField(Field).DisplayLabel;
-        DialogFilter := TCBStringField(Field).DialogFilter;
-      end
-      else if Field is TCBWideStringField then
-      begin
-        Title := TCBWideStringField(Field).DisplayLabel;
-        DialogFilter := TCBWideStringField(Field).DialogFilter;
-      end
-      else
-      begin
-        Title := Field.DisplayLabel;
-        DialogFilter := ALL_FILES_FILTER;
-      end;
-      SelectFileByDialog(self, BeforeDialogExecute, Title, DialogFilter);
-    end
+      SelectFileByDialog(self, BeforeDialogExecute, Field.DisplayLabel, FDialogFilter)
     else if ButtonEditStyle = besFolder then
       SelectDirByDialog(Self)
     else if ButtonEditStyle in [besColor] then
@@ -1103,11 +1096,9 @@ begin
 
   LoadImagesIntoControl(Self,1,1);
 
-  FButtonEditStyle := besEllipsis;
+  FButtonEditStyle := besFind;
   FButtonWidth := DEFAULT_BUTTON_WIDTH;
   FShortCut := VK_F3;
-
-  InitCBEditorStyle(Self);
 end;
 
 destructor TLabeledDBButtonEdit.Destroy;
@@ -1120,11 +1111,11 @@ end;
 
 procedure TLabeledDBButtonEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
-  if ((Key = TASTO_DOWN) and (Shift = [ssAlt])) or //Alt-down
+  if ((Key = VK_DOWN) and (Shift = [ssAlt])) or //Alt-down
     (Key = FShortCut) or  //Shortcut definito
-    ((Key = TASTO_SPACE) and Collapsed) then //Spazio se collapsed
+    ((Key = VK_SPACE) and Collapsed) then //Spazio se collapsed
     ButtonEditClick
-  else if (Field <> nil) and (Field.CanModify) and ((Key = TASTO_DELETE) or (Key = TASTO_BACKSPACE)) and (Collapsed) then
+  else if (Field <> nil) and (Field.CanModify) and ((Key = VK_DELETE) or (Key = VK_BACK)) and (Collapsed) then
     Field.Clear
   else
     inherited KeyDown(Key, Shift);
@@ -1185,7 +1176,7 @@ end;
 procedure TLabeledDBButtonEdit.KeyPress(var Key: Char);
 begin
   inherited;
-  if (Ord(Key) = vk_Return) and (FButtonEditStyle = besEllipsis) then
+  if (Ord(Key) = vk_Return) and (FButtonEditStyle = besFind) then
   begin
     Key := #0;
     ButtonEditClick;
@@ -1196,7 +1187,7 @@ procedure TLabeledDBButtonEdit.WMNCHitTest(var Msg: TMessage);
 begin
   inherited;
 
-  if Msg.Result = Windows.HTNOWHERE then
+  if Msg.Result = WinApi.Windows.HTNOWHERE then
   begin
     FMouseOverButton := True;
     Msg.Result := HTCLIENT;
@@ -1299,7 +1290,7 @@ end;
 procedure TLabeledDBButtonEdit.WMSetCursor(var Msg: TWMSetCursor);
 begin
   if FMouseOverButton then
-    Msg.HitTest := Windows.HTNOWHERE;
+    Msg.HitTest := WinApi.Windows.HTNOWHERE;
 
   inherited;
 end;
@@ -1349,7 +1340,7 @@ end;
 
 function TLabeledDBButtonEdit.isDateTimeInput: boolean;
 begin
-  Result := FButtonEditStyle in [besDate,besDateHHMM,besDateHHMMSS, besTime];
+  Result := FButtonEditStyle in [besDate,besDateHHMM,besDateHHMMSS(*, besTime*)];
 end;
 
 procedure TLabeledDBButtonEdit.SetCollapsed(const Value: boolean);

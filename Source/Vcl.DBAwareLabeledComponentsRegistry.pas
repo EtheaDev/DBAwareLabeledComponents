@@ -47,10 +47,17 @@ uses
   , Vcl.DbNumberBox
   , Vcl.LabeledNumberBox
   {$ENDIF}
+  {$IFDEF D10_1+}
+  , Vcl.LabeledButtonEdit
+  {$ENDIF}
   , Vcl.LabeledCurrencyEdit;
 
 procedure Register;
 begin
+  {$IFDEF D10_1+}
+  RegisterComponents('LabeledControls', [TLabeledButtonEdit]);
+  RegisterComponents('LabeledControls', [TLabeledDBButtonEdit]);
+  {$ENDIF}
   {$IFDEF D10_4+}
   RegisterComponents('DbControls', [TDBNumberBox]);
   RegisterComponents('LabeledControls', [TLabeledNumberBox]);

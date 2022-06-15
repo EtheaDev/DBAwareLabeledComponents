@@ -35,6 +35,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <DCC_DcuOutput>..\..\Dcu\D11.0\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -49,7 +50,7 @@
         <SanitizedProjectName>dclDBAwareLabeledComponents</SanitizedProjectName>
         <DCC_UnitSearchPath>..\..\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.0.0.0;InternalName=;LegalCopyright=Copyright (c) 2021 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.2.0.0;InternalName=;LegalCopyright=Copyright (c) 2021-2022 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.2;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Description>Ethea: Dataaware Labeled Components</DCC_Description>
         <DllSuffix>$(Auto)</DllSuffix>
@@ -83,15 +84,15 @@
         </DelphiCompile>
         <DCCReference Include="DBAwareLabeledComponents.dcp"/>
         <DCCReference Include="..\..\Source\Vcl.DBAwareLabeledComponentsRegistry.pas"/>
+        <BuildConfiguration Include="Release">
+            <Key>Cfg_2</Key>
+            <CfgParent>Base</CfgParent>
+        </BuildConfiguration>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
         <BuildConfiguration Include="Debug">
             <Key>Cfg_1</Key>
-            <CfgParent>Base</CfgParent>
-        </BuildConfiguration>
-        <BuildConfiguration Include="Release">
-            <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
         </BuildConfiguration>
     </ItemGroup>
@@ -104,9 +105,6 @@
                     <Source Name="MainSource">dclDBAwareLabeledComponents.dpk</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="D:\ETHEA\XLSSuit6\Package\DDX11\XLSRWII6_DDX11.bpl">File D:\ETHEA\XLSSuit6\Package\DDX11\XLSRWII6_DDX11.bpl not found</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">

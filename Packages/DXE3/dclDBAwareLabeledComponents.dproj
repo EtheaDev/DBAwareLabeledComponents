@@ -35,6 +35,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <DCC_DcuOutput>..\..\Dcu\DXE3\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -49,9 +50,9 @@
         <SanitizedProjectName>dclDBAwareLabeledComponents</SanitizedProjectName>
         <DCC_UnitSearchPath>..\..\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.0.0.0;InternalName=;LegalCopyright=Copyright (c) 2021 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.2.0.0;InternalName=;LegalCopyright=Copyright (c) 2021-2022 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.2;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <DCC_Description>Dataaware Labeled Components by Ethea</DCC_Description>
+        <DCC_Description>Ethea: Dataaware Labeled Components</DCC_Description>
         <DllSuffix>_DXE3</DllSuffix>
         <DesignOnlyPackage>true</DesignOnlyPackage>
     </PropertyGroup>
@@ -104,41 +105,6 @@
                     <Source Name="MainSource">dclDBAwareLabeledComponents.dpk</Source>
                 </Source>
                 <Excluded_Packages/>
-                <VersionInfo>
-                    <VersionInfo Name="IncludeVerInfo">True</VersionInfo>
-                    <VersionInfo Name="AutoIncBuild">False</VersionInfo>
-                    <VersionInfo Name="MajorVer">1</VersionInfo>
-                    <VersionInfo Name="MinorVer">0</VersionInfo>
-                    <VersionInfo Name="Release">0</VersionInfo>
-                    <VersionInfo Name="Build">0</VersionInfo>
-                    <VersionInfo Name="Debug">False</VersionInfo>
-                    <VersionInfo Name="PreRelease">False</VersionInfo>
-                    <VersionInfo Name="Special">False</VersionInfo>
-                    <VersionInfo Name="Private">False</VersionInfo>
-                    <VersionInfo Name="DLL">False</VersionInfo>
-                    <VersionInfo Name="Locale">1040</VersionInfo>
-                    <VersionInfo Name="CodePage">1252</VersionInfo>
-                </VersionInfo>
-                <VersionInfoKeys>
-                    <VersionInfoKeys Name="CompanyName"/>
-                    <VersionInfoKeys Name="FileDescription"/>
-                    <VersionInfoKeys Name="FileVersion">1.0.0.0</VersionInfoKeys>
-                    <VersionInfoKeys Name="InternalName"/>
-                    <VersionInfoKeys Name="LegalCopyright"/>
-                    <VersionInfoKeys Name="LegalTrademarks"/>
-                    <VersionInfoKeys Name="OriginalFilename"/>
-                    <VersionInfoKeys Name="ProductName"/>
-                    <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
-                    <VersionInfoKeys Name="Comments"/>
-                    <VersionInfoKeys Name="CFBundleName"/>
-                    <VersionInfoKeys Name="CFBundleDisplayName"/>
-                    <VersionInfoKeys Name="CFBundleIdentifier"/>
-                    <VersionInfoKeys Name="CFBundleVersion"/>
-                    <VersionInfoKeys Name="CFBundlePackageType"/>
-                    <VersionInfoKeys Name="CFBundleSignature"/>
-                    <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
-                    <VersionInfoKeys Name="CFBundleExecutable"/>
-                </VersionInfoKeys>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libpcre.dylib" Class="DependencyModule">

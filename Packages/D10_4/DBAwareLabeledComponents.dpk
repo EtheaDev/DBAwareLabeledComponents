@@ -28,6 +28,7 @@ package DBAwareLabeledComponents;
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
 {$LIBSUFFIX AUTO}
 {$RUNONLY}
+{$WARNINGS OFF}
 {$IMPLICITBUILD ON}
 
 requires
@@ -45,7 +46,11 @@ contains
   Vcl.BoundLabel in '..\..\Source\Vcl.BoundLabel.pas',
   Vcl.DbAwareLabeledConsts in '..\..\Source\Vcl.DbAwareLabeledConsts.pas',
   Vcl.DbAwareLabeledUtils in '..\..\Source\Vcl.DbAwareLabeledUtils.pas',
+  Vcl.LabeledGraphicUtils in '..\..\Source\Vcl.LabeledGraphicUtils.pas',
+  Vcl.Form.CalendarView in '..\..\Source\Vcl.Form.CalendarView.pas',
+  Vcl.LabeledButtonEdit in '..\..\Source\Vcl.LabeledButtonEdit.pas',
   Vcl.DBNumberBox in '..\..\Source\Vcl.DBNumberBox.pas',
+  Vcl.LabeledNumberBox in '..\..\Source\Vcl.LabeledNumberBox.pas',
   Vcl.LabeledCheckLst in '..\..\Source\Vcl.LabeledCheckLst.pas',
   Vcl.LabeledColorGrd in '..\..\Source\Vcl.LabeledColorGrd.pas',
   Vcl.LabeledComCtrls in '..\..\Source\Vcl.LabeledComCtrls.pas',
@@ -54,7 +59,6 @@ contains
   Vcl.LabeledDbImage in '..\..\Source\Vcl.LabeledDbImage.pas',
   Vcl.LabeledExtCtrls in '..\..\Source\Vcl.LabeledExtCtrls.pas',
   Vcl.LabeledMask in '..\..\Source\Vcl.LabeledMask.pas',
-  Vcl.LabeledNumberBox in '..\..\Source\Vcl.LabeledNumberBox.pas',
   Vcl.LabeledDBListView in '..\..\Source\Vcl.LabeledDBListView.pas',
   Vcl.LabeledShellUtils in '..\..\Source\Vcl.LabeledShellUtils.pas',
   Vcl.LabeledCurrencyEdit in '..\..\Source\Vcl.LabeledCurrencyEdit.pas';

@@ -13,16 +13,6 @@
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
     </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSDevice64' and '$(Base)'=='true') or '$(Base_iOSDevice64)'!=''">
-        <Base_iOSDevice64>true</Base_iOSDevice64>
-        <CfgParent>Base</CfgParent>
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='iOSSimulator' and '$(Base)'=='true') or '$(Base_iOSSimulator)'!=''">
-        <Base_iOSSimulator>true</Base_iOSSimulator>
-        <CfgParent>Base</CfgParent>
-        <Base>true</Base>
-    </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
         <Base_Win32>true</Base_Win32>
         <CfgParent>Base</CfgParent>
@@ -45,6 +35,7 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <DCC_DcuOutput>..\..\Dcu\D10.4\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
         <DCC_E>false</DCC_E>
@@ -59,17 +50,11 @@
         <SanitizedProjectName>dclDBAwareLabeledComponents</SanitizedProjectName>
         <DCC_UnitSearchPath>..\..\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.0.0.0;InternalName=;LegalCopyright=Copyright (c) 2021 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=DBAwareLabeledComponents;FileDescription=Dataaware Labeled Components;FileVersion=1.2.0.0;InternalName=;LegalCopyright=Copyright (c) 2021-2022 - Ethea S.r.l.;LegalTrademarks=;OriginalFilename=;ProgramID=;ProductName=;ProductVersion=1.2;Comments=</VerInfo_Keys>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Description>Ethea: Dataaware Labeled Components</DCC_Description>
         <DllSuffix>$(Auto)</DllSuffix>
         <DesignOnlyPackage>true</DesignOnlyPackage>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_iOSDevice64)'!=''">
-        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_iOSSimulator)'!=''">
-        <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -119,10 +104,7 @@
                 <Source>
                     <Source Name="MainSource">dclDBAwareLabeledComponents.dpk</Source>
                 </Source>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp270.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k270.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="C:\Users\Public\Documents\Embarcadero\Studio\21.0\Bpl\dclDBAwareLabeledComponents_D10.4.bpl" Configuration="Debug" Class="ProjectOutput">
@@ -840,10 +822,6 @@
                 <ProjectRoot Platform="Android64" Name="$(PROJECTNAME)"/>
             </Deployment>
             <Platforms>
-                <Platform value="iOSDevice64">False</Platform>
-                <Platform value="iOSSimulator">False</Platform>
-                <Platform value="Linux64">False</Platform>
-                <Platform value="OSX64">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>

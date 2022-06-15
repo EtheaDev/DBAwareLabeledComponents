@@ -10,10 +10,12 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  OldCreateOrder = True
   ShowHint = True
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnShow = FormShow
+  PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TPageControl
     Left = 0
@@ -281,9 +283,9 @@ object MainForm: TMainForm
           Top = 17
           Width = 201
           Height = 193
+          OnClickCheck = lbOptionsClickCheck
           ItemHeight = 13
           TabOrder = 10
-          OnClickCheck = lbOptionsClickCheck
         end
         object cbDrawCheckBoxImages: TCheckBox
           Left = 340
@@ -337,7 +339,6 @@ object MainForm: TMainForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Filter data expression:'
           TabOrder = 14
-          Text = ''
           OnExit = filterDataEditExit
         end
         object btSelectStyle: TButton
@@ -371,7 +372,7 @@ object MainForm: TMainForm
       end
       object LabeledDBComboBox: TLabeledDBComboBox
         Left = 88
-        Top = 72
+        Top = 66
         Width = 144
         Height = 21
         DataField = 'StringField'
@@ -383,7 +384,7 @@ object MainForm: TMainForm
         TabOrder = 1
         BoundCaption = 'LabeledDBComboBox:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 58
+        BoundLabel.Top = 52
         BoundLabel.Width = 105
         BoundLabel.Height = 13
       end
@@ -395,7 +396,7 @@ object MainForm: TMainForm
         DataField = 'MemoField'
         DataSource = DataSource
         ScrollBars = ssVertical
-        TabOrder = 2
+        TabOrder = 3
         BoundCaption = 'LabeledDBMemo:'
         BoundLabel.Left = 88
         BoundLabel.Top = 194
@@ -415,7 +416,8 @@ object MainForm: TMainForm
         Font.Name = 'Tahoma'
         Font.Style = []
         ScrollBars = ssVertical
-        TabOrder = 3
+        TabOrder = 5
+        Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
         BoundLabel.Top = 10
@@ -434,7 +436,7 @@ object MainForm: TMainForm
           'First'
           'Second'
           'Last')
-        TabOrder = 4
+        TabOrder = 6
         BoundCaption = 'LabeledDBListBox:'
         BoundLabel.Left = 333
         BoundLabel.Top = 114
@@ -465,7 +467,7 @@ object MainForm: TMainForm
         KeyField = 'Key'
         ListField = 'Value'
         ListSource = ListDataSource
-        TabOrder = 5
+        TabOrder = 2
         BoundCaption = 'LabeledDBLookupComboBox:'
         BoundLabel.Left = 88
         BoundLabel.Top = 98
@@ -482,7 +484,7 @@ object MainForm: TMainForm
         KeyField = 'Key'
         ListField = 'Value'
         ListSource = ListDataSource
-        TabOrder = 6
+        TabOrder = 7
         BoundCaption = 'LabeledDBLookupListBox:'
         BoundLabel.Left = 333
         BoundLabel.Top = 194
@@ -492,18 +494,63 @@ object MainForm: TMainForm
       object LabeledDBImage: TLabeledDBImage
         Left = 592
         Top = 24
-        Width = 180
+        Width = 185
         Height = 253
         DataField = 'BlobField'
         DataSource = DataSource
         Proportional = True
         Stretch = True
-        TabOrder = 7
+        TabOrder = 9
         BoundCaption = 'LabeledDBImage'
         BoundLabel.Left = 592
         BoundLabel.Top = 10
         BoundLabel.Width = 80
         BoundLabel.Height = 13
+      end
+      object LabeledDBButtonEditFind: TLabeledDBButtonEdit
+        Left = 88
+        Top = 296
+        Width = 185
+        Height = 21
+        DataField = 'StringField'
+        DataSource = DataSource
+        TabOrder = 4
+        BoundCaption = 'LabeledDBButtonEdit (find):'
+        BoundLabel.Left = 88
+        BoundLabel.Top = 282
+        BoundLabel.Width = 133
+        BoundLabel.Height = 13
+        OnButtonEditClick = LabeledDBButtonEditFindButtonEditClick
+      end
+      object LabeledDBButtonEditCalendar: TLabeledDBButtonEdit
+        Left = 333
+        Top = 296
+        Width = 185
+        Height = 21
+        DataField = 'DateField'
+        DataSource = DataSource
+        TabOrder = 8
+        BoundCaption = 'LabeledDBButtonEdit (calendar):'
+        BoundLabel.Left = 333
+        BoundLabel.Top = 282
+        BoundLabel.Width = 156
+        BoundLabel.Height = 13
+        ButtonEditStyle = besDate
+      end
+      object LabeledDBButtonEditColor: TLabeledDBButtonEdit
+        Left = 592
+        Top = 296
+        Width = 185
+        Height = 21
+        DataField = 'IntegerField'
+        DataSource = DataSource
+        TabOrder = 10
+        BoundCaption = 'LabeledDBButtonEdit (color):'
+        BoundLabel.Left = 592
+        BoundLabel.Top = 282
+        BoundLabel.Width = 138
+        BoundLabel.Height = 13
+        ButtonEditStyle = besColor
       end
     end
     object NumberBoxTabSheet: TTabSheet
@@ -616,6 +663,7 @@ object MainForm: TMainForm
         ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 7
+        Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
         BoundLabel.Top = 102
@@ -671,6 +719,52 @@ object MainForm: TMainForm
         BoundLabel.Top = 10
         BoundLabel.Width = 69
         BoundLabel.Height = 13
+      end
+      object LabeledButtonEditFind: TLabeledButtonEdit
+        Left = 600
+        Top = 24
+        Width = 185
+        Height = 21
+        TabOrder = 10
+        Text = ''
+        BoundCaption = 'LabeledDBButtonEdit (find):'
+        BoundLabel.Left = 600
+        BoundLabel.Top = 10
+        BoundLabel.Width = 133
+        BoundLabel.Height = 13
+        OnButtonEditClick = LabeledDBButtonEditFindButtonEditClick
+      end
+      object LabeledButtonEditCalendar: TLabeledButtonEdit
+        Left = 600
+        Top = 64
+        Width = 185
+        Height = 21
+        EditMask = '!99/99/9999;1; '
+        MaxLength = 10
+        TabOrder = 11
+        Text = '  /  /    '
+        BoundCaption = 'LabeledDBButtonEdit (calendar):'
+        BoundLabel.Left = 600
+        BoundLabel.Top = 50
+        BoundLabel.Width = 156
+        BoundLabel.Height = 13
+        ButtonEditStyle = besDate
+      end
+      object LabeledButtonEditColor: TLabeledButtonEdit
+        Left = 600
+        Top = 104
+        Width = 185
+        Height = 21
+        EditMask = '>aaaaaa;1; '
+        MaxLength = 6
+        TabOrder = 12
+        Text = '      '
+        BoundCaption = 'LabeledDBButtonEdit (color):'
+        BoundLabel.Left = 600
+        BoundLabel.Top = 90
+        BoundLabel.Width = 138
+        BoundLabel.Height = 13
+        ButtonEditStyle = besColor
       end
     end
     object ColorsTabSheet: TTabSheet

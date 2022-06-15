@@ -28,6 +28,7 @@ interface
 
 uses
   System.TypInfo
+  , Vcl.Graphics
   ;
 
 {$WARN WIDECHAR_REDUCED OFF}
@@ -52,6 +53,13 @@ function TIME_HH_MM_SS_FORMAT : string;
 function TIME_HH_MM_FORMAT : string;
 function DATE_TIME_HH_MM_FORMAT : string;
 function DATE_TIME_HH_MM_SS_FORMAT : string;
+function KillChars( const S : string; Chars : TSetOfChar ) : string;
+function DateTimeHHMMtoStr(Data : TDateTime) : string;
+function DateTimeHHMMSStoStr(Data : TDateTime) : string;
+function IsVCLStyled: boolean;
+function GetStyledColor(Color: TColor): TColor;
+function PadL(Const InString: String; Len: Integer; FChar: Char): String;
+function PadR(Const InString: String; Len: Integer; FChar: Char): String;
 
 implementation
 
@@ -59,6 +67,8 @@ uses
   System.SysUtils
   , WinApi.Windows
   , Vcl.DbAwareLabeledConsts
+  , Vcl.Controls
+  , Vcl.Themes
   ;
 
 //sostituisce un carattere in un altro all'interno di una stringa (zero-based)
@@ -302,6 +312,60 @@ end;
 function DATE_TIME_HH_MM_SS_FORMAT : string;
 begin
   Result := DATE_FORMAT + ' '+TIME_HH_MM_SS_FORMAT;
+end;
+
+function KillChars( const S : string; Chars : TSetOfChar ) : string;
+var
+  I, Count: integer;
+begin
+  SetLength( Result, Length(S) ); // imposta la lunghezza per prevenire la riallocazione
+  Count := 0; // numero di caratteri copiati nella stringa risultato
+  for I := 1 to Length(S) do
+  begin
+    if not (S[I] in Chars) then // il carattere non è fra quelli da eliminare
+    begin
+      // aggiunge il carattere alla stringa risultato
+      Inc(Count);
+      Result[Count] := S[I];
+    end;
+  end;
+  SetLength( Result, Count ); // imposta la lunghezza della stringa con i caratteri effettivamente copiati
+end;
+
+function DateTimeHHMMtoStr(Data : TDateTime) : string;
+var
+  DataStr : string;
+begin
+  DateTimeToString(DataStr, DATE_TIME_HH_MM_FORMAT+FormatSettings.TimeSeparator+'00', Data);
+  Result := Copy(DataStr,1,length(DataStr)-3);
+end;
+
+function DateTimeHHMMSStoStr(Data : TDateTime) : string;
+begin
+  DateTimeToString(Result, DATE_TIME_HH_MM_SS_FORMAT, Data);
+end;
+
+function IsVCLStyled: boolean;
+begin
+  Result := StyleServices.Enabled and (TStyleManager.ActiveStyle.Name <> STYLE_WINDOWS);
+end;
+
+function GetStyledColor(Color: TColor): TColor;
+begin
+  if IsVCLStyled then
+    Result := StyleServices.GetSystemColor(Color)
+  else
+    Result := Color;
+end;
+
+function PadL(Const InString: String; Len: Integer; FChar: Char): String;
+begin
+  Result := StringOfChar(FChar,Len-Length(InString)) + InString;
+end;
+
+function PadR(Const InString: String; Len: Integer; FChar: Char): String;
+begin
+  Result := InString + StringOfChar(FChar,Len-Length(InString));
 end;
 
 end.

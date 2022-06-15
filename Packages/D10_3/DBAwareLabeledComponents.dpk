@@ -9,25 +9,26 @@ package DBAwareLabeledComponents;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Dataaware Labeled Components by Ethea'}
+{$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
 {$LIBSUFFIX '_D10.3'}
 {$RUNONLY}
+{$WARNINGS OFF}
 {$IMPLICITBUILD ON}
 
 requires
@@ -45,6 +46,9 @@ contains
   Vcl.BoundLabel in '..\..\Source\Vcl.BoundLabel.pas',
   Vcl.DbAwareLabeledConsts in '..\..\Source\Vcl.DbAwareLabeledConsts.pas',
   Vcl.DbAwareLabeledUtils in '..\..\Source\Vcl.DbAwareLabeledUtils.pas',
+  Vcl.LabeledGraphicUtils in '..\..\Source\Vcl.LabeledGraphicUtils.pas',
+  Vcl.Form.CalendarView in '..\..\Source\Vcl.Form.CalendarView.pas',
+  Vcl.LabeledButtonEdit in '..\..\Source\Vcl.LabeledButtonEdit.pas',
   Vcl.LabeledCheckLst in '..\..\Source\Vcl.LabeledCheckLst.pas',
   Vcl.LabeledColorGrd in '..\..\Source\Vcl.LabeledColorGrd.pas',
   Vcl.LabeledComCtrls in '..\..\Source\Vcl.LabeledComCtrls.pas',
