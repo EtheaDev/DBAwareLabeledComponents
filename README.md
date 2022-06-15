@@ -2,7 +2,7 @@
 
 Classic Delphi-VCL Editors plus a Boundary-Label (DB-Aware and Standard) including NumberBox, plus an Extended DbGrid
 
-### Actual official version 1.1.0 (VCL)
+### Actual official version 1.2.0 (VCL)
 
 With this small library of VCL components it is possible to have the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit). 
 
@@ -27,6 +27,10 @@ TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label
 - Lines per Rows (to show memo fields with multiple lines)
 - RowMargin (to enlarge heigh fo rows)
 
+## From Delphi 10.3:
+
+TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editor with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.
+
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
 
 | Sample | Description |
@@ -47,9 +51,9 @@ TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label
 - TLabeledNumberBox: a TNumberBox component with boudary label
 - TLabeledDBNumberBox: a TDBNumberBox with boudary label
 
-### Available from Delphi XE3 to Delphi 11.0 (32bit and 64bit platforms)
+### Available from Delphi XE3 to Delphi 11 (32bit and 64bit platforms)
 
-![Delphi 11.0 Sydney Support](./Images/SupportingDelphi.jpg)
+![Delphi 11 Sydney Support](./Images/SupportingDelphi.jpg)
 
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
@@ -72,6 +76,11 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+15 Jun 2022: ver.1.2.0
+- Added TLabeledButtonEdit and TLabeledDBButtonEdit (from Delphi 10.1)
+- Updated Demo with TLabeledButtonEdit and TLabeledDBButtonEdit examples
+- Added Packages for Delphi 10.1 and Delphi XE8
+
 17 May 2022: ver.1.1.0
 - Added LinesPerRow and RowMargin to TLabeledDbGrid
 - Updated Demo with full features of TLabeledDbGrid
@@ -93,6 +102,10 @@ only for D10.4.2 and above
 - TDBNumberBox
 - TLabeledNumberBox
 - TLabeledDBNumberBox
+
+only for D10.1 and above
+- TLabeledDBButtonEdit
+- TLabeledButtonEdit
 
 for all Delphi versions (from XE3)
 - TLabeledColorGrid
