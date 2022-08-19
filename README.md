@@ -2,7 +2,7 @@
 
 Classic Delphi-VCL Editors plus a Boundary-Label (DB-Aware and Standard) including NumberBox, plus an Extended DbGrid
 
-### Actual official version 1.2.0 (VCL)
+### Actual official version 1.2.1 (VCL)
 
 With this small library of VCL components it is possible to have the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit). 
 
@@ -76,6 +76,11 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+19 Aug 2022: ver.1.2.1
+- Fixed checkbox drawing in "Windows" style, using rowmargin and/or LinesPerRow
+- Fixed drawing cell right aligned
+- Fixed Setting custom cursor for Grid
+
 15 Jun 2022: ver.1.2.0
 - Added TLabeledButtonEdit and TLabeledDBButtonEdit (from Delphi 10.1)
 - Updated Demo with TLabeledButtonEdit and TLabeledDBButtonEdit examples

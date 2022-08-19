@@ -351,6 +351,8 @@ Type
     procedure ClearCell(Rect: TRect; const State: TGridDrawState);
     function GetTitleFont: TFont;
     procedure SetTitleFont(const Value: TFont);
+    function GetCursor: TCursor;
+    procedure SetCursor(const Value: TCursor);
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -403,6 +405,7 @@ Type
     property Options default [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete];
     property BoundCaption: TCaption read FBoundCaption write SetBoundCaption;
     property BoundLabel: TControlBoundLabel read FBoundLabel;
+    property Cursor: TCursor read GetCursor write SetCursor default crDefault;
     property HighlightCurrRow: boolean read FHighlightCurrRow write SetHighlightCurrRow default True;
     property AlternateRowColor: boolean read FAlternateRowColor write SetAlternateRowColor default True;
     property OnColWidthsChanged: TNotifyEvent read FOnColWidthsChanged write FOnColWidthsChanged;
@@ -1161,6 +1164,7 @@ begin
   inherited;
   if (inherited LayoutLock = 0) and Assigned(FOnColWidthsChanged) then
     FOnColWidthsChanged(self);
+  LayoutChanged;
 end;
 
 procedure TLabeledDbGrid.KeyDown(var Key: Word; Shift: TShiftState);
@@ -1337,6 +1341,13 @@ begin
   End;
 end;
 
+procedure TLabeledDbGrid.SetCursor(const Value: TCursor);
+begin
+  if Value <> crDefault then
+    FCursorIsDefault := False;
+  inherited Cursor := Value;
+end;
+
 procedure TLabeledDbGrid.SetDrawCheckBoxImages(const Value: Boolean);
 begin
   if FDrawCheckBoxImages <> Value then
@@ -1444,7 +1455,7 @@ begin
     UpdateRowCount;
 
     // set the height of each row
-    DefaultRowHeight := (LPixelsPerRow * FLinesPerRow) + FRowMargin;
+    DefaultRowHeight := (LPixelsPerRow * FLinesPerRow) + (FRowMargin*2);
     if TitleOffset = 1 then
       RowHeights[0] := LPixelsTitle;
   finally
@@ -1464,6 +1475,12 @@ end;
 
 procedure TLabeledDbGrid.DrawColumnCell(const Rect: TRect; DataCol: Integer;
   Column: TColumn; State: TGridDrawState);
+const
+  AlignFlags : array [TAlignment] of Integer =
+    ( DT_LEFT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
+      DT_RIGHT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
+      DT_CENTER or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX );
+  RTL: array [Boolean] of Integer = (0, DT_RTLREADING);
 var
   CellColor: TColor;
   OutRect: TRect;
@@ -1531,19 +1548,20 @@ begin
 
   ClearCell(Rect, State);
 
-  // Event Handler
-  if Assigned(OnDrawColumnCell) then
-    OnDrawColumnCell(Self, Rect, DataCol, Column, State);
-
   // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
   // false e true, l'immagine check e uncheck
   if (not (csLoading in ComponentState)) and isCheckBoxedColumn(Column) and FDrawCheckBoxImages then
   begin
     ClearCell(Rect, State);
+    // Event Handler
+    if Assigned(OnDrawColumnCell) then
+      OnDrawColumnCell(Self, Rect, DataCol, Column, State);
+
     DrawCheckImage(Rect, Column, State);
   end
   else
   begin
+    //This section is the equivalent of DefaultDrawColumnCell
     OutRect := Rect;
     //Reduce output
     InflateRect(OutRect, -2, -2);
@@ -1557,7 +1575,7 @@ begin
       //memo field: draw wordwrap text
       if Column.Field.DataType in [ftMemo, ftFmtMemo, ftWideMemo] then
       begin
-        InflateRect(OutRect, 0, -FRowMargin div 2);
+        InflateRect(OutRect, 0, -(FRowMargin*2) div 2);
         LFormat := dt_WordBreak or dt_NoPrefix;
         LFieldValue := Column.Field.AsString;
       end;
@@ -1567,13 +1585,17 @@ begin
         ChangeBiDiModeAlignment(LAlignment);
       case LAlignment of
         taRightJustify:
-          OutRect.Left := OutRect.Right - Canvas.TextWidth(LFieldValue) - 3;
+          OutRect.Left := Max(OutRect.Left,OutRect.Right - Canvas.TextWidth(LFieldValue) - 3);
         taCenter:
           OutRect.Left := OutRect.Left + (OutRect.Right - OutRect.Left) div 2
           - (Canvas.TextWidth(LfieldValue) div 2);
       end;
     end;
-    DrawText(Canvas.Handle, PChar(LFieldValue), Length(LFieldValue), OutRect, LFormat);
+    DrawText(Canvas.Handle, PChar(LFieldValue), Length(LFieldValue), OutRect,
+      AlignFlags[Column.Alignment] or RTL[LRightToLeft] or LFormat);
+    // Event Handler
+    if Assigned(OnDrawColumnCell) then
+      OnDrawColumnCell(Self, Rect, DataCol, Column, State);
   end;
 end;
 
@@ -1597,6 +1619,11 @@ begin
   Result.Bottom := Result.Top + Check_Size;
 end;
 
+function TLabeledDbGrid.GetCursor: TCursor;
+begin
+  Result := inherited Cursor;
+end;
+
 procedure TLabeledDbGrid.ClearCell(Rect: TRect; const State: TGridDrawState);
 begin
   if (gdFocused in State) and StyleServices.Enabled then
@@ -1615,6 +1642,7 @@ var
   LState: TCheckBoxState;
   LDetails: TThemedElementDetails;
   LOutRect: TRect;
+  LHeight, LMargin: Integer;
 
   function GetDrawState(AState: TCheckBoxState): TThemedButton;
   begin
@@ -1636,6 +1664,13 @@ var
 
 begin
   LOutRect := GetCheckBounds(Rect, Column.Alignment);
+  //Recalc OutRect considering rowmargin and rowLines
+  LMargin := Round(FRowMargin)+1;
+  LHeight := Rect.Height-(FRowMargin*2);
+  LMargin := LMargin + Round((LHeight - (LHeight / FLinesPerRow)) / 2);
+  LOutRect.Top := LOutRect.Top + LMargin;
+  LOutRect.Bottom := LOutRect.Bottom - LMargin;
+
   if Column.Field.IsNull then
     LState := cbGrayed
   else if Column.Field.AsBoolean then
