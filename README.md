@@ -1,22 +1,12 @@
 ﻿# DBAwareLabeledComponents [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Classic Delphi-VCL Editors plus a Boundary-Label (DB-Aware and Standard) including NumberBox, plus an Extended DbGrid
+An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
 ### Actual official version 1.2.1 (VCL)
 
-With this small library of VCL components it is possible to have the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit). 
+An advanced TDbGrid component:
 
-It is no longer necessary to keep the Label "connected" and "aligned" by hand to the editor: on every component you can specify 3 simple properties:
-- BoundCaption
-- BoundLabel.Labelposition
-- BoundCaption.LabelSpacing (default 1)
-
-The label can be positioned in 12 alignements:
-**lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
-
-## PLUS: An advanced TDbGrid component
-
-TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label, plus some extra features:
+TLabeledDbGrid is an advanced version of classic TDbGrid with a boundary Label, plus some extra features:
 - ShowSortOrder: shows an indicator of sorting column
 - Embedeed CheckBox for boolean fields
 - Incremental search, when typing into a ReadOnly DbGrid
@@ -25,24 +15,39 @@ TLabeledDbGrid is an advanced version of classic TDbGrid with the boundary Label
 - Show sort order
 - Incremental search
 - Lines per Rows (to show memo fields with multiple lines)
-- RowMargin (to enlarge heigh fo rows)
+- RowMargin (to enlarge heigh of any row)
 
-## From Delphi 10.3:
+*Example of a TLabeledDbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (inside the client area of the grid aligned alClient).
 
-TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editor with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.
+![Preview Thumbnails Dark](./Images/DemoDataAwareDbGridTopCenter.png)
+
+This library contains also the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit). 
+
+It is no longer necessary to keep the Label "connected" and "aligned" by hand to the editor: on every component you can specify 3 simple properties:
+- BoundCaption
+- BoundLabel.Labelposition
+- BoundCaption.LabelSpacing (default 1)
+
+The label can be positioned with 12 alignements:
+**lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
+
+## TLabeledButtonEdit:
+
+Also available for D10.3 to latest, TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editors with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.
 
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
 
 | Sample | Description |
 | ------ | ----------- |
-| ![Preview Thumbnails Dark](./Images/DemoDataAwareDbGridTopCenter.png) | Example of a DbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (notice that the grid is aligned alClient and the Label is rendered inside the client area) |
+| ![DemoDataAwareDbGridLinesPerRow3](./Images/DemoDataAwareDbGridLinesPerRow3.png) | Example of LabeledDbGrid with LinesPerRow = 3 to show multiline content of memo fields |
+| ![DemoDataAwareDbGridRowMargin15](./Images/DemoDataAwareDbGridRowMargin15.png) | Example of LabeledDbGrid with RowMargin = 15 to to change height of grid Row. Fully compatible with Styles (light and dark)|
 | ![DemoDataAwareTopLeft](./Images/DemoDataAwareTopLeft.png) | Example of collection of Dataaware components with label aligned to "TopLeft" |
 | ![DemoDataAwareNumberEditorsLeftMiddle](./Images/DemoDataAwareNumberEditorsLeftMiddle.png) | Example of LabeledDBCurrencyEdit and LabeledDBNumberBox (only for 10.4.2): Dataware components for numeric input (from right to left) with label aligned to "LeftMiddle" |
 | ![Preview Thumbnails Dark](./Images/DemoNonDataAwareTopRight.png) | Example of collection of Standard components with label aligned to "TopRight" |
 | ![Preview Thumbnails Dark](./Images/DemoColorsImagesBottomCenter.png) | Example of collection of components with label aligned to "BottomCenter" |
 | ![Preview Thumbnails Dark](./Images/DemoNumberInputStyled.png) | All components are fully VCL styles compatible |
-| ![DemoDataAwareDbGridLinesPerRow3](./Images/DemoDataAwareDbGridLinesPerRow3.png) | Example of LabeledDbGrid with LinesPerRow = 3 to show multiline content of memo fields |
-| ![DemoDataAwareDbGridRowMargin15](./Images/DemoDataAwareDbGridRowMargin15.png) | Example of LabeledDbGrid with RowMargin = 15 to to change height of grid Row |
+
+A complete Demo is available in Demo Folder.
 
 ## Support for new NumberBox component
 
