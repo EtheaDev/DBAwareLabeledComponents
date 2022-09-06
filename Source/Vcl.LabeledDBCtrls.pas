@@ -346,13 +346,16 @@ Type
     procedure SetIncrementalSearchDelay(const Value: integer);
     function GetIncrementalSearchDelay: integer;
     procedure SetDrawCheckBoxImages(const Value: Boolean);
-    function CanApplyCustomColors: boolean;
+    function DefaultWindowsStyleEnabled: boolean;
     function GetIsEmpty: Boolean;
     procedure ClearCell(Rect: TRect; const State: TGridDrawState);
     function GetTitleFont: TFont;
     procedure SetTitleFont(const Value: TFont);
     function GetCursor: TCursor;
     procedure SetCursor(const Value: TCursor);
+    procedure WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
+      const AField: TField; Const AColumn: TColumn);
+    function CalcRowMargin(const ARect: TRect): Integer;
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -381,6 +384,10 @@ Type
     procedure ChangeScale(M, D: Integer); override;
     {$ENDIF}
   public
+    procedure DefaultDrawColumnCell(const Rect: TRect; DataCol: Integer;
+      Column: TColumn; State: TGridDrawState);
+    procedure DefaultDrawDataCell(const Rect: TRect; Field: TField;
+      State: TGridDrawState); { obsolete }
     procedure StandardTitleClick(Column : TColumn);
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -398,7 +405,7 @@ Type
     function ColumnByFieldName(const AFieldName: string): TColumn;
     function ColumnIndexByFieldName(const AFieldName: string): Integer;
     function GetMouseOverField(X, Y: Integer): TField;
-    property DefaultRowHeight;
+    function GetDefaultRowHeight: Integer;
   published
     property TitleFont: TFont read GetTitleFont write SetTitleFont stored False;
     property IsEmpty: Boolean read GetIsEmpty;
@@ -444,6 +451,7 @@ var
   DbGridPrintSupport: TStringList;
   StandardOddRowsColor: TColor;
   DefaultGridRowMargin : Integer;
+  DrawBitmap: TBitmap;
 
 procedure RegisterGridOddRowsColor(Color: TColor);
 begin
@@ -1036,6 +1044,112 @@ begin
 end;
 
 { TLabeledDbGrid }
+
+//Same as VCL source
+procedure TLabeledDbGrid.WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
+  const AField: TField; Const AColumn: TColumn);
+const
+  AlignFlags : array [TAlignment] of Integer =
+    ( DT_LEFT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
+      DT_RIGHT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
+      DT_CENTER or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX );
+  RTL: array [Boolean] of Integer = (0, DT_RTLREADING);
+var
+  Text: string;
+  Alignment: TAlignment;
+  ARightToLeft: Boolean;
+  B, R: TRect;
+  Hold, Left: Integer;
+  I: TColorRef;
+  LFormat: Integer;
+  LMemoField: Boolean;
+begin
+  ACanvas.Font.Name := Font.Name;
+  ACanvas.Font.Style := Font.Style;
+  ACanvas.Font.Height := Font.Height;
+
+  //Verifiy that Field is a Memofield
+  LMemoField := Assigned(AField) and (AField.DataType in [ftMemo, ftFmtMemo, ftWideMemo]);
+  if LMemoField then
+  begin
+    Text := AField.AsString;
+    ACanvas.FillRect(ARect);
+  end
+  else if Assigned(AField) and not (FDrawCheckBoxImages and isCheckBoxedField(AField)) then //Empty Text if drawing checkbox
+    Text := AField.DisplayText
+  else
+    Text := '';
+
+  Alignment := AColumn.Alignment;
+  ARightToLeft := UseRightToLeftAlignmentForField(AField, AColumn.Alignment);
+
+  I := ColorToRGB(ACanvas.Brush.Color);
+  if GetNearestColor(ACanvas.Handle, I) = I then
+  begin                       { Use ExtTextOut for solid colors }
+    { In BiDi, because we changed the window origin, the text that does not
+      change alignment, actually gets its alignment changed. }
+    if (ACanvas.CanvasOrientation = coRightToLeft) and (not ARightToLeft) then
+      ChangeBiDiModeAlignment(Alignment);
+    case Alignment of
+      taLeftJustify:
+        Left := ARect.Left + DX;
+      taRightJustify:
+        Left := ARect.Right - ACanvas.TextWidth(Text) - 3;
+    else { taCenter }
+      Left := ARect.Left + (ARect.Right - ARect.Left) div 2
+        - (ACanvas.TextWidth(Text) div 2);
+    end;
+    //Se il campo è un memo lo stampa su n righe:
+    if LMemoField then
+    begin
+      LFormat := dt_WordBreak or dt_NoPrefix;
+      //Riduce l'area di stampa in base ai margini
+      InflateRect(ARect, -DX, -((FRowMargin*2) div 2) - DY);
+      DrawText(Canvas.Handle, PChar(Text), Length(Text), ARect,
+        AlignFlags[AColumn.Alignment] or RTL[ARightToLeft] or LFormat);
+    end
+    else
+    begin
+      //se non è un memo considera il margine
+      ACanvas.TextRect(ARect, Left, ARect.Top + DY + CalcRowMargin(ARect), Text);
+    end;
+  end
+  else begin                  { Use FillRect and Drawtext for dithered colors }
+    DrawBitmap.Canvas.Lock;
+    try
+      with ARect do { Use offscreen bitmap to eliminate flicker and }
+      begin         { brush origin tics in painting / scrolling.    }
+        DrawBitmap.Width := Max(DrawBitmap.Width, Right - Left);
+        DrawBitmap.Height := Max(DrawBitmap.Height, Bottom - Top);
+        R := Rect(DX, DY, Right - Left - 1, Bottom - Top - 1);
+        B := Rect(0, 0, Right - Left, Bottom - Top);
+      end;
+      with DrawBitmap.Canvas do
+      begin
+        Font := ACanvas.Font;
+        Font.Color := ACanvas.Font.Color;
+        Brush := ACanvas.Brush;
+        Brush.Style := bsSolid;
+        FillRect(B);
+        SetBkMode(Handle, TRANSPARENT);
+        if (ACanvas.CanvasOrientation = coRightToLeft) then
+          ChangeBiDiModeAlignment(Alignment);
+        DrawText(Handle, PChar(Text), Length(Text), R,
+          AlignFlags[Alignment] or RTL[ARightToLeft]);
+      end;
+      if (ACanvas.CanvasOrientation = coRightToLeft) then
+      begin
+        Hold := ARect.Left;
+        ARect.Left := ARect.Right;
+        ARect.Right := Hold;
+      end;
+      ACanvas.CopyRect(ARect, DrawBitmap.Canvas, B);
+    finally
+      DrawBitmap.Canvas.Unlock;
+    end;
+  end;
+end;
+
 constructor TLabeledDbGrid.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -1176,71 +1290,159 @@ begin
     SelectedRows.CurrentRowSelected := not SelectedRows.CurrentRowSelected;
 end;
 
-procedure TLabeledDbGrid.DrawCell(ACol, ARow: Integer; ARect: TRect;
-  AState: TGridDrawState);
+procedure TLabeledDbGrid.DrawCell(ACol, ARow: Longint; ARect: TRect; AState: TGridDrawState);
 var
-  Offset : integer;
-  LRect: TRect;
-  SortOrder : TCBSortOrder;
-  Column : TColumn;
+  OldActive: Integer;
+  DrawColumn: TColumn;
+  IsCustomStyle: Boolean;
+  Style: TCustomStyleServices;
+
   dxGridSortedShapeMinWidth: Integer;
-  LIsTitlePresent: Integer;
+  SortOrder: TCBSortOrder;
+  LRect: TRect;
+  LDataLinkActive: Boolean;
 begin
   dxGridSortedShapeMinWidth := ARect.Bottom - ARect.Top; //16
-  //Updating DrawingCurrentRecord so it is possible to check this flag
-  //into ondrawcolumncell event
+  //se è il record corrente aggiorno il flag in modo tale che nell'evento
+  //ondrawcolumncell il programmatore può testate questo flag!
   Dec(ACol, IndicatorOffset);
-  LIsTitlePresent := Ord(dgTitles in Options);
-  if not ((gdFixed in AState) and (ACol < 0)) and
-    (DataLink <> nil) and
-    (DataLink.DataSource <> nil) and
-    (DataLink.DataSource.DataSet <> nil) and
-    (ARow-LIsTitlePresent = Datalink.ActiveRecord) then
-    FDrawingCurrentRecord := True
-  else
-    FDrawingCurrentRecord := False;
+  try
+    if not ((gdFixed in AState) and (ACol < 0)) and
+      (DataLink <> nil) and
+      (DataLink.DataSource <> nil) and
+      (DataLink.DataSource.DataSet <> nil) and
+      (ARow-TitleOffset = Datalink.ActiveRecord) then
+      FDrawingCurrentRecord := True
+    else
+      FDrawingCurrentRecord := False;
+  finally
+    Inc(ACol, IndicatorOffset);
+  end;
 
-  Inc(ACol, IndicatorOffset);
+  inherited DrawCell(ACol, ARow, ARect, AState);
 
-  inherited; //default drawing
+  //Nuova implementazione
+  Dec(ARow, TitleOffset);
+  Dec(ACol, IndicatorOffset);
 
-  if dgIndicator in Options then
-    Offset := 1 else
-    Offset := 0;
+  LDataLinkActive := Assigned(DataLink) and DataLink.Active;
 
-  //if it's a sort column, draw the shape
-  if (FShowSortOrder) and
-    (ACol-Offset >= 0) and
+  //stampa il triangolino se è una colonna di sort
+  if LDataLinkActive and (TitleOffset > 0) and (FShowSortOrder) and (ACol >= 0) and
     (not (csLoading in ComponentState)) and
     (DataSource <> nil) and
     (DataSource.DataSet <> nil) and
     (gdFixed in AState) then
   begin
-    Column := Columns[ACol-Offset];
-    //verify if the column is included in actual sort
+    DrawColumn := Columns[ACol];
+    //verifica che la colonna faccia parte del sort attuale
     SortOrder := soNone;
-    if (Column.Field <> nil) then
+    if (DrawColumn.Field <> nil) then
     begin
       if Assigned(FOnSortedField) then
-       FOnSortedField(Self,Column.Field,SortOrder) else
-       StandardSort(Column.Field,SortOrder);
+       FOnSortedField(Self,DrawColumn.Field,SortOrder) else
+       StandardSort(DrawColumn.Field,SortOrder);
     end;
-
     if SortOrder <> soNone then
     begin
       with ARect do
       begin
         if (Right - Left) >= dxGridSortedShapeMinWidth then
         begin
-          //there is space to draw the shape
-          if Column.Title.Alignment = taRightJustify then
+          //c'è spazio per disegnare il triangolino
+          if DrawColumn.Title.Alignment = taRightJustify then
             LRect := Rect(Left, Top, Left + dxGridSortedShapeMinWidth, Bottom) else
             LRect := Rect(Right - dxGridSortedShapeMinWidth, Top, Right, Bottom);
           Dec(Right, dxGridSortedShapeMinWidth);
-          //Draw the Shape
+          //disegno il triangolino
           DrawSortedShape(Canvas, LRect, (SortOrder = soAscending));
         end;
       end;
+    end;
+  end;
+
+  if (csLoading in ComponentState) or
+    ((gdFixed in AState) and (ACol < 0)) or
+    (ARow < 0) or not LDataLinkActive then
+    Exit;
+
+  Style := StyleServices{$IFDEF D10_4+}(Self){$ENDIF};
+  IsCustomStyle := TStyleManager.IsCustomStyleActive;
+
+  if (gdFixed in AState) and ([dgRowLines, dgColLines] * Options =
+    [dgRowLines, dgColLines]) then
+  begin
+    InflateRect(ARect, -1, -1);
+  end;
+
+  with Canvas do
+  begin
+    DrawColumn := Columns[ACol];
+    if not DrawColumn.Showing then Exit;
+    if not (gdFixed in AState) then
+    begin
+      Font := DrawColumn.Font;
+      Brush.Color := DrawColumn.Color;
+      if IsCustomStyle then
+      begin
+        // DrawHighlightCell will set the appropriate font color for highlighted cells
+        if seFont in StyleElements then
+          Font.Color := Style.GetStyleFontColor(sfGridItemNormal)
+        else
+          Font.Color := Self.Font.Color;
+        if seClient in StyleElements then
+          Brush.Color := Style.GetStyleColor(scGrid)
+        else
+          Brush.Color := Color;
+      end;
+    end;
+
+    // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
+    // false e true, l'immagine check e uncheck
+    if (not (csLoading in ComponentState)) and isCheckBoxedColumn(DrawColumn) and FDrawCheckBoxImages then
+
+    begin
+      Exit;
+    end;
+
+    OldActive := DataLink.ActiveRecord;
+    try
+      DataLink.ActiveRecord := ARow;
+      if HighlightCell(ACol, ARow, '', AState) and DefaultDrawing then
+        DrawCellHighlight(ARect, AState, ACol, ARow);
+      if not Enabled then
+        Font.Color := clGrayText;
+      if DefaultDrawing then
+        WriteText(Canvas, ARect, 3, 2, DrawColumn.Field, DrawColumn);
+      if Columns.State = csDefault then
+        DrawDataCell(ARect, DrawColumn.Field, AState);
+      DrawColumnCell(ARect, ACol, DrawColumn, AState);
+    finally
+      DataLink.ActiveRecord := OldActive;
+    end;
+    Canvas.Brush.Style := bsSolid;
+    if DefaultDrawing and (gdSelected in AState)
+      and ((dgAlwaysShowSelection in Options) or Focused)
+      and not (csDesigning in ComponentState)
+      and not (dgRowSelect in Options)
+      and (UpdateLock = 0)
+      and (ValidParentForm(Self).ActiveControl = Self) then
+    begin
+      if (FInternalDrawingStyle = gdsThemed) and (Win32MajorVersion >= 6) then
+        InflateRect(ARect, -1, -1);
+      if not IsCustomStyle then
+        Winapi.Windows.DrawFocusRect(Handle, ARect);
+    end;
+  end;
+  if (gdFixed in AState) and ([dgRowLines, dgColLines] * Options =
+     [dgRowLines, dgColLines]) and (FInternalDrawingStyle = gdsClassic) and
+     not (gdPressed in AState) then
+  begin
+    InflateRect(ARect, 1, 1);
+    if not IsCustomStyle then
+    begin
+      DrawEdge(Canvas.Handle, ARect, BDR_RAISEDINNER, BF_BOTTOMRIGHT);
+      DrawEdge(Canvas.Handle, ARect, BDR_RAISEDINNER, BF_TOPLEFT);
     end;
   end;
 end;
@@ -1335,8 +1537,8 @@ begin
       SetStringPropCheck(Field.DataSet, 'IndexFieldNames', Field.FieldName);
       //mi riposiziono sul record precedente
       Field.DataSet.Locate(Field.FieldName, Value, []);
-    end
-    else   Finally
+    end;
+  Finally
     Screen.Cursor := crDefault;
   End;
 end;
@@ -1428,7 +1630,8 @@ var
         if dgRowSelect in Options then TopRow := FixedRows;
         UpdateActive;
       end;
-    if OldRowCount <> RowCount then Invalidate;
+    if OldRowCount <> RowCount then
+      Invalidate;
   end;
 
 begin
@@ -1468,32 +1671,40 @@ begin
   end;
 end;
 
-function TLabeledDbGrid.CanApplyCustomColors: boolean;
+procedure TLabeledDbGrid.DefaultDrawColumnCell(const Rect: TRect; DataCol: Integer;
+  Column: TColumn; State: TGridDrawState);
+begin
+  WriteText(Canvas, Rect, 3, 2, Column.Field, Column);
+end;
+
+procedure TLabeledDbGrid.DefaultDrawDataCell(const Rect: TRect; Field: TField;
+  State: TGridDrawState);
+var
+  LColumn: TColumn;
+begin
+  if not (FDrawCheckBoxImages and isCheckBoxedField(Field)) then
+  begin
+    LColumn := nil;
+    FindColumnByField(Field, LColumn);
+    inherited DefaultDrawDataCell(Rect, Field, State);
+  end;
+end;
+
+function TLabeledDbGrid.DefaultWindowsStyleEnabled: boolean;
 begin
   Result := not StyleServices.Enabled or (TStyleManager.ActiveStyle.Name = 'Windows');
 end;
 
 procedure TLabeledDbGrid.DrawColumnCell(const Rect: TRect; DataCol: Integer;
   Column: TColumn; State: TGridDrawState);
-const
-  AlignFlags : array [TAlignment] of Integer =
-    ( DT_LEFT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
-      DT_RIGHT or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX,
-      DT_CENTER or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX );
-  RTL: array [Boolean] of Integer = (0, DT_RTLREADING);
 var
   CellColor: TColor;
-  OutRect: TRect;
-  LFieldValue: string;
-  LFormat: Cardinal;
-  LRightToLeft: Boolean;
-  LAlignment: TAlignment;
 
   function GetCellColor : TColor;
   begin
     if IsCurrentRowOdd then
     begin
-      if CanApplyCustomColors then
+      if DefaultWindowsStyleEnabled then
         Result := StandardOddRowsColor  //Colore righe pari e dispari alternato
       else
         Result := GetStyledColor(clBtnFace);
@@ -1505,20 +1716,25 @@ var
 begin
   if FDrawingCurrentRecord then
   begin
-    // colore sfondo cella EVIDENZIATO solo se non è la cella corrente
-    // e non è impostata l'opzione RowSelect o MultiSelect
+    // background color higlighted only if not current cell
+    // and not RowSelect or MultiSelect
     if not ((gdSelected in State) and ((gdFocused in State) or (dgAlwaysShowSelection in Options))) and
       not (dgRowSelect in Options) and not (dgMultiSelect in Options) then
     begin
-      if FHighlightCurrRow then
+      if csDesigning in ComponentState then
+        CellColor := Column.Color
+      else
       begin
-        if CanApplyCustomColors then
-          CellColor := clInfoBk
+        if FHighlightCurrRow then
+        begin
+          if DefaultWindowsStyleEnabled then
+            CellColor := clInfoBk
+          else
+            CellColor := GetCellColor;
+        end
         else
           CellColor := GetCellColor;
-      end
-      else
-        CellColor := GetCellColor;
+      end;
       if Assigned(OnBkCellColorAssign) then
         OnBkCellColorAssign(Column, FDrawingCurrentRecord, CellColor);
       Canvas.Brush.Color := CellColor;
@@ -1527,7 +1743,7 @@ begin
     begin
       CellColor := GetCellColor;
       //Resolve bad painting in W11
-      if not StyleServices.Enabled or (StyleServices.IsSystemStyle) and Self.Focused then
+      if not StyleServices.Enabled or (StyleServices.IsSystemStyle) then
         Canvas.Brush.Color := clHighlight;
     end;
   end
@@ -1546,13 +1762,10 @@ begin
       CellColor := GetCellColor;
   end;
 
-  ClearCell(Rect, State);
-
   // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
   // false e true, l'immagine check e uncheck
   if (not (csLoading in ComponentState)) and isCheckBoxedColumn(Column) and FDrawCheckBoxImages then
   begin
-    ClearCell(Rect, State);
     // Event Handler
     if Assigned(OnDrawColumnCell) then
       OnDrawColumnCell(Self, Rect, DataCol, Column, State);
@@ -1561,38 +1774,7 @@ begin
   end
   else
   begin
-    //This section is the equivalent of DefaultDrawColumnCell
-    OutRect := Rect;
-    //Reduce output
-    InflateRect(OutRect, -2, -2);
-    LFieldValue := '';
-    LAlignment := taLeftJustify;
-    LFormat := DT_VCENTER or DT_SINGLELINE or DT_NOPREFIX; //Draw text centered by height
-    if Assigned(Column.Field) then
-    begin
-      LAlignment := Column.Field.Alignment;
-      LFieldValue := Column.Field.DisplayText;
-      //memo field: draw wordwrap text
-      if Column.Field.DataType in [ftMemo, ftFmtMemo, ftWideMemo] then
-      begin
-        InflateRect(OutRect, 0, -(FRowMargin*2) div 2);
-        LFormat := dt_WordBreak or dt_NoPrefix;
-        LFieldValue := Column.Field.AsString;
-      end;
-      //alignment
-      LRightToLeft := UseRightToLeftAlignmentForField(Column.Field, Column.Alignment);
-      if (Canvas.CanvasOrientation = coRightToLeft) and (not LRightToLeft) then
-        ChangeBiDiModeAlignment(LAlignment);
-      case LAlignment of
-        taRightJustify:
-          OutRect.Left := Max(OutRect.Left,OutRect.Right - Canvas.TextWidth(LFieldValue) - 3);
-        taCenter:
-          OutRect.Left := OutRect.Left + (OutRect.Right - OutRect.Left) div 2
-          - (Canvas.TextWidth(LfieldValue) div 2);
-      end;
-    end;
-    DrawText(Canvas.Handle, PChar(LFieldValue), Length(LFieldValue), OutRect,
-      AlignFlags[Column.Alignment] or RTL[LRightToLeft] or LFormat);
+    DefaultDrawColumnCell(Rect, DataCol, Column, State);
     // Event Handler
     if Assigned(OnDrawColumnCell) then
       OnDrawColumnCell(Self, Rect, DataCol, Column, State);
@@ -1626,12 +1808,25 @@ end;
 
 procedure TLabeledDbGrid.ClearCell(Rect: TRect; const State: TGridDrawState);
 begin
-  if (gdFocused in State) and StyleServices.Enabled then
-  begin
-    Canvas.Brush.Style := bsSolid;
+  Canvas.Brush.Style := bsSolid;
+  if ((gdFocused in State) or (gdSelected in State))
+    and not (csDesigning in ComponentState) then
     Canvas.Brush.Color := StyleServices.GetSystemColor(clHighlight);
-  end;
   Canvas.FillRect(Rect);
+end;
+
+function TLabeledDbGrid.GetDefaultRowHeight: Integer;
+begin
+  Result := DefaultRowHeight;
+end;
+
+function TLabeledDbGrid.CalcRowMargin(const ARect: TRect): Integer;
+var
+  LHeight: Integer;
+begin
+  Result := Round(FRowMargin)+1;
+  LHeight := ARect.Height-(FRowMargin*2);
+  Result := Result + Round((LHeight - (LHeight / FLinesPerRow)) / 2);
 end;
 
 procedure TLabeledDbGrid.DrawCheckImage(Rect: TRect; Column: TColumn;
@@ -1642,7 +1837,7 @@ var
   LState: TCheckBoxState;
   LDetails: TThemedElementDetails;
   LOutRect: TRect;
-  LHeight, LMargin: Integer;
+  LMargin: Integer;
 
   function GetDrawState(AState: TCheckBoxState): TThemedButton;
   begin
@@ -1663,11 +1858,10 @@ var
   end;
 
 begin
+  ClearCell(Rect, State);
   LOutRect := GetCheckBounds(Rect, Column.Alignment);
   //Recalc OutRect considering rowmargin and rowLines
-  LMargin := Round(FRowMargin)+1;
-  LHeight := Rect.Height-(FRowMargin*2);
-  LMargin := LMargin + Round((LHeight - (LHeight / FLinesPerRow)) / 2);
+  LMargin := CalcRowMargin(Rect);
   LOutRect.Top := LOutRect.Top + LMargin;
   LOutRect.Bottom := LOutRect.Bottom - LMargin;
 
@@ -1694,6 +1888,7 @@ begin
     begin
       Result := True;
       Column := Columns[i];
+      Break;
     end;
   end;
 end;
@@ -1986,14 +2181,9 @@ end;
 function TLabeledDbGrid.isMouseOverTitleColumn(X, Y: Integer): boolean;
 var
   Cell: TGridCoord;
-  FTitleOffset: integer;
 begin
   Cell := MouseCoord(X,Y);
-  if dgTitles in Options then
-    FTitleOffset := 1
-  else
-    FTitleOffset := 0;
-  Result := (Cell.X >= IndicatorOffset) and (Cell.Y >= 0) and (Cell.Y < FTitleOffset);
+  Result := (Cell.X >= IndicatorOffset) and (Cell.Y >= 0) and (Cell.Y < TitleOffset);
 end;
 
 function TLabeledDbGrid.CanEditCell(X, Y: integer): boolean;

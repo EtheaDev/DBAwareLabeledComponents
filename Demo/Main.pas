@@ -59,7 +59,9 @@ uses
   , Vcl.LabeledCheckLst
   , Vcl.LabeledDBListView
   , Vcl.Samples.Spin
+  {$IFDEF D10_3+}
   , Vcl.LabeledButtonEdit
+  {$ENDIF}
   , Vcl.BoundLabel
   ;
 
@@ -144,12 +146,6 @@ type
     filterDataEdit: TLabeledEdit;
     DBNavigator: TDBNavigator;
     btSelectStyle: TButton;
-    LabeledDBButtonEditFind: TLabeledDBButtonEdit;
-    LabeledDBButtonEditCalendar: TLabeledDBButtonEdit;
-    LabeledDBButtonEditColor: TLabeledDBButtonEdit;
-    LabeledButtonEditFind: TLabeledButtonEdit;
-    LabeledButtonEditCalendar: TLabeledButtonEdit;
-    LabeledButtonEditColor: TLabeledButtonEdit;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
     procedure OpenButtonClick(Sender: TObject);
     procedure ClientDataSetIntegerFieldChange(Sender: TField);
@@ -180,12 +176,20 @@ type
     procedure filterDataEditExit(Sender: TObject);
     procedure PositionLabeledComboBoxSelect(Sender: TObject);
     procedure VisibleCheckBoxClick(Sender: TObject);
-    procedure LabeledDBButtonEditFindButtonEditClick(Sender: TObject);
+    procedure LabeledButtonEditClick(Sender: TObject);
   private
     FMemoText: string;
     procedure BkCellColorAssign(Column : TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor);
     procedure CreateControls;
     procedure CreateAndFillDataSets;
+    {$IFDEF D10_1+}
+    procedure CreateButtonEditForField(const AField: TField;
+      const ATop, ALeft: Integer; const ACaption: string;
+      const AButtonEditStyle: TButtonEditStyle);
+    procedure CreateButtonEdit(const ATop, ALeft: Integer;
+      const ACaption: string; const AButtonEditStyle: TButtonEditStyle);
+    {$ENDIF}
+
     {$IFDEF D10_4+}
     procedure CreateNumberBoxForField(const AField: TField;
       const ATop, ALeft: Integer);
@@ -350,6 +354,45 @@ begin
   LabeledMemo.Lines.Text := FMemoText;
 end;
 
+{$IFDEF D10_1+}
+procedure TMainForm.CreateButtonEditForField(const AField: TField;
+  const ATop, ALeft: Integer; const ACaption: string;
+  const AButtonEditStyle: TButtonEditStyle);
+var
+  LabeledDBButtonEditFind: TLabeledDBButtonEdit;
+begin
+  LabeledDBButtonEditFind := TLabeledDBButtonEdit.Create(Self);
+  LabeledDBButtonEditFind.Parent := DBTabSheet;
+  LabeledDBButtonEditFind.Left := ALeft;
+  LabeledDBButtonEditFind.Top := ATop;
+  LabeledDBButtonEditFind.Width := 185;
+  LabeledDBButtonEditFind.Height := 21;
+  LabeledDBButtonEditFind.DataField := AField.FieldName;
+  LabeledDBButtonEditFind.DataSource := DataSource;
+  LabeledDBButtonEditFind.BoundCaption := ACaption;
+  LabeledDBButtonEditFind.ButtonEditStyle := AButtonEditStyle;
+  if AButtonEditStyle = besFind then
+    LabeledDBButtonEditFind.OnButtonEditClick := LabeledButtonEditClick;
+end;
+
+procedure TMainForm.CreateButtonEdit(const ATop, ALeft: Integer;
+  const ACaption: string; const AButtonEditStyle: TButtonEditStyle);
+var
+  LabeledDBButtonEditFind: TLabeledButtonEdit;
+begin
+  LabeledDBButtonEditFind := TLabeledButtonEdit.Create(Self);
+  LabeledDBButtonEditFind.Parent := stdControlsTabSheet;
+  LabeledDBButtonEditFind.Left := ALeft;
+  LabeledDBButtonEditFind.Top := ATop;
+  LabeledDBButtonEditFind.Width := 185;
+  LabeledDBButtonEditFind.Height := 21;
+  LabeledDBButtonEditFind.BoundCaption := ACaption;
+  LabeledDBButtonEditFind.ButtonEditStyle := AButtonEditStyle;
+  if AButtonEditStyle = besFind then
+    LabeledDBButtonEditFind.OnButtonEditClick := LabeledButtonEditClick;
+end;
+{$ENDIF}
+
 {$IFDEF D10_4+}
 procedure TMainForm.CreateNumberBoxForField(const AField: TField;
   const ATop, ALeft: Integer);
@@ -382,6 +425,22 @@ begin
   CreateDBCurrencyEdit(ClientDataSetBCDField, 140,110);
   CreateDBCurrencyEdit(ClientDataSetExtendedField, 180,110);
   CreateDBCurrencyEdit(ClientDataSetFmtBCDField, 220,110);
+
+  {$IFDEF D10_1+}
+  CreateButtonEditForField(ClientDataSetStringField, 296, 88,
+    'LabeledDBButtonEdit (find):', besFind);
+  CreateButtonEditForField(ClientDataSetDateField, 296, 333,
+    'LabeledDBButtonEdit (calendar):', besDate);
+  CreateButtonEditForField(ClientDataSetIntegerField, 296, 592,
+    'LabeledDBButtonEdit (color):', besColor);
+
+  CreateButtonEdit(380, 88,
+    'LabeledDBButtonEdit (find):', besFind);
+  CreateButtonEdit(380, 340,
+    'LabeledDBButtonEdit (calendar):', besDate);
+  CreateButtonEdit(380, 600,
+    'LabeledDBButtonEdit (color):', besColor);
+  {$ENDIF}
 
   {$IFDEF D10_4+}
   CreateNumberBoxForField(ClientDataSetIntegerField, 20,360);
@@ -589,7 +648,7 @@ begin
   DbGrid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
-procedure TMainForm.LabeledDBButtonEditFindButtonEditClick(Sender: TObject);
+procedure TMainForm.LabeledButtonEditClick(Sender: TObject);
 begin
   ShowMessage('OnButtonEditClick event');
 end;

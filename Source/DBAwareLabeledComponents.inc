@@ -22,51 +22,6 @@
 {  limitations under the License.                                              }
 {                                                                              }
 {******************************************************************************}
-// Delphi 2010
-{$IFDEF VER210}
-  {$DEFINE D2010+}
-{$ENDIF}
-
-// Delphi XE
-{$IFDEF VER220}
-  {$DEFINE D2010+}
-  {$DEFINE DXE+}
-{$ENDIF}
-
-// Delphi XE2
-{$IFDEF VER230}
-  {$DEFINE D2010+}
-  {$DEFINE DXE+}
-  {$DEFINE DXE2+}
-{$ENDIF}
-
-// Delphi XE3
-{$IFDEF VER240}
-  {$DEFINE D2010+}
-  {$DEFINE DXE+}
-  {$DEFINE DXE2+}
-  {$DEFINE DXE3+}
-{$ENDIF}
-
-// Delphi XE4
-{$IFDEF VER250}
-  {$DEFINE D2010+}
-  {$DEFINE DXE+}
-  {$DEFINE DXE2+}
-  {$DEFINE DXE3+}
-  {$DEFINE DXE4+}
-{$ENDIF}
-
-// Delphi XE5
-{$IFDEF VER260}
-  {$DEFINE D2010+}
-  {$DEFINE DXE+}
-  {$DEFINE DXE2+}
-  {$DEFINE DXE3+}
-  {$DEFINE DXE4+}
-  {$DEFINE DXE5+}
-{$ENDIF}
-
 // Delphi XE6
 {$IFDEF VER270}
   {$DEFINE D2010+}

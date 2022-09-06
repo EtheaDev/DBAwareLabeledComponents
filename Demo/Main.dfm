@@ -7,8 +7,8 @@ object MainForm: TMainForm
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
   Font.Style = []
   OldCreateOrder = True
   ShowHint = True
@@ -16,7 +16,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 15
   object PageControl: TPageControl
     Left = 0
     Top = 0
@@ -30,18 +30,18 @@ object MainForm: TMainForm
       ImageIndex = 2
       object DbGrid: TLabeledDbGrid
         Left = 0
-        Top = 16
+        Top = 18
         Width = 812
-        Height = 186
+        Height = 182
         Cursor = crHandPoint
         Align = alClient
         DataSource = DataSource
         TabOrder = 0
         BoundCaption = 'Labeled and Advanced DbGrid'
-        BoundLabel.Left = 334
+        BoundLabel.Left = 326
         BoundLabel.Top = 0
-        BoundLabel.Width = 144
-        BoundLabel.Height = 13
+        BoundLabel.Width = 160
+        BoundLabel.Height = 15
         BoundLabel.Alignment = taCenter
         BoundLabel.LabelPosition = lpTopCenter
         BoundLabel.LabelSpacing = 3
@@ -141,32 +141,32 @@ object MainForm: TMainForm
       end
       object DbGridOptionsPanel: TPanel
         Left = 0
-        Top = 202
+        Top = 200
         Width = 812
         Height = 218
         Align = alBottom
         TabOrder = 1
         object FontLabel: TLabel
-          Left = 346
+          Left = 340
           Top = 122
-          Width = 60
-          Height = 13
+          Width = 66
+          Height = 15
           Alignment = taRightJustify
           Caption = 'Font Height:'
         end
         object RowLinesLabel: TLabel
-          Left = 354
+          Left = 350
           Top = 154
-          Width = 52
-          Height = 13
+          Width = 56
+          Height = 15
           Alignment = taRightJustify
           Caption = 'Row Lines:'
         end
         object RowMarginLabel: TLabel
-          Left = 346
+          Left = 339
           Top = 186
-          Width = 60
-          Height = 13
+          Width = 67
+          Height = 15
           Alignment = taRightJustify
           Caption = 'Row Margin:'
         end
@@ -284,7 +284,7 @@ object MainForm: TMainForm
           Width = 201
           Height = 193
           OnClickCheck = lbOptionsClickCheck
-          ItemHeight = 13
+          ItemHeight = 15
           TabOrder = 10
         end
         object cbDrawCheckBoxImages: TCheckBox
@@ -334,9 +334,9 @@ object MainForm: TMainForm
           Left = 8
           Top = 155
           Width = 297
-          Height = 21
-          EditLabel.Width = 108
-          EditLabel.Height = 13
+          Height = 23
+          EditLabel.Width = 114
+          EditLabel.Height = 15
           EditLabel.Caption = 'Filter data expression:'
           TabOrder = 14
           OnExit = filterDataEditExit
@@ -345,7 +345,7 @@ object MainForm: TMainForm
           Left = 8
           Top = 182
           Width = 162
-          Height = 25
+          Height = 29
           Caption = 'Change Application Style...'
           TabOrder = 15
           OnClick = btSelectStyleClick
@@ -359,22 +359,22 @@ object MainForm: TMainForm
         Left = 88
         Top = 153
         Width = 144
-        Height = 20
+        Height = 22
         Color = clWhite
         DataField = 'StringField'
         DataSource = DataSource
         ParentColor = False
         BoundCaption = 'LabeledDBLabel:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 139
-        BoundLabel.Width = 79
-        BoundLabel.Height = 13
+        BoundLabel.Top = 137
+        BoundLabel.Width = 87
+        BoundLabel.Height = 15
       end
       object LabeledDBComboBox: TLabeledDBComboBox
         Left = 88
         Top = 66
         Width = 144
-        Height = 21
+        Height = 23
         DataField = 'StringField'
         DataSource = DataSource
         Items.Strings = (
@@ -384,9 +384,9 @@ object MainForm: TMainForm
         TabOrder = 1
         BoundCaption = 'LabeledDBComboBox:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 52
-        BoundLabel.Width = 105
-        BoundLabel.Height = 13
+        BoundLabel.Top = 50
+        BoundLabel.Width = 119
+        BoundLabel.Height = 15
       end
       object LabeledDBMemo: TLabeledDBMemo
         Left = 88
@@ -399,9 +399,9 @@ object MainForm: TMainForm
         TabOrder = 3
         BoundCaption = 'LabeledDBMemo:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 194
-        BoundLabel.Width = 82
-        BoundLabel.Height = 13
+        BoundLabel.Top = 192
+        BoundLabel.Width = 94
+        BoundLabel.Height = 15
       end
       object LabeledDBRichEdit: TLabeledDBRichEdit
         Left = 332
@@ -412,17 +412,17 @@ object MainForm: TMainForm
         DataSource = DataSource
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
         Font.Style = []
         ScrollBars = ssVertical
-        TabOrder = 5
+        TabOrder = 4
         Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
-        BoundLabel.Top = 10
-        BoundLabel.Width = 92
-        BoundLabel.Height = 13
+        BoundLabel.Top = 8
+        BoundLabel.Width = 102
+        BoundLabel.Height = 15
       end
       object LabeledDBListBox: TLabeledDBListBox
         Left = 333
@@ -431,37 +431,37 @@ object MainForm: TMainForm
         Height = 57
         DataField = 'StringField'
         DataSource = DataSource
-        ItemHeight = 13
+        ItemHeight = 15
         Items.Strings = (
           'First'
           'Second'
           'Last')
-        TabOrder = 6
+        TabOrder = 5
         BoundCaption = 'LabeledDBListBox:'
         BoundLabel.Left = 333
-        BoundLabel.Top = 114
-        BoundLabel.Width = 88
-        BoundLabel.Height = 13
+        BoundLabel.Top = 112
+        BoundLabel.Width = 97
+        BoundLabel.Height = 15
       end
       object LabeledDBEditEx: TLabeledDBEdit
         Left = 88
         Top = 24
         Width = 121
-        Height = 21
+        Height = 23
         DataField = 'StringField'
         DataSource = DataSource
         TabOrder = 0
         BoundCaption = 'LabeledDBEdit:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 10
-        BoundLabel.Width = 72
-        BoundLabel.Height = 13
+        BoundLabel.Top = 8
+        BoundLabel.Width = 79
+        BoundLabel.Height = 15
       end
       object LabeledDBLookupComboBox: TLabeledDBLookupComboBox
         Left = 88
         Top = 112
         Width = 145
-        Height = 21
+        Height = 23
         DataField = 'StringField'
         DataSource = DataSource
         KeyField = 'Key'
@@ -470,15 +470,15 @@ object MainForm: TMainForm
         TabOrder = 2
         BoundCaption = 'LabeledDBLookupComboBox:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 98
-        BoundLabel.Width = 139
-        BoundLabel.Height = 13
+        BoundLabel.Top = 96
+        BoundLabel.Width = 159
+        BoundLabel.Height = 15
       end
       object LabeledDBLookupListBox: TLabeledDBLookupListBox
         Left = 333
         Top = 208
         Width = 185
-        Height = 69
+        Height = 64
         DataField = 'StringField'
         DataSource = DataSource
         KeyField = 'Key'
@@ -487,9 +487,9 @@ object MainForm: TMainForm
         TabOrder = 7
         BoundCaption = 'LabeledDBLookupListBox:'
         BoundLabel.Left = 333
-        BoundLabel.Top = 194
-        BoundLabel.Width = 122
-        BoundLabel.Height = 13
+        BoundLabel.Top = 192
+        BoundLabel.Width = 137
+        BoundLabel.Height = 15
       end
       object LabeledDBImage: TLabeledDBImage
         Left = 592
@@ -500,57 +500,12 @@ object MainForm: TMainForm
         DataSource = DataSource
         Proportional = True
         Stretch = True
-        TabOrder = 9
+        TabOrder = 6
         BoundCaption = 'LabeledDBImage'
         BoundLabel.Left = 592
-        BoundLabel.Top = 10
-        BoundLabel.Width = 80
-        BoundLabel.Height = 13
-      end
-      object LabeledDBButtonEditFind: TLabeledDBButtonEdit
-        Left = 88
-        Top = 296
-        Width = 185
-        Height = 21
-        DataField = 'StringField'
-        DataSource = DataSource
-        TabOrder = 4
-        BoundCaption = 'LabeledDBButtonEdit (find):'
-        BoundLabel.Left = 88
-        BoundLabel.Top = 282
-        BoundLabel.Width = 133
-        BoundLabel.Height = 13
-        OnButtonEditClick = LabeledDBButtonEditFindButtonEditClick
-      end
-      object LabeledDBButtonEditCalendar: TLabeledDBButtonEdit
-        Left = 333
-        Top = 296
-        Width = 185
-        Height = 21
-        DataField = 'DateField'
-        DataSource = DataSource
-        TabOrder = 8
-        BoundCaption = 'LabeledDBButtonEdit (calendar):'
-        BoundLabel.Left = 333
-        BoundLabel.Top = 282
-        BoundLabel.Width = 156
-        BoundLabel.Height = 13
-        ButtonEditStyle = besDate
-      end
-      object LabeledDBButtonEditColor: TLabeledDBButtonEdit
-        Left = 592
-        Top = 296
-        Width = 185
-        Height = 21
-        DataField = 'IntegerField'
-        DataSource = DataSource
-        TabOrder = 10
-        BoundCaption = 'LabeledDBButtonEdit (color):'
-        BoundLabel.Left = 592
-        BoundLabel.Top = 282
-        BoundLabel.Width = 138
-        BoundLabel.Height = 13
-        ButtonEditStyle = besColor
+        BoundLabel.Top = 8
+        BoundLabel.Width = 89
+        BoundLabel.Height = 15
       end
     end
     object NumberBoxTabSheet: TTabSheet
@@ -563,48 +518,48 @@ object MainForm: TMainForm
         Left = 88
         Top = 24
         Width = 121
-        Height = 21
+        Height = 23
         TabOrder = 0
         Text = 'LabeledEditEx'
         BoundCaption = 'LabeledEditEx:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 10
-        BoundLabel.Width = 71
-        BoundLabel.Height = 13
+        BoundLabel.Top = 8
+        BoundLabel.Width = 76
+        BoundLabel.Height = 15
       end
       object LabeledCurrencyEdit: TLabeledCurrencyEdit
         Left = 88
         Top = 64
         Width = 121
-        Height = 21
+        Height = 23
         TabOrder = 1
         Text = '0,00'
         BoundCaption = 'LabeledCurrencyEdit:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 50
-        BoundLabel.Width = 103
-        BoundLabel.Height = 13
+        BoundLabel.Top = 48
+        BoundLabel.Width = 112
+        BoundLabel.Height = 15
       end
       object LabeledSpinEdit: TLabeledSpinEdit
         Left = 88
         Top = 272
         Width = 121
-        Height = 22
+        Height = 24
         MaxValue = 0
         MinValue = 0
         TabOrder = 5
         Value = 0
         BoundCaption = 'LabeledSpinEdit'
         BoundLabel.Left = 88
-        BoundLabel.Top = 258
-        BoundLabel.Width = 75
-        BoundLabel.Height = 13
+        BoundLabel.Top = 256
+        BoundLabel.Width = 84
+        BoundLabel.Height = 15
       end
       object LabeledComboBox: TLabeledComboBox
         Left = 88
         Top = 104
         Width = 145
-        Height = 21
+        Height = 23
         TabOrder = 2
         Text = 'LabeledComboBox'
         Items.Strings = (
@@ -613,24 +568,24 @@ object MainForm: TMainForm
           'Last')
         BoundCaption = 'LabeledComboBox:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 90
-        BoundLabel.Width = 92
-        BoundLabel.Height = 13
+        BoundLabel.Top = 88
+        BoundLabel.Width = 104
+        BoundLabel.Height = 15
       end
       object LabeledMaskEdit: TLabeledMaskEdit
         Left = 88
         Top = 144
         Width = 120
-        Height = 21
+        Height = 23
         EditMask = '!99/99/0000;1;_'
         MaxLength = 10
         TabOrder = 3
         Text = '  /  /    '
         BoundCaption = 'LabeledMaskEdit'
         BoundLabel.Left = 88
-        BoundLabel.Top = 130
-        BoundLabel.Width = 79
-        BoundLabel.Height = 13
+        BoundLabel.Top = 128
+        BoundLabel.Width = 89
+        BoundLabel.Height = 15
       end
       object LabeledRadioGroup: TLabeledRadioGroup
         Left = 88
@@ -646,9 +601,9 @@ object MainForm: TMainForm
         TabStop = True
         BoundCaption = 'LabeledRadioGroup'
         BoundLabel.Left = 88
-        BoundLabel.Top = 170
-        BoundLabel.Width = 93
-        BoundLabel.Height = 13
+        BoundLabel.Top = 168
+        BoundLabel.Width = 104
+        BoundLabel.Height = 15
       end
       object LabeledRichEdit: TLabeledRichEdit
         Left = 340
@@ -657,8 +612,8 @@ object MainForm: TMainForm
         Height = 81
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Tahoma'
+        Font.Height = -12
+        Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
         ScrollBars = ssVertical
@@ -666,16 +621,16 @@ object MainForm: TMainForm
         Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
-        BoundLabel.Top = 102
-        BoundLabel.Width = 79
-        BoundLabel.Height = 13
+        BoundLabel.Top = 100
+        BoundLabel.Width = 87
+        BoundLabel.Height = 15
       end
       object LabeledCheckListBox: TLabeledCheckListBox
         Left = 340
         Top = 224
         Width = 185
         Height = 57
-        ItemHeight = 13
+        ItemHeight = 15
         Items.Strings = (
           'First'
           'Second'
@@ -683,16 +638,16 @@ object MainForm: TMainForm
         TabOrder = 8
         BoundCaption = 'LabeledCheckListBox:'
         BoundLabel.Left = 340
-        BoundLabel.Top = 210
-        BoundLabel.Width = 104
-        BoundLabel.Height = 13
+        BoundLabel.Top = 208
+        BoundLabel.Width = 115
+        BoundLabel.Height = 15
       end
       object LabeledListBox: TLabeledListBox
         Left = 341
         Top = 300
         Width = 184
         Height = 57
-        ItemHeight = 13
+        ItemHeight = 15
         Items.Strings = (
           'First'
           'Second'
@@ -700,9 +655,9 @@ object MainForm: TMainForm
         TabOrder = 9
         BoundCaption = 'LabeledListBox:'
         BoundLabel.Left = 341
-        BoundLabel.Top = 286
-        BoundLabel.Width = 75
-        BoundLabel.Height = 13
+        BoundLabel.Top = 284
+        BoundLabel.Width = 82
+        BoundLabel.Height = 15
         TextDelimited = 'First;Second;Last'
       end
       object LabeledMemo: TLabeledMemo
@@ -716,55 +671,9 @@ object MainForm: TMainForm
         TabOrder = 6
         BoundCaption = 'LabeledMemo:'
         BoundLabel.Left = 340
-        BoundLabel.Top = 10
-        BoundLabel.Width = 69
-        BoundLabel.Height = 13
-      end
-      object LabeledButtonEditFind: TLabeledButtonEdit
-        Left = 600
-        Top = 24
-        Width = 185
-        Height = 21
-        TabOrder = 10
-        Text = ''
-        BoundCaption = 'LabeledDBButtonEdit (find):'
-        BoundLabel.Left = 600
-        BoundLabel.Top = 10
-        BoundLabel.Width = 133
-        BoundLabel.Height = 13
-        OnButtonEditClick = LabeledDBButtonEditFindButtonEditClick
-      end
-      object LabeledButtonEditCalendar: TLabeledButtonEdit
-        Left = 600
-        Top = 64
-        Width = 185
-        Height = 21
-        EditMask = '!99/99/9999;1; '
-        MaxLength = 10
-        TabOrder = 11
-        Text = '  /  /    '
-        BoundCaption = 'LabeledDBButtonEdit (calendar):'
-        BoundLabel.Left = 600
-        BoundLabel.Top = 50
-        BoundLabel.Width = 156
-        BoundLabel.Height = 13
-        ButtonEditStyle = besDate
-      end
-      object LabeledButtonEditColor: TLabeledButtonEdit
-        Left = 600
-        Top = 104
-        Width = 185
-        Height = 21
-        EditMask = '>aaaaaa;1; '
-        MaxLength = 6
-        TabOrder = 12
-        Text = '      '
-        BoundCaption = 'LabeledDBButtonEdit (color):'
-        BoundLabel.Left = 600
-        BoundLabel.Top = 90
-        BoundLabel.Width = 138
-        BoundLabel.Height = 13
-        ButtonEditStyle = besColor
+        BoundLabel.Top = 8
+        BoundLabel.Width = 79
+        BoundLabel.Height = 15
       end
     end
     object ColorsTabSheet: TTabSheet
@@ -5088,9 +4997,9 @@ object MainForm: TMainForm
         Stretch = True
         BoundCaption = 'LabeledImage Ethea:'
         BoundLabel.Left = 112
-        BoundLabel.Top = 18
-        BoundLabel.Width = 102
-        BoundLabel.Height = 13
+        BoundLabel.Top = 16
+        BoundLabel.Width = 109
+        BoundLabel.Height = 15
       end
       object LabeledImageLogo: TLabeledImage
         Left = 112
@@ -5424,9 +5333,9 @@ object MainForm: TMainForm
         Stretch = True
         BoundCaption = 'LabeledImageLogo:'
         BoundLabel.Left = 112
-        BoundLabel.Top = 242
-        BoundLabel.Width = 94
-        BoundLabel.Height = 13
+        BoundLabel.Top = 240
+        BoundLabel.Width = 104
+        BoundLabel.Height = 15
       end
       object LabeledColorGrid: TLabeledColorGrid
         Left = 360
@@ -5436,21 +5345,21 @@ object MainForm: TMainForm
         TabOrder = 0
         BoundCaption = 'LabeledColorGrid:'
         BoundLabel.Left = 360
-        BoundLabel.Top = 26
-        BoundLabel.Width = 85
-        BoundLabel.Height = 13
+        BoundLabel.Top = 24
+        BoundLabel.Width = 95
+        BoundLabel.Height = 15
       end
       object LabeledColorBox: TLabeledColorBox
         Left = 360
         Top = 240
         Width = 145
-        Height = 19
+        Height = 21
         TabOrder = 1
         BoundCaption = 'LabeledColorBox:'
         BoundLabel.Left = 360
-        BoundLabel.Top = 226
-        BoundLabel.Width = 84
-        BoundLabel.Height = 13
+        BoundLabel.Top = 224
+        BoundLabel.Width = 93
+        BoundLabel.Height = 15
       end
     end
   end
@@ -5471,10 +5380,10 @@ object MainForm: TMainForm
       OnClick = OpenButtonClick
     end
     object PositionLabeledComboBox: TLabeledComboBox
-      Left = 216
-      Top = 18
+      Left = 225
+      Top = 16
       Width = 145
-      Height = 21
+      Height = 23
       Style = csDropDownList
       DropDownCount = 12
       ItemIndex = 0
@@ -5495,10 +5404,10 @@ object MainForm: TMainForm
         'lpRightMiddle'
         'lpRightBottom')
       BoundCaption = 'Change Label Position:'
-      BoundLabel.Left = 104
-      BoundLabel.Top = 22
-      BoundLabel.Width = 109
-      BoundLabel.Height = 13
+      BoundLabel.Left = 101
+      BoundLabel.Top = 20
+      BoundLabel.Width = 121
+      BoundLabel.Height = 15
       BoundLabel.Alignment = taRightJustify
       BoundLabel.LabelPosition = lpLeftMiddle
       BoundLabel.LabelSpacing = 3
@@ -5516,7 +5425,7 @@ object MainForm: TMainForm
     end
     object DBNavigator: TDBNavigator
       Left = 469
-      Top = 13
+      Top = 16
       Width = 240
       Height = 25
       TabOrder = 3

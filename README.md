@@ -2,7 +2,7 @@
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.2.1 (VCL)
+### Actual official version 1.2.2 (VCL)
 
 An advanced TDbGrid component:
 
@@ -81,6 +81,9 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+05 Sep 2022: ver.1.2.2
+- Refactoring of rendering TLabeledDBGrid to fix some problems when dgRowSelect is active
+
 19 Aug 2022: ver.1.2.1
 - Fixed checkbox drawing in "Windows" style, using rowmargin and/or LinesPerRow
 - Fixed drawing cell right aligned

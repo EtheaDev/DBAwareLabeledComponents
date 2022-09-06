@@ -59,7 +59,9 @@ type
   private
     FScaleFactor: Single;
   public
+  {$IFDEF D10_3+}
     procedure ScaleForPPI(NewPPI: Integer); override;
+  {$ENDIF}
     Constructor CreateSelectOption( AOwner : TComponent; NewFont : Tfont; Resize : boolean;
        AOptions : TStringList; Title : string; NewWidth : integer = 0; NewHeight : integer = 0;
        HelpContext : integer = 0; SelectedIndex : integer = 0);
@@ -185,11 +187,13 @@ begin
     gb.SetFocus;
 end;
 
+{$IFDEF D10_3+}
 procedure TfmSelectOption.ScaleForPPI(NewPPI: Integer);
 begin
   inherited;
   FScaleFactor := NewPPI / PixelsPerInch;
 end;
+{$ENDIF}
 
 constructor TfmSelectOption.CreateSelectOption( AOwner : TComponent;
   NewFont : Tfont; Resize : boolean;

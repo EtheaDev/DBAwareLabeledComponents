@@ -28,7 +28,6 @@ package DBAwareLabeledComponents;
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
 {$LIBSUFFIX '_DXE3'}
 {$RUNONLY}
-{$WARNINGS OFF}
 {$IMPLICITBUILD ON}
 
 requires
