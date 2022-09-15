@@ -26,7 +26,7 @@ This library contains also the classic VCL editors (standard and data-aware) wit
 It is no longer necessary to keep the Label "connected" and "aligned" by hand to the editor: on every component you can specify 3 simple properties:
 - BoundCaption
 - BoundLabel.Labelposition
-- BoundCaption.LabelSpacing (default 1)
+- BoundLabel.LabelSpacing (default 1)
 
 The label can be positioned with 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
