@@ -10,12 +10,10 @@ object MainForm: TMainForm
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = True
   ShowHint = True
   WindowState = wsMaximized
   OnCreate = FormCreate
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 15
   object PageControl: TPageControl
     Left = 0
@@ -25,6 +23,7 @@ object MainForm: TMainForm
     ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
+    ExplicitTop = -6
     object DbGridTabSheet: TTabSheet
       Caption = 'Labeled and Advanced DbGrid'
       ImageIndex = 2
@@ -146,6 +145,8 @@ object MainForm: TMainForm
         Height = 218
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 199
+        ExplicitWidth = 808
         object FontLabel: TLabel
           Left = 340
           Top = 122
@@ -283,9 +284,9 @@ object MainForm: TMainForm
           Top = 17
           Width = 201
           Height = 193
-          OnClickCheck = lbOptionsClickCheck
           ItemHeight = 15
           TabOrder = 10
+          OnClickCheck = lbOptionsClickCheck
         end
         object cbDrawCheckBoxImages: TCheckBox
           Left = 340
@@ -339,6 +340,7 @@ object MainForm: TMainForm
           EditLabel.Height = 15
           EditLabel.Caption = 'Filter data expression:'
           TabOrder = 14
+          Text = ''
           OnExit = filterDataEditExit
         end
         object btSelectStyle: TButton
@@ -417,7 +419,6 @@ object MainForm: TMainForm
         Font.Style = []
         ScrollBars = ssVertical
         TabOrder = 4
-        Zoom = 100
         BoundCaption = 'LabeledDBRichEdit:'
         BoundLabel.Left = 332
         BoundLabel.Top = 8
@@ -618,7 +619,6 @@ object MainForm: TMainForm
         ParentFont = False
         ScrollBars = ssVertical
         TabOrder = 7
-        Zoom = 100
         BoundCaption = 'LabeledRichEdit:'
         BoundLabel.Left = 340
         BoundLabel.Top = 100
@@ -630,7 +630,7 @@ object MainForm: TMainForm
         Top = 224
         Width = 185
         Height = 57
-        ItemHeight = 15
+        ItemHeight = 17
         Items.Strings = (
           'First'
           'Second'
@@ -5353,7 +5353,7 @@ object MainForm: TMainForm
         Left = 360
         Top = 240
         Width = 145
-        Height = 21
+        Height = 22
         TabOrder = 1
         BoundCaption = 'LabeledColorBox:'
         BoundLabel.Left = 360
@@ -5370,6 +5370,8 @@ object MainForm: TMainForm
     Height = 59
     Align = alBottom
     TabOrder = 1
+    ExplicitTop = 447
+    ExplicitWidth = 816
     object OpenButton: TButton
       Left = 8
       Top = 14
