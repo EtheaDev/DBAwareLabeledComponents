@@ -1045,6 +1045,27 @@ end;
 
 { TLabeledDbGrid }
 
+function TruncStringInRect(ACanvas: TCanvas; ARect: TRect; const AText: string; AOffset: Integer): string;
+const
+  DOTS = '...';
+var
+  maxDim, idx: Integer ;
+begin
+  maxDim := (ARect.Right - ARect.Left + 1) - (AOffset*2) ;
+  if ACanvas.TextWidth(AText) <= maxDim then
+    Result := AText
+  else
+    for idx := 1 to Length(AText) do
+    begin
+      Result := Copy(AText, 1, idx) + DOTS ;
+      if ACanvas.TextWidth(Result) > MaxDim then
+      begin
+        Result := Copy(AText, 1, idx-1) + DOTS ;
+        Break ;
+      end;
+    end;
+end;
+
 //Same as VCL source
 procedure TLabeledDbGrid.WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
   const AField: TField; Const AColumn: TColumn);
@@ -1079,6 +1100,9 @@ begin
     Text := AField.DisplayText
   else
     Text := '';
+
+  if LinesPerRow=1 then
+    Text := TruncStringInRect(Canvas, ARect, Text, DX) ;
 
   Alignment := AColumn.Alignment;
   ARightToLeft := UseRightToLeftAlignmentForField(AField, AColumn.Alignment);
