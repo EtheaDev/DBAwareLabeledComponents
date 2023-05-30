@@ -61,6 +61,8 @@ function GetStyledColor(Color: TColor): TColor;
 function PadL(Const InString: String; Len: Integer; FChar: Char): String;
 function PadR(Const InString: String; Len: Integer; FChar: Char): String;
 
+function LightenColor(Color: TColor; Percentage: Cardinal): TColor;
+
 implementation
 
 uses
@@ -69,6 +71,7 @@ uses
   , Vcl.DbAwareLabeledConsts
   , Vcl.Controls
   , Vcl.Themes
+  , Vcl.GraphUtil
   ;
 
 //sostituisce un carattere in un altro all'interno di una stringa (zero-based)
@@ -366,6 +369,17 @@ end;
 function PadR(Const InString: String; Len: Integer; FChar: Char): String;
 begin
   Result := InString + StringOfChar(FChar,Len-Length(InString));
+end;
+
+function LightenColor(Color: TColor; Percentage: Cardinal): TColor;
+var
+  rgb: LongInt;
+  h, s, l: Word;
+begin
+  rgb := ColorToRGB(Color);
+  ColorRGBToHLS(rgb, h, l, s);
+  l := (Cardinal(l) * Percentage) div 100;
+  Result := TColor(ColorHLSToRGB(h, l, s));
 end;
 
 end.

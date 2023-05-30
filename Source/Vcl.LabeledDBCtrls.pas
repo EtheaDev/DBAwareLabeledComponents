@@ -319,6 +319,7 @@ Type
     FOnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent;
     FLinesPerRow: Integer;
     FRowMargin: Integer;
+    FWrapAllText: Boolean;
     function TitleOffset: Integer;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
@@ -356,6 +357,7 @@ Type
     procedure WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
       const AField: TField; Const AColumn: TColumn);
     function CalcRowMargin(const ARect: TRect): Integer;
+    procedure SetWrapAllText(const Value: Boolean);
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -428,6 +430,7 @@ Type
     property UnsortableFields: string read FUnsortableFields write FUnsortableFields;
     property CanEditColumn: TCBCanEditColumn read FCanEditColumn write FCanEditColumn;
     property RowMargin: Integer read FRowMargin write SetRowMargin default 0;
+    property WrapAllText: Boolean read FWrapAllText write SetWrapAllText default False;
   end;
 
   TNavInsMode = (imInsert, imAppend);
@@ -1045,6 +1048,27 @@ end;
 
 { TLabeledDbGrid }
 
+function TruncStringInRect(ACanvas: TCanvas; ARect: TRect; const AText: string; AOffset: Integer): string;
+const
+  DOTS = '...';
+var
+  maxDim, idx: Integer ;
+begin
+  maxDim := (ARect.Right - ARect.Left + 1) - (AOffset*2) ;
+  if ACanvas.TextWidth(AText) <= maxDim then
+    Result := AText
+  else
+    for idx := 1 to Length(AText) do
+    begin
+      Result := Copy(AText, 1, idx) + DOTS ;
+      if ACanvas.TextWidth(Result) > MaxDim then
+      begin
+        Result := Copy(AText, 1, idx-1) + DOTS ;
+        Break ;
+      end;
+    end;
+end;
+
 //Same as VCL source
 procedure TLabeledDbGrid.WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
   const AField: TField; Const AColumn: TColumn);
@@ -1055,7 +1079,7 @@ const
       DT_CENTER or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX );
   RTL: array [Boolean] of Integer = (0, DT_RTLREADING);
 var
-  Text: string;
+  Text, TruncText: string;
   Alignment: TAlignment;
   ARightToLeft: Boolean;
   B, R: TRect;
@@ -1063,6 +1087,7 @@ var
   I: TColorRef;
   LFormat: Integer;
   LMemoField: Boolean;
+  LWrapText: Boolean;
 begin
   ACanvas.Font.Name := Font.Name;
   ACanvas.Font.Style := Font.Style;
@@ -1071,14 +1096,25 @@ begin
   //Verifiy that Field is a Memofield
   LMemoField := Assigned(AField) and (AField.DataType in [ftMemo, ftFmtMemo, ftWideMemo]);
   if LMemoField then
-  begin
-    Text := AField.AsString;
-    ACanvas.FillRect(ARect);
-  end
+    Text := AField.AsString
   else if Assigned(AField) and not (FDrawCheckBoxImages and isCheckBoxedField(AField)) then //Empty Text if drawing checkbox
     Text := AField.DisplayText
   else
     Text := '';
+
+  TruncText := TruncStringInRect(Canvas, ARect, Text, DX) ;
+
+  if (LinesPerRow = 1) or (Text = TruncText) or not FWrapAllText or
+     ((Text <> TruncText) and not Text.Contains(' ')) then
+  begin
+    Text := TruncText;
+    LWrapText := False
+  end
+  else
+    LWrapText := True;
+
+  if LMemoField or LWrapText then
+    ACanvas.FillRect(ARect);
 
   Alignment := AColumn.Alignment;
   ARightToLeft := UseRightToLeftAlignmentForField(AField, AColumn.Alignment);
@@ -1100,7 +1136,7 @@ begin
         - (ACanvas.TextWidth(Text) div 2);
     end;
     //Se il campo è un memo lo stampa su n righe:
-    if LMemoField then
+    if LMemoField or LWrapText then
     begin
       LFormat := dt_WordBreak or dt_NoPrefix;
       //Riduce l'area di stampa in base ai margini
@@ -1461,6 +1497,15 @@ begin
   inherited TitleFont.Assign(Value);
 end;
 
+procedure TLabeledDbGrid.SetWrapAllText(const Value: Boolean);
+begin
+  if FWrapAllText <> Value then
+  begin
+    FWrapAllText := Value;
+    Invalidate;
+  end;
+end;
+
 procedure TLabeledDbGrid.StandardSort(Field: TField; var SortOrder: TCBSortOrder);
 var
   DataSet: TDataSet;
@@ -1730,7 +1775,11 @@ begin
           if DefaultWindowsStyleEnabled then
             CellColor := clInfoBk
           else
-            CellColor := GetCellColor;
+          //CellColor := GetCellColor;
+          begin
+            CellColor := LightenColor(GetStyledColor(clHighlight), 150);
+            Canvas.Font.Color :=LightenColor(GetStyledColor(clHighlightText), 25);
+          end;
         end
         else
           CellColor := GetCellColor;
@@ -1760,6 +1809,26 @@ begin
     end
     else
       CellColor := GetCellColor;
+  end;
+
+  if dgAlwaysShowSelection in Options then
+  begin
+    if (DataSource = nil) or (DataSource.DataSet = nil) or (DataSource.DataSet.EOF and DataSource.DataSet.BOF) then
+      Canvas.Brush.Color := GetStyledColor(Color)
+    else
+    if not Focused and ( gdSelected in State ) then
+    begin
+      if DefaultWindowsStyleEnabled then
+      begin
+        Canvas.Brush.Color := clInactiveCaption;
+        Canvas.Font.Color  := clInactiveCaptionText;
+      end
+      else
+      begin
+        Canvas.Brush.Color := LightenColor(GetStyledColor(clHighlight), 150);
+        Canvas.Font.Color  := LightenColor(GetStyledColor(clHighlightText), 25);
+      end;
+    end;
   end;
 
   // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
