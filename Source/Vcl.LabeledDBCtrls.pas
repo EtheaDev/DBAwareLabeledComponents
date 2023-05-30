@@ -1754,7 +1754,11 @@ begin
           if DefaultWindowsStyleEnabled then
             CellColor := clInfoBk
           else
-            CellColor := GetCellColor;
+          //CellColor := GetCellColor;
+          begin
+            CellColor := LightenColor(GetStyledColor(clHighlight), 150);
+            Canvas.Font.Color :=LightenColor(GetStyledColor(clHighlightText), 25);
+          end;
         end
         else
           CellColor := GetCellColor;
