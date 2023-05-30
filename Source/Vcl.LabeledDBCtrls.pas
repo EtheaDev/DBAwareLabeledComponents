@@ -1786,6 +1786,26 @@ begin
       CellColor := GetCellColor;
   end;
 
+  if dgAlwaysShowSelection in Options then
+  begin
+    if (DataSource = nil) or (DataSource.DataSet = nil) or (DataSource.DataSet.EOF and DataSource.DataSet.BOF) then
+      Canvas.Brush.Color := GetStyledColor(Color)
+    else
+    if not Focused and ( gdSelected in State ) then
+    begin
+      if DefaultWindowsStyleEnabled then
+      begin
+        Canvas.Brush.Color := clInactiveCaption;
+        Canvas.Font.Color  := clInactiveCaptionText;
+      end
+      else
+      begin
+        Canvas.Brush.Color := LightenColor(GetStyledColor(clHighlight), 150);
+        Canvas.Font.Color  := LightenColor(GetStyledColor(clHighlightText), 25);
+      end;
+    end;
+  end;
+
   // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
   // false e true, l'immagine check e uncheck
   if (not (csLoading in ComponentState)) and isCheckBoxedColumn(Column) and FDrawCheckBoxImages then
