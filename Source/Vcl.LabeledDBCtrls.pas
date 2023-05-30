@@ -319,6 +319,7 @@ Type
     FOnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent;
     FLinesPerRow: Integer;
     FRowMargin: Integer;
+    FWrapAllText: Boolean;
     function TitleOffset: Integer;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
@@ -356,6 +357,7 @@ Type
     procedure WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
       const AField: TField; Const AColumn: TColumn);
     function CalcRowMargin(const ARect: TRect): Integer;
+    procedure SetWrapAllText(const Value: Boolean);
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -428,6 +430,7 @@ Type
     property UnsortableFields: string read FUnsortableFields write FUnsortableFields;
     property CanEditColumn: TCBCanEditColumn read FCanEditColumn write FCanEditColumn;
     property RowMargin: Integer read FRowMargin write SetRowMargin default 0;
+    property WrapAllText: Boolean read FWrapAllText write SetWrapAllText default False;
   end;
 
   TNavInsMode = (imInsert, imAppend);
@@ -1076,7 +1079,7 @@ const
       DT_CENTER or DT_WORDBREAK or DT_EXPANDTABS or DT_NOPREFIX );
   RTL: array [Boolean] of Integer = (0, DT_RTLREADING);
 var
-  Text: string;
+  Text, TruncText: string;
   Alignment: TAlignment;
   ARightToLeft: Boolean;
   B, R: TRect;
@@ -1084,6 +1087,7 @@ var
   I: TColorRef;
   LFormat: Integer;
   LMemoField: Boolean;
+  LWrapText: Boolean;
 begin
   ACanvas.Font.Name := Font.Name;
   ACanvas.Font.Style := Font.Style;
@@ -1092,17 +1096,25 @@ begin
   //Verifiy that Field is a Memofield
   LMemoField := Assigned(AField) and (AField.DataType in [ftMemo, ftFmtMemo, ftWideMemo]);
   if LMemoField then
-  begin
-    Text := AField.AsString;
-    ACanvas.FillRect(ARect);
-  end
+    Text := AField.AsString
   else if Assigned(AField) and not (FDrawCheckBoxImages and isCheckBoxedField(AField)) then //Empty Text if drawing checkbox
     Text := AField.DisplayText
   else
     Text := '';
 
-  if LinesPerRow=1 then
-    Text := TruncStringInRect(Canvas, ARect, Text, DX) ;
+  TruncText := TruncStringInRect(Canvas, ARect, Text, DX) ;
+
+  if (LinesPerRow = 1) or (Text = TruncText) or not FWrapAllText or
+     ((Text <> TruncText) and not Text.Contains(' ')) then
+  begin
+    Text := TruncText;
+    LWrapText := False
+  end
+  else
+    LWrapText := True;
+
+  if LMemoField or LWrapText then
+    ACanvas.FillRect(ARect);
 
   Alignment := AColumn.Alignment;
   ARightToLeft := UseRightToLeftAlignmentForField(AField, AColumn.Alignment);
@@ -1124,7 +1136,7 @@ begin
         - (ACanvas.TextWidth(Text) div 2);
     end;
     //Se il campo è un memo lo stampa su n righe:
-    if LMemoField then
+    if LMemoField or LWrapText then
     begin
       LFormat := dt_WordBreak or dt_NoPrefix;
       //Riduce l'area di stampa in base ai margini
@@ -1483,6 +1495,15 @@ end;
 procedure TLabeledDbGrid.SetTitleFont(const Value: TFont);
 begin
   inherited TitleFont.Assign(Value);
+end;
+
+procedure TLabeledDbGrid.SetWrapAllText(const Value: Boolean);
+begin
+  if FWrapAllText <> Value then
+  begin
+    FWrapAllText := Value;
+    Invalidate;
+  end;
 end;
 
 procedure TLabeledDbGrid.StandardSort(Field: TField; var SortOrder: TCBSortOrder);
