@@ -320,6 +320,7 @@ Type
     FLinesPerRow: Integer;
     FRowMargin: Integer;
     FWrapAllText: Boolean;
+    FColMoving: Boolean;
     function TitleOffset: Integer;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
@@ -358,6 +359,7 @@ Type
       const AField: TField; Const AColumn: TColumn);
     function CalcRowMargin(const ARect: TRect): Integer;
     procedure SetWrapAllText(const Value: Boolean);
+    procedure SetColMoving(const Value: Boolean);
   protected
     procedure SetParent(AParent: TWinControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -431,6 +433,7 @@ Type
     property CanEditColumn: TCBCanEditColumn read FCanEditColumn write FCanEditColumn;
     property RowMargin: Integer read FRowMargin write SetRowMargin default 0;
     property WrapAllText: Boolean read FWrapAllText write SetWrapAllText default False;
+    property ColMoving: Boolean read FColMoving write SetColMoving default True;
   end;
 
   TNavInsMode = (imInsert, imAppend);
@@ -1203,6 +1206,7 @@ begin
   FSearchTimer.Interval := INCREMENTAL_DELAY_DEFAULT;
   FSearchTimer.Enabled := False;
   FSearchTimer.OnTimer := OnSearchTimer;
+  FColMoving := True;
 end;
 
 procedure TLabeledDbGrid.VisibleChanging;
@@ -2368,6 +2372,23 @@ begin
   Result := FindColumnByFieldName(OldfieldName, Column);
   if Result then
     Column.FieldName := NewFieldName;
+end;
+
+
+type
+  THackCustomGrid = class(TCustomGrid)
+  public
+    property Options;
+  end;
+
+procedure TLabeledDbGrid.SetColMoving(const Value: Boolean);
+begin
+  FColMoving := Value;
+  with THackCustomGrid(Self) do
+  if Value then
+    Options := Options + [goColMoving]
+  else
+    Options := Options - [goColMoving];
 end;
 
 { TLabeledDBLabel }
