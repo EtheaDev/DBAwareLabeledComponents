@@ -297,6 +297,8 @@ Type
   TCBCheckBoxedColumnEvent = procedure (Column: TColumn; var IsCheckBoxedColumn: Boolean) of object;
   TColumnNotifyEvent = procedure (Column: TColumn) of object;
 
+  TGridIncrementalSearchType = (stBeginsWith, stFilterBy);
+
   TLabeledDbGrid = class(TDBGrid)
   private
     FBoundLabel: TControlBoundLabel;
@@ -322,6 +324,7 @@ Type
     FWrapAllText: Boolean;
     FColMoving: Boolean;
     FTitleMouseDown: boolean;
+    FIncrementalSearchType: TGridIncrementalSearchType;
     function TitleOffset: Integer;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
@@ -346,6 +349,7 @@ Type
     function isCheckBoxedField(Field: TField): boolean;
     function isUnsortableField(Field: TField): boolean;
     procedure doIncrementalLocate;
+    procedure doIncrementalFilter;
     procedure SetIncrementalSearchDelay(const Value: integer);
     function GetIncrementalSearchDelay: integer;
     procedure SetDrawCheckBoxImages(const Value: Boolean);
@@ -416,6 +420,8 @@ Type
     function ColumnIndexByFieldName(const AFieldName: string): Integer;
     function GetMouseOverField(X, Y: Integer): TField;
     function GetDefaultRowHeight: Integer;
+    procedure ClearFilters;
+
   published
     property TitleFont: TFont read GetTitleFont write SetTitleFont stored False;
     property IsEmpty: Boolean read GetIsEmpty;
@@ -440,6 +446,7 @@ Type
     property RowMargin: Integer read FRowMargin write SetRowMargin default 0;
     property WrapAllText: Boolean read FWrapAllText write SetWrapAllText default False;
     property ColMoving: Boolean read FColMoving write SetColMoving default True;
+    property IncrementalSearchType: TGridIncrementalSearchType read FIncrementalSearchType write FIncrementalSearchType default stBeginsWith;
   end;
 
   TNavInsMode = (imInsert, imAppend);
@@ -1216,6 +1223,7 @@ begin
   FDrawCheckBoxImages := True;
   FShowSortOrder := True;
   FIncrementalSearch := False;
+  FIncrementalSearchType := stBeginsWith;
   FSearchTimer := TTimer.Create(nil);
   FSearchTimer.Interval := INCREMENTAL_DELAY_DEFAULT;
   FSearchTimer.Enabled := False;
@@ -2180,12 +2188,67 @@ begin
   FSearchTimer.Enabled := True;
 end;
 
+procedure TLabeledDbGrid.doIncrementalFilter;
+var
+  IntValue: Integer;
+  DateValue: TDateTime;
+begin
+  FSearchTimer.Enabled := False;
+
+  if (DataSource = nil) or (Datasource.DataSet = nil) or (SelectedField = nil) then
+    Exit;
+
+  Datasource.DataSet.Filtered := False;
+
+  if StrRicercaIncrementale = '' then
+    Datasource.DataSet.Filter := ''
+  else
+  begin
+    Screen.Cursor := crHourGlass;
+    Try
+      if SelectedField.InheritsFrom(TNumericField) then
+      begin
+        if TryStrToInt(StrRicercaIncrementale, IntValue) then
+          Datasource.DataSet.Filter := SelectedField.FieldName + '='+ IntValue.ToString;
+      end
+      else if SelectedField.InheritsFrom(TDateField) then
+      begin
+        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+          Datasource.DataSet.Filter := SelectedField.FieldName + '='+ QuotedStr(DateToStr(DateValue));
+      end
+      else if SelectedField.InheritsFrom(TDateTimeField) or SelectedField.InheritsFrom(TSQLTimeStampField) then
+      begin
+        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+          Datasource.DataSet.Filter := SelectedField.FieldName + '>='+ QuotedStr(DateTimeToStr(DateValue));
+      end
+      else
+        Datasource.DataSet.Filter := SelectedField.FieldName+ ' like ' +QuotedStr('%'+StrRicercaIncrementale+'%');
+
+      Datasource.DataSet.Filtered := True;
+    Finally
+      Screen.Cursor := crDefault;
+    End;
+  end;
+end;
+
+procedure TLabeledDbGrid.ClearFilters;
+begin
+  ChangeStrSearch('');
+  OnSearchTimer(self);
+end;
+
+
+
 procedure TLabeledDbGrid.doIncrementalLocate;
 var
   IntValue: Integer;
   DateValue: TDateTime;
 begin
   FSearchTimer.Enabled := False;
+
+  if (DataSource = nil) or (Datasource.DataSet = nil) or (SelectedField = nil) then
+    Exit;
+
   if StrRicercaIncrementale <> '' then
   begin
     Screen.Cursor := crHourGlass;
@@ -2370,7 +2433,10 @@ end;
 
 procedure TLabeledDbGrid.OnSearchTimer(Sender: TObject);
 begin
-  doIncrementalLocate;
+  case FIncrementalSearchType of
+    stBeginsWith: doIncrementalLocate;
+    stFilterBy  : doIncrementalFilter;
+  end;
 end;
 
 procedure TLabeledDbGrid.SetIncrementalSearchDelay(const Value: integer);
