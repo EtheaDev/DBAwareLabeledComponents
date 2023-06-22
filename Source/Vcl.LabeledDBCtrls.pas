@@ -321,6 +321,7 @@ Type
     FRowMargin: Integer;
     FWrapAllText: Boolean;
     FColMoving: Boolean;
+    FTitleMouseDown: boolean;
     function TitleOffset: Integer;
     procedure OnSearchTimer(Sender : TObject);
     procedure SetBoundCaption(const Value: TCaption);
@@ -381,12 +382,17 @@ Type
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: Integer); override;
+      procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X: Integer; Y: Integer); override;
+
     function GetBorderStyle: TBorderStyle;
     {$IF DEFINE DXE8+}
     procedure ChangeScale(M, D: Integer; isDpiChange: Boolean); override;
     {$ELSE}
     procedure ChangeScale(M, D: Integer); override;
     {$ENDIF}
+
+    function  CreateColumns: TDBGridColumns; override;
+
   public
     procedure DefaultDrawColumnCell(const Rect: TRect; DataCol: Integer;
       Column: TColumn; State: TGridDrawState);
@@ -452,6 +458,14 @@ uses
   DBActns, UxTheme, UITypes,
   //Labeled components
   Vcl.DbAwareLabeledUtils, Vcl.LabeledCtrls;
+  
+type
+  TXColumn = class(TColumn)
+  private
+    FTitleCaption: string;
+  public
+    property TitleCaption: string read FTitleCaption write FTitleCaption;
+  end;
 
 var
   DbGridPrintSupport: TStringList;
@@ -1209,6 +1223,11 @@ begin
   FColMoving := True;
 end;
 
+function TLabeledDbGrid.CreateColumns: TDBGridColumns;
+begin
+  Result := TDBGridColumns.Create(Self, TXColumn)
+end;
+
 procedure TLabeledDbGrid.VisibleChanging;
 begin
   inherited;
@@ -1341,6 +1360,8 @@ var
   SortOrder: TCBSortOrder;
   LRect: TRect;
   LDataLinkActive: Boolean;
+
+  Text: string;
 begin
   dxGridSortedShapeMinWidth := ARect.Bottom - ARect.Top; //16
   //se è il record corrente aggiorno il flag in modo tale che nell'evento
@@ -1355,6 +1376,26 @@ begin
       FDrawingCurrentRecord := True
     else
       FDrawingCurrentRecord := False;
+
+    // artifizio per avere i puntini di sospensione anche in caso di troncatura del testo sul titolo
+    if not FTitleMouseDown and (gdFixed in AState) and (ACol > 0) and not(csDesigning in ComponentState) then
+    begin
+      DrawColumn := Columns[ACol];
+      Text := TXColumn(DrawColumn).TitleCaption;
+
+      if Text = '' then
+      begin
+        Text := DrawColumn.Title.Caption;
+        TXColumn(DrawColumn).TitleCaption := Text; // prima assegnazione della caption originale
+      end;
+
+      if (StrRicercaIncrementale <> '') and (SelectedIndex = ACol) then
+        Text := '[' + StrRicercaIncrementale + '] '+Text;
+
+      DrawColumn.Title.Caption := TruncStringInRect(Canvas, ARect, Text, 2) ;
+    end;
+    //--ale
+
   finally
     Inc(ACol, IndicatorOffset);
   end;
@@ -1623,6 +1664,9 @@ end;
 procedure TLabeledDbGrid.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 begin
+  FTitleMouseDown := (Button = mbLeft) and (Shift = [ssLeft])
+         and isMouseOverTitleColumn(X,Y) and not Sizing(X,Y);
+
   inherited;
   if (Button = mbLeft) and (Shift = [ssLeft]) then
   begin
@@ -2307,6 +2351,13 @@ begin
     else if FCursorIsDefault then
       Cursor := crDefault;
   end;
+end;
+
+procedure TLabeledDbGrid.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+begin
+  FTitleMouseDown := False;
+  inherited;
 end;
 
 procedure TLabeledDbGrid.SetCheckBoxedFields(const Value: string);
