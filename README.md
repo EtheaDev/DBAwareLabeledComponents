@@ -1,8 +1,10 @@
-﻿# DBAwareLabeledComponents [![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
+﻿# DBAwareLabeledComponents
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.2.2 (VCL)
+### Actual official version 1.3.0 (VCL)
 
 An advanced TDbGrid component:
 
@@ -56,9 +58,9 @@ A complete Demo is available in Demo Folder.
 - TLabeledNumberBox: a TNumberBox component with boudary label
 - TLabeledDBNumberBox: a TDBNumberBox with boudary label
 
-### Available from Delphi XE3 to Delphi 11 (32bit and 64bit platforms)
+### Available from Delphi XE3 to Delphi 12 (32bit and 64bit platforms)
 
-![Delphi 11 Sydney Support](./Images/SupportingDelphi.jpg)
+![Delphi Support](./Images/SupportingDelphi.jpg)
 
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
@@ -81,6 +83,11 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+21 Aug 2023: ver.1.3.0
+- Added support for Delphi 12
+- Added WrapAllText to TLabeledDbGrid
+- Fixed 64Bit issue for TLabeledDBComboBox
+
 05 Sep 2022: ver.1.2.2
 - Refactoring of rendering TLabeledDBGrid to fix some problems when dgRowSelect is active
 

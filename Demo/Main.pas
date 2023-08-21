@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021 (Ethea S.r.l.)                                      }
+{       Copyright (c) 2021-2023 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -63,6 +63,7 @@ uses
   , Vcl.LabeledButtonEdit
   {$ENDIF}
   , Vcl.BoundLabel
+  , Vcl.Buttons
   ;
 
 type
@@ -146,6 +147,7 @@ type
     filterDataEdit: TLabeledEdit;
     DBNavigator: TDBNavigator;
     btSelectStyle: TButton;
+    cbWrapAllText: TCheckBox;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
     procedure OpenButtonClick(Sender: TObject);
     procedure ClientDataSetIntegerFieldChange(Sender: TField);
@@ -177,6 +179,7 @@ type
     procedure PositionLabeledComboBoxSelect(Sender: TObject);
     procedure VisibleCheckBoxClick(Sender: TObject);
     procedure LabeledButtonEditClick(Sender: TObject);
+    procedure cbWrapAllTextClick(Sender: TObject);
   private
     FMemoText: string;
     procedure BkCellColorAssign(Column : TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor);
@@ -320,6 +323,7 @@ begin
   cbIncremental.Checked := DbGrid.IncrementalSearch;
   cbCustomDraw.Checked := Assigned(DbGrid.OnDrawColumnCell);
   cbDrawCheckBoxImages.Checked := DbGrid.DrawCheckBoxImages;
+  cbWrapAllText.Checked := DbGrid.WrapAllText;
 
   DbGridOptions := GetPropValue(DbGrid, 'Options');
   for i := Low(TDBGridOption) to High(TDBGridOption) do
@@ -595,6 +599,11 @@ end;
 procedure TMainForm.cbSortClick(Sender: TObject);
 begin
   DbGrid.ShowSortOrder := cbSort.Checked;
+end;
+
+procedure TMainForm.cbWrapAllTextClick(Sender: TObject);
+begin
+  DbGrid.WrapAllText := cbWrapAllText.Checked;
 end;
 
 procedure TMainForm.filterDataEditExit(Sender: TObject);

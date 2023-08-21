@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2022 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2023 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -148,7 +148,7 @@ Type
     procedure DoExit; override;
   published
     property IsEmpty: Boolean read GetIsEmpty;
-    property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    property BoundCaption: TCaption read FBoundCaption write SetBoundCaption;
     property BoundLabel: TControlBoundLabel read FBoundLabel;
     // Values written to the field instead of the corresponding displayed
     // text values (which are in Items).
@@ -699,7 +699,7 @@ begin
     end;
   end;
   if Result = -1 then
-    Result := SendMessage(Self.Handle, CB_FINDSTRINGEXACT, -1, LongInt(PChar(AString)));
+    Result := SendMessage(Self.Handle, CB_FINDSTRINGEXACT, -1, NativeInt(PChar(AString)));
 end;
 
 function TLabeledDBComboBox.GetItemsClass: TCustomComboBoxStringsClass;
@@ -1726,12 +1726,15 @@ procedure TLabeledDbGrid.DefaultDrawDataCell(const Rect: TRect; Field: TField;
   State: TGridDrawState);
 var
   LColumn: TColumn;
+  LRect: TRect;
 begin
   if not (FDrawCheckBoxImages and isCheckBoxedField(Field)) then
   begin
     LColumn := nil;
     FindColumnByField(Field, LColumn);
-    inherited DefaultDrawDataCell(Rect, Field, State);
+    LRect := Rect;
+    LRect.Top := LRect.Top + FRowMargin + 1;
+    inherited DefaultDrawDataCell(LRect, Field, State);
   end;
 end;
 
@@ -2506,20 +2509,20 @@ end;
 
 function TCBComboBoxStrings.Add(const S: string): Integer;
 begin
-  Result := SendMessage(ComboBox.Handle, CB_ADDSTRING, 0, Longint(PChar(S)));
+  Result := SendMessage(ComboBox.Handle, CB_ADDSTRING, 0, NativeInt(PChar(S)));
   if Result < 0 then
     raise EOutOfResources.Create(SInsertLineError);
 end;
 
 function TCBComboBoxStrings.IndexOf(const S: string): Integer;
 begin
-  Result := TLabeledDBComboBox(ComboBox).GetItemPos(Self,S);
+  Result := (ComboBox as TLabeledDBComboBox).GetItemPos(Self,S);
 end;
 
 procedure TCBComboBoxStrings.Insert(Index: Integer; const S: string);
 begin
   if SendMessage(ComboBox.Handle, CB_INSERTSTRING, Index,
-    Longint(PChar(S))) < 0 then
+    NativeInt(PChar(S))) < 0 then
     raise EOutOfResources.Create(SInsertLineError);
 end;
 

@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'DataAwareLabeledComponents Demo'
-  ClientHeight = 507
-  ClientWidth = 820
+  ClientHeight = 687
+  ClientWidth = 896
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,26 +18,27 @@ object MainForm: TMainForm
   object PageControl: TPageControl
     Left = 0
     Top = 0
-    Width = 820
-    Height = 448
+    Width = 896
+    Height = 628
     ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
-    ExplicitTop = -6
+    ExplicitWidth = 892
+    ExplicitHeight = 627
     object DbGridTabSheet: TTabSheet
       Caption = 'Labeled and Advanced DbGrid'
       ImageIndex = 2
       object DbGrid: TLabeledDbGrid
         Left = 0
         Top = 18
-        Width = 812
-        Height = 182
+        Width = 888
+        Height = 362
         Cursor = crHandPoint
         Align = alClient
         DataSource = DataSource
         TabOrder = 0
         BoundCaption = 'Labeled and Advanced DbGrid'
-        BoundLabel.Left = 326
+        BoundLabel.Left = 364
         BoundLabel.Top = 0
         BoundLabel.Width = 160
         BoundLabel.Height = 15
@@ -140,23 +141,23 @@ object MainForm: TMainForm
       end
       object DbGridOptionsPanel: TPanel
         Left = 0
-        Top = 200
-        Width = 812
+        Top = 380
+        Width = 888
         Height = 218
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 199
-        ExplicitWidth = 808
+        ExplicitTop = 379
+        ExplicitWidth = 884
         object FontLabel: TLabel
-          Left = 340
-          Top = 122
+          Left = 353
+          Top = 129
           Width = 66
           Height = 15
           Alignment = taRightJustify
           Caption = 'Font Height:'
         end
         object RowLinesLabel: TLabel
-          Left = 350
+          Left = 363
           Top = 154
           Width = 56
           Height = 15
@@ -164,7 +165,7 @@ object MainForm: TMainForm
           Caption = 'Row Lines:'
         end
         object RowMarginLabel: TLabel
-          Left = 339
+          Left = 352
           Top = 186
           Width = 67
           Height = 15
@@ -174,8 +175,8 @@ object MainForm: TMainForm
         object cbHcr: TCheckBox
           Left = 8
           Top = 10
-          Width = 129
-          Height = 13
+          Width = 148
+          Height = 17
           Caption = 'HighLight current row'
           TabOrder = 0
           OnClick = cbHcrClick
@@ -183,19 +184,19 @@ object MainForm: TMainForm
         object cbSort: TCheckBox
           Left = 8
           Top = 61
-          Width = 112
-          Height = 13
+          Width = 148
+          Height = 17
           Caption = 'Show Sort Order'
           TabOrder = 2
           OnClick = cbSortClick
         end
         object DbGridOptionsGroupBox: TGroupBox
-          Left = 143
+          Left = 176
           Top = 6
-          Width = 185
+          Width = 171
           Height = 130
           Caption = 'Custom Background color'
-          TabOrder = 5
+          TabOrder = 6
           object cbCurrColor: TColorBox
             Left = 16
             Top = 51
@@ -226,17 +227,17 @@ object MainForm: TMainForm
         object cbIncremental: TCheckBox
           Left = 8
           Top = 80
-          Width = 124
-          Height = 13
+          Width = 148
+          Height = 17
           Caption = 'Incremental search'
           TabOrder = 3
           OnClick = cbIncrementalClick
         end
         object cbAltColors: TCheckBox
           Left = 8
-          Top = 29
-          Width = 129
-          Height = 13
+          Top = 31
+          Width = 148
+          Height = 17
           Caption = 'Alternate row colors'
           TabOrder = 1
           OnClick = cbAltColorsClick
@@ -244,63 +245,63 @@ object MainForm: TMainForm
         object cbCustomDraw: TCheckBox
           Left = 8
           Top = 112
-          Width = 96
-          Height = 13
+          Width = 148
+          Height = 17
           Caption = 'Custom Draw'
           TabOrder = 4
           OnClick = cbCustomDrawClick
         end
         object FontTrackBar: TTrackBar
-          Left = 412
+          Left = 425
           Top = 119
           Width = 133
           Height = 25
           Max = 30
           Min = 10
           Position = 11
-          TabOrder = 11
+          TabOrder = 12
           OnChange = FontTrackBarChange
         end
         object cbEditing: TCheckBox
-          Left = 340
+          Left = 353
           Top = 8
           Width = 102
-          Height = 13
+          Height = 17
           Caption = 'Inplace Editing'
-          TabOrder = 6
+          TabOrder = 8
           OnClick = cbEditingClick
         end
         object cbAutoEdit: TCheckBox
-          Left = 340
+          Left = 353
           Top = 29
           Width = 131
-          Height = 13
+          Height = 17
           Caption = 'AutoEdit Datasource'
-          TabOrder = 7
+          TabOrder = 9
           OnClick = cbAutoEditClick
         end
         object lbOptions: TCheckListBox
-          Left = 591
-          Top = 17
+          Left = 583
+          Top = 6
           Width = 201
-          Height = 193
+          Height = 203
           ItemHeight = 15
-          TabOrder = 10
+          TabOrder = 15
           OnClickCheck = lbOptionsClickCheck
         end
         object cbDrawCheckBoxImages: TCheckBox
-          Left = 340
-          Top = 48
+          Left = 353
+          Top = 50
           Width = 195
-          Height = 13
+          Height = 17
           Caption = 'Draw CheckBox for Boolean Fields'
-          TabOrder = 8
+          TabOrder = 10
           OnClick = cbDrawCheckBoxImagesClick
         end
         object rgCtl3D: TRadioGroup
-          Left = 340
-          Top = 67
-          Width = 178
+          Left = 176
+          Top = 135
+          Width = 170
           Height = 41
           Caption = 'Ctl3D'
           Columns = 2
@@ -308,49 +309,49 @@ object MainForm: TMainForm
           Items.Strings = (
             'True'
             'False')
-          TabOrder = 9
+          TabOrder = 7
           OnClick = rgCtl3DClick
         end
         object LineTrackBar: TTrackBar
-          Left = 412
+          Left = 425
           Top = 150
           Width = 133
           Height = 25
           Max = 5
           Min = 1
           Position = 1
-          TabOrder = 12
+          TabOrder = 13
           OnChange = LineTrackBarChange
         end
         object RowMarginTrackBar: TTrackBar
-          Left = 412
+          Left = 425
           Top = 181
           Width = 133
           Height = 25
           Max = 20
-          TabOrder = 13
+          TabOrder = 14
           OnChange = RowMarginTrackBarChange
         end
         object filterDataEdit: TLabeledEdit
           Left = 8
-          Top = 155
-          Width = 297
+          Top = 153
+          Width = 162
           Height = 23
           EditLabel.Width = 114
           EditLabel.Height = 15
           EditLabel.Caption = 'Filter data expression:'
-          TabOrder = 14
+          TabOrder = 5
           Text = ''
           OnExit = filterDataEditExit
         end
-        object btSelectStyle: TButton
-          Left = 8
-          Top = 182
-          Width = 162
-          Height = 29
-          Caption = 'Change Application Style...'
-          TabOrder = 15
-          OnClick = btSelectStyleClick
+        object cbWrapAllText: TCheckBox
+          Left = 353
+          Top = 72
+          Width = 195
+          Height = 17
+          Caption = 'Wrap All Text'
+          TabOrder = 11
+          OnClick = cbWrapAllTextClick
         end
       end
     end
@@ -5365,13 +5366,13 @@ object MainForm: TMainForm
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 448
-    Width = 820
+    Top = 628
+    Width = 896
     Height = 59
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 447
-    ExplicitWidth = 816
+    ExplicitTop = 627
+    ExplicitWidth = 892
     object OpenButton: TButton
       Left = 8
       Top = 14
@@ -5426,11 +5427,20 @@ object MainForm: TMainForm
       OnClick = VisibleCheckBoxClick
     end
     object DBNavigator: TDBNavigator
-      Left = 469
+      Left = 477
       Top = 16
       Width = 240
       Height = 25
       TabOrder = 3
+    end
+    object btSelectStyle: TButton
+      Left = 723
+      Top = 14
+      Width = 162
+      Height = 29
+      Caption = 'Change Application Style...'
+      TabOrder = 4
+      OnClick = btSelectStyleClick
     end
   end
   object ClientDataSet: TClientDataSet
