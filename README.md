@@ -85,7 +85,7 @@ Coming soon, into Wiki section.
 ### RELEASE NOTES
 21 Aug 2023: ver.1.3.0
 - Added support for Delphi 12
-- Added WrapAllText to TLabeledDbGrid
+- Added WrapAllText, ColMoving and IncrementalSearchType to TLabeledDbGrid
 - Fixed 64Bit issue for TLabeledDBComboBox
 
 05 Sep 2022: ver.1.2.2
