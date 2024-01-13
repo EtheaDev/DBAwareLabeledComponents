@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{8484ED88-BB64-466F-BA27-B08980C3F027}</ProjectGuid>
         <MainSource>dclDBAwareLabeledComponents.dpk</MainSource>
-        <ProjectVersion>20.0</ProjectVersion>
+        <ProjectVersion>20.1</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -105,8 +105,7 @@
                 <Source>
                     <Source Name="MainSource">dclDBAwareLabeledComponents.dpk</Source>
                 </Source>
-                <Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
             </Delphi.Personality>
             <Platforms>
                 <Platform value="Win32">True</Platform>

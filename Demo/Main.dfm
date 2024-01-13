@@ -23,8 +23,6 @@ object MainForm: TMainForm
     ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 892
-    ExplicitHeight = 627
     object DbGridTabSheet: TTabSheet
       Caption = 'Labeled and Advanced DbGrid'
       ImageIndex = 2
@@ -146,8 +144,6 @@ object MainForm: TMainForm
         Height = 218
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 379
-        ExplicitWidth = 884
         object FontLabel: TLabel
           Left = 353
           Top = 129
@@ -5371,8 +5367,6 @@ object MainForm: TMainForm
     Height = 59
     Align = alBottom
     TabOrder = 1
-    ExplicitTop = 627
-    ExplicitWidth = 892
     object OpenButton: TButton
       Left = 8
       Top = 14

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2023 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -1725,8 +1725,10 @@ var
         RowCount := 1 + TitleOffset
       else
       begin
-        RowCount := 1000;
-        DataLink.BufferCount := VisibleRowCount;
+        if VisibleRowCount < 1 then
+          DataLink.BufferCount := 1
+        else
+          DataLink.BufferCount := VisibleRowCount;
         RowCount := RecordCount + TitleOffset;
         if dgRowSelect in Options then TopRow := FixedRows;
         UpdateActive;

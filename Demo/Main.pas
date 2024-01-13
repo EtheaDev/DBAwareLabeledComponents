@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2023 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -406,7 +406,7 @@ begin
   LDBNumberBox := TLabeledDBNumberBox.Create(Self);
   LDBNumberBox.BoundCaption := AField.DisplayLabel;
   LDBNumberBox.SetBounds(ALeft,ATop,131,21);
-  LDBNumberBox.BoundLabel.SetPosition(lpLeftMiddle);
+  LDBNumberBox.BoundLabel.SetPosition(lpTopLeft);
   LDBNumberBox.Hint := 'Hint';
   LDBNumberBox.Alignment := taRightJustify;
 //  LDBNumberBox.CurrencyFormat := 2;
