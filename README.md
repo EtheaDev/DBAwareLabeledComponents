@@ -4,7 +4,7 @@
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.3.1 (VCL)
+### Actual official version 1.3.2 (VCL)
 
 An advanced TDbGrid component:
 
@@ -83,6 +83,9 @@ _{InstallDir}\Source_
 Coming soon, into Wiki section.
 
 ### RELEASE NOTES
+08 Jul 2024: ver.1.3.2
+- Fixed error when adding TLabeledNumberBox to a form.
+
 13 Jan 2024: ver.1.3.1
 - Fixed DbGrid rendering
 - Updated Copyright

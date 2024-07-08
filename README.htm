@@ -1,0 +1,207 @@
+<style type="text/css">
+code{
+  font-family: "Consolas", monospace;
+}
+pre{
+  border: 1px solid #ddd;
+  border-left: 3px solid #f36d33;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+}
+Blockquote{
+  border-left: 3px solid #d0d0d0;
+  padding-left: 0.5em;
+  margin-left:1em;
+}
+Blockquote p{
+  margin: 0;
+}
+table{
+  border:1px solid;
+  border-collapse:collapse;
+}
+th{  padding:5px;
+  border:1px solid;
+}
+td{
+  padding:5px;
+  border:1px solid;
+}
+</style>
+<h1>DBAwareLabeledComponents</h1>
+<p><a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="License"/></a></p>
+<p>An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox</p>
+<h3>Actual official version 1.3.2 (VCL)</h3>
+<p>An advanced TDbGrid component:</p>
+<p>TLabeledDbGrid is an advanced version of classic TDbGrid with a boundary Label, plus some extra features:</p>
+<ul>
+<li>ShowSortOrder: shows an indicator of sorting column</li>
+<li>Embedeed CheckBox for boolean fields</li>
+<li>Incremental search, when typing into a ReadOnly DbGrid</li>
+<li>Alternate row-color</li>
+<li>Custom row-colors</li>
+<li>Show sort order</li>
+<li>Incremental search</li>
+<li>Lines per Rows (to show memo fields with multiple lines)</li>
+<li>RowMargin (to enlarge heigh of any row)</li>
+</ul>
+<p>*Example of a TLabeledDbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (inside the client area of the grid aligned alClient).</p>
+<p><img src="./Images/DemoDataAwareDbGridTopCenter.png" alt="Preview Thumbnails Dark"/></p>
+<p>This library contains also the classic VCL editors (standard and data-aware) with the addition of a &ldquo;label&rdquo; attached to the component itself (like the native component TLabeledEdit).</p>
+<p>It is no longer necessary to keep the Label &ldquo;connected&rdquo; and &ldquo;aligned&rdquo; by hand to the editor: on every component you can specify 3 simple properties:</p>
+<ul>
+<li>BoundCaption</li>
+<li>BoundLabel.Labelposition (default lpTopLeft)</li>
+<li>BoundLabel.LabelSpacing (default 1)</li>
+</ul>
+<p>The label can be positioned with 12 alignements:
+<strong>lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom</strong></p>
+<h2>TLabeledButtonEdit:</h2>
+<p>Also available for D10.3 to latest, TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editors with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.</p>
+<p><em>Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder</em></p>
+<table>
+  <tr>
+    <th>Sample</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoDataAwareDbGridLinesPerRow3.png" alt="DemoDataAwareDbGridLinesPerRow3"/></td>
+    <td>Example of LabeledDbGrid with LinesPerRow = 3 to show multiline content of memo fields</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoDataAwareDbGridRowMargin15.png" alt="DemoDataAwareDbGridRowMargin15"/></td>
+    <td>Example of LabeledDbGrid with RowMargin = 15 to to change height of grid Row. Fully compatible with Styles (light and dark)</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoDataAwareTopLeft.png" alt="DemoDataAwareTopLeft"/></td>
+    <td>Example of collection of Dataaware components with label aligned to &ldquo;TopLeft&rdquo;</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoDataAwareNumberEditorsLeftMiddle.png" alt="DemoDataAwareNumberEditorsLeftMiddle"/></td>
+    <td>Example of LabeledDBCurrencyEdit and LabeledDBNumberBox (only for 10.4.2): Dataware components for numeric input (from right to left) with label aligned to &ldquo;LeftMiddle&rdquo;</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoNonDataAwareTopRight.png" alt="Preview Thumbnails Dark"/></td>
+    <td>Example of collection of Standard components with label aligned to &ldquo;TopRight&rdquo;</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoColorsImagesBottomCenter.png" alt="Preview Thumbnails Dark"/></td>
+    <td>Example of collection of components with label aligned to &ldquo;BottomCenter&rdquo;</td>
+  </tr>
+  <tr>
+    <td><img src="./Images/DemoNumberInputStyled.png" alt="Preview Thumbnails Dark"/></td>
+    <td>All components are fully VCL styles compatible</td>
+  </tr>
+</table>
+<p>A complete Demo is available in Demo Folder.</p>
+<h2>Support for new NumberBox component</h2>
+<p><strong>TNumberBox</strong> component (available from D10.4.2) is the new component for advanced numeric input. In this library you can find:</p>
+<ul>
+<li>TDBNumberBox: the standard component with classic DataAeware support (DataSource + DataField) without Label.</li>
+<li>TLabeledNumberBox: a TNumberBox component with boudary label</li>
+<li>TLabeledDBNumberBox: a TDBNumberBox with boudary label</li>
+</ul>
+<h3>Available from Delphi XE3 to Delphi 12 (32bit and 64bit platforms)</h3>
+<p><img src="./Images/SupportingDelphi.jpg" alt="Delphi Support"/></p>
+<p>Related links: https://www.embarcadero.com/ - https://learndelphi.org/</p>
+<h2>INSTALLATION</h2>
+<p>Clone repository, open Package Group &ldquo;PackageGroup.groupproj&rdquo; of your Delphi version located in:</p>
+<p><em>DBAwareLabeledComponents\Packages\DXXX</em></p>
+<p>Build RunTime package: DBAwareLabeledComponents.dproj</p>
+<p>Install DesignTime package: dclDBAwareLabeledComponents.dproj</p>
+<p><strong>Remember to add those folders to Search Path:</strong></p>
+<p><em>{InstallDir}\Source</em></p>
+<h3>DOCUMENTATION</h3>
+<p>Coming soon, into Wiki section.</p>
+<h3>RELEASE NOTES</h3>
+<p>08 Jul 2024: ver.1.3.2</p>
+<ul>
+<li>Fixed error when adding TLabeledNumberBox to a form.</li>
+</ul>
+<p>13 Jan 2024: ver.1.3.1</p>
+<ul>
+<li>Fixed DbGrid rendering</li>
+<li>Updated Copyright</li>
+</ul>
+<h3>RELEASE NOTES</h3>
+<p>21 Aug 2023: ver.1.3.0</p>
+<ul>
+<li>Added support for Delphi 12</li>
+<li>Added WrapAllText, ColMoving and IncrementalSearchType to TLabeledDbGrid</li>
+<li>Fixed 64Bit issue for TLabeledDBComboBox</li>
+</ul>
+<p>05 Sep 2022: ver.1.2.2</p>
+<ul>
+<li>Refactoring of rendering TLabeledDBGrid to fix some problems when dgRowSelect is active</li>
+</ul>
+<p>19 Aug 2022: ver.1.2.1</p>
+<ul>
+<li>Fixed checkbox drawing in &ldquo;Windows&rdquo; style, using rowmargin and/or LinesPerRow</li>
+<li>Fixed drawing cell right aligned</li>
+<li>Fixed Setting custom cursor for Grid</li>
+</ul>
+<p>15 Jun 2022: ver.1.2.0</p>
+<ul>
+<li>Added TLabeledButtonEdit and TLabeledDBButtonEdit (from Delphi 10.1)</li>
+<li>Updated Demo with TLabeledButtonEdit and TLabeledDBButtonEdit examples</li>
+<li>Added Packages for Delphi 10.1 and Delphi XE8</li>
+</ul>
+<p>17 May 2022: ver.1.1.0</p>
+<ul>
+<li>Added LinesPerRow and RowMargin to TLabeledDbGrid</li>
+<li>Updated Demo with full features of TLabeledDbGrid</li>
+<li>Changed LibSuffix for Packages (D10.4 and D11)</li>
+<li>Renamed Package Description to &ldquo;Ethea: Dataaware Labeled Components&rdquo;</li>
+</ul>
+<p>10 Oct 2021:</p>
+<ul>
+<li>Fixed LabeledDbGrid for Rendering selected cell with Windows 11</li>
+<li>Fixex LabeledDbGrid columns draw in High-DPI app</li>
+</ul>
+<p>03 Sep 2021:</p>
+<ul>
+<li>Added support for Delphi 11</li>
+</ul>
+<p>25 Apr 2021: version 1.0.0</p>
+<p>Components released:</p>
+<p>only for D10.4.2 and above</p>
+<ul>
+<li>TDBNumberBox</li>
+<li>TLabeledNumberBox</li>
+<li>TLabeledDBNumberBox</li>
+</ul>
+<p>only for D10.1 and above</p>
+<ul>
+<li>TLabeledDBButtonEdit</li>
+<li>TLabeledButtonEdit</li>
+</ul>
+<p>for all Delphi versions (from XE3)</p>
+<ul>
+<li>TLabeledColorGrid</li>
+<li>TLabeledCurrencyEdit</li>
+<li>TLabeledDBCurrencyEdit</li>
+<li>TLabeledSpinEdit</li>
+<li>TLabeledRichEdit</li>
+<li>TLabeledCheckListBox</li>
+<li>TLabeledEditEx (similar to TLabeledEdit)</li>
+<li>TLabeledComboBox</li>
+<li>TLabeledListBox</li>
+<li>TLabeledMemo</li>
+<li>TLabeledDBEdit</li>
+<li>TLabeledDBLabel</li>
+<li>TLabeledDBComboBox</li>
+<li>TLabeledDBListBox</li>
+<li>TLabeledDBMemo</li>
+<li>TLabeledDBImage</li>
+<li>TLabeledDBLookupListBox</li>
+<li>TLabeledDBLookupComboBox</li>
+<li>TLabeledDbGrid</li>
+<li>TLabeledDBRichEdit</li>
+<li>TLabeledDBCtrlGrid</li>
+<li>TLabeledDBListView</li>
+<li>TLabeledMaskEdit</li>
+<li>TLabeledRadioGroup</li>
+<li>TLabeledImage</li>
+<li>TLabeledColorBox</li>
+</ul>

@@ -145,7 +145,7 @@ object MainForm: TMainForm
         Align = alBottom
         TabOrder = 1
         object FontLabel: TLabel
-          Left = 353
+          Left = 368
           Top = 129
           Width = 66
           Height = 15
@@ -153,7 +153,7 @@ object MainForm: TMainForm
           Caption = 'Font Height:'
         end
         object RowLinesLabel: TLabel
-          Left = 363
+          Left = 378
           Top = 154
           Width = 56
           Height = 15
@@ -161,7 +161,7 @@ object MainForm: TMainForm
           Caption = 'Row Lines:'
         end
         object RowMarginLabel: TLabel
-          Left = 352
+          Left = 367
           Top = 186
           Width = 67
           Height = 15
@@ -248,7 +248,7 @@ object MainForm: TMainForm
           OnClick = cbCustomDrawClick
         end
         object FontTrackBar: TTrackBar
-          Left = 425
+          Left = 440
           Top = 119
           Width = 133
           Height = 25
@@ -309,7 +309,7 @@ object MainForm: TMainForm
           OnClick = rgCtl3DClick
         end
         object LineTrackBar: TTrackBar
-          Left = 425
+          Left = 440
           Top = 150
           Width = 133
           Height = 25
@@ -320,7 +320,7 @@ object MainForm: TMainForm
           OnChange = LineTrackBarChange
         end
         object RowMarginTrackBar: TTrackBar
-          Left = 425
+          Left = 440
           Top = 181
           Width = 133
           Height = 25

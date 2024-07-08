@@ -461,6 +461,8 @@ begin
   else if AEditControl is TLabeledDBImage then
     Result := TLabeledDBImage(AEditControl).Font
   {$IFDEF D10_4+}
+  else if AEditControl is TLabeledNumberBox then
+    Result := TLabeledNumberBox(AEditControl).Font
   else if AEditControl is TLabeledDBNumberBox then
     Result := TLabeledDBNumberBox(AEditControl).Font
   {$ENDIF}
