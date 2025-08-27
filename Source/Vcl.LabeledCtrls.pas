@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,15 +29,14 @@ unit Vcl.LabeledCtrls;
 interface
 
 uses
-  WinApi.Windows
-  , System.SysUtils
-  , System.Classes
-  , WinApi.Messages
-  , Vcl.Controls
-  , Vcl.StdCtrls
-  , Vcl.Graphics
-  , Vcl.BoundLabel
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.StdCtrls,
+  Vcl.Graphics,
+  Vcl.BoundLabel;
 
 type
   {TLabeledEditEx}

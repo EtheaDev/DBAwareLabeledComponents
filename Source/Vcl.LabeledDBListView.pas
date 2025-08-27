@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,18 +29,17 @@ unit Vcl.LabeledDBListView;
 interface
 
 uses
-  WinApi.Windows
-  , Winapi.CommCtrl
-  , System.SysUtils
-  , System.Classes
-  , WinApi.Messages
-  , Vcl.ComCtrls
-  , Vcl.Controls
-  , Vcl.StdCtrls
-  , Vcl.Graphics
-  , Vcl.BoundLabel
-  , Data.DB
-  ;
+  Winapi.Windows,
+  Winapi.CommCtrl,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Classes,
+  Data.DB,
+  Vcl.ComCtrls,
+  Vcl.Controls,
+  Vcl.StdCtrls,
+  Vcl.Graphics,
+  Vcl.BoundLabel;
 
 type
   TLabeledDBListView = class;
@@ -60,7 +59,7 @@ type
   private
     FCBXDBListView: TLabeledDBListView;
   protected
-    procedure DataEvent(Event: TDataEvent; Info: {$IFNDEF DXE2+}LongInt{$ELSE}NativeInt{$ENDIF}); override;
+    procedure DataEvent(Event: TDataEvent; Info: NativeInt); override;
     procedure EditingChanged; override;
     procedure ActiveChanged; override;
     procedure DataSetChanged; override;
@@ -223,9 +222,8 @@ type
 implementation
 
 uses
-  Vcl.Forms
-  , Vcl.LabeledShellUtils
-  ;
+  Vcl.Forms,
+  Vcl.LabeledShellUtils;
 
 { TLabeledDBListView }
 
@@ -559,7 +557,7 @@ begin
 end;
 
 procedure TLabeledDBListViewDataLink.DataEvent(Event: TDataEvent;
-  Info: {$IFNDEF DXE2+}LongInt{$ELSE}NativeInt{$ENDIF});
+  Info: NativeInt);
 begin
   inherited;
   if (Info = 0) and (Event = deDataSetChange) and not FCBXDBListView.Updating then

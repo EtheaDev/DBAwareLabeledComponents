@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,13 +29,17 @@ interface
 {$I 'DBAwareLabeledComponents.inc'}
 
 uses
-  //RTL
-  Types,
-  SysUtils, Classes, Messages, Forms,
-  //CB
+  Winapi.Messages,
+  System.Types,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Forms,
   Vcl.BoundLabel,
-  //VCL
-  Controls, ComCtrls, Spin, Graphics, CategoryButtons;
+  Vcl.Controls,
+  Vcl.ComCtrls,
+  Vcl.Samples.Spin,
+  Vcl.Graphics,
+  Vcl.CategoryButtons;
 
 type
   TAllowExpandNodeEvent = procedure (Node: TTreeNode; var AllowExpand: boolean) of Object;
@@ -98,10 +102,9 @@ implementation
 
 
 uses
-  Vcl.Themes
-  , Winapi.Windows
-  , System.Math
-  ;
+  Winapi.Windows,
+  System.Math,
+  Vcl.Themes;
 
 { TLabeledRichEdit }
 procedure TLabeledRichEdit.CMFontChanged(var Message: TMessage);

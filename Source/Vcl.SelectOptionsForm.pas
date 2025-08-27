@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,9 +29,27 @@ unit Vcl.SelectOptionsForm;
 interface
 
 uses
-  SysUtils, Variants, Classes, DB,
-  Messages, Windows, Forms, Graphics, Controls, Dialogs, ToolWin, ComCtrls, ActnList, ExtCtrls,
-  DBGrids, Buttons, DBCtrls, Spin, Grids, StdCtrls, ImgList;
+  Winapi.Messages,
+  Winapi.Windows,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Data.DB,
+  Vcl.Forms,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Dialogs,
+  Vcl.ToolWin,
+  Vcl.ComCtrls,
+  Vcl.ActnList,
+  Vcl.ExtCtrls,
+  Vcl.DBGrids,
+  Vcl.Buttons,
+  Vcl.DBCtrls,
+  Vcl.Samples.Spin,
+  Vcl.Grids,
+  Vcl.StdCtrls,
+  Vcl.ImgList;
 
 const
   MAX_SELECTION = 20;
@@ -80,7 +98,8 @@ implementation
 {$R *.DFM}
 
 uses
-  Math, Themes;
+  System.Math,
+  Vcl.Themes;
 
 procedure CalcStandardEditSize(Font : TFont;
   Ctl3D : boolean; out Width, Height : integer);

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -30,28 +30,27 @@ unit Vcl.LabeledButtonEdit;
 interface
 
 uses
-  WinApi.Windows
-  , WinApi.Messages
-  , System.Types
-  , System.SysUtils
-  , System.Classes
-  , Data.DB
-  , Vcl.ExtCtrls
-  , Vcl.StdCtrls
-  , Vcl.Forms
-  , Vcl.Styles
-  , Vcl.Controls
-  , Vcl.DBCtrls
-  , Vcl.DBGrids
-  , Vcl.Grids
-  , Vcl.Graphics
-  , Vcl.DBCGrids
-  , Vcl.Buttons
-  , Vcl.BoundLabel
-  , Vcl.LabeledDBCtrls
-  , Vcl.LabeledMask
-  , Vcl.DbAwareLabeledConsts
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.Types,
+  System.SysUtils,
+  System.Classes,
+  Data.DB,
+  Vcl.ExtCtrls,
+  Vcl.StdCtrls,
+  Vcl.Forms,
+  Vcl.Styles,
+  Vcl.Controls,
+  Vcl.DBCtrls,
+  Vcl.DBGrids,
+  Vcl.Grids,
+  Vcl.Graphics,
+  Vcl.DBCGrids,
+  Vcl.Buttons,
+  Vcl.BoundLabel,
+  Vcl.LabeledDBCtrls,
+  Vcl.LabeledMask,
+  Vcl.DbAwareLabeledConsts;
 
 Type
   /// <summary>
@@ -264,15 +263,14 @@ Type
 implementation
 
 uses
-  PngImage
-  , Vcl.FileCtrl
-  , Vcl.Themes
-  , Vcl.LabeledShellUtils
-  , Vcl.DbAwareLabeledUtils
-  , Vcl.LabeledGraphicUtils
-  , Vcl.ImgList
-  , Vcl.Form.CalendarView
-  ;
+  Vcl.Imaging.pngimage,
+  Vcl.FileCtrl,
+  Vcl.Themes,
+  Vcl.LabeledShellUtils,
+  Vcl.DbAwareLabeledUtils,
+  Vcl.LabeledGraphicUtils,
+  Vcl.ImgList,
+  Vcl.Form.CalendarView;
 
 procedure SetEditRect(Handle : THandle; ButtonWidth : integer );
 begin

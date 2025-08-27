@@ -25,7 +25,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  Application.Title := 'Normal and DataAware Labeled Components Editors Demo - Copyright (c) 2021-2024 Ethea S.r.l.';
+  Application.Title := 'Normal and DataAware Labeled Components Editors Demo - Copyright (c) 2021-2025 Ethea S.r.l.';
   //Uses System Style for border / shadow of Forms
   TStyleManager.FormBorderStyle := TStyleManager.TFormBorderStyle.fbsSystemStyle;
   Application.CreateForm(TMainForm, MainForm);

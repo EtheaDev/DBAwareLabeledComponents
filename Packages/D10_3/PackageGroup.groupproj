@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{F301A347-674F-4E63-AE97-611FEBC2D5BB}</ProjectGuid>
+        <ProjectGuid>{3EA8F2C8-4501-4ABF-BC25-6A10AC0E1FA7}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="DBAwareLabeledComponents.dproj">
@@ -45,4 +45,18 @@
         <CallTarget Targets="DBAwareLabeledComponents:Make;dclDBAwareLabeledComponents:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='ALL'">
+        <BuildGroupProject Include="DBAwareLabeledComponents.dproj">
+            <ProjectGuid>{DA811525-0AC8-4B01-802D-4C87D18B1F6A}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32;Win64</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="dclDBAwareLabeledComponents.dproj">
+            <ProjectGuid>{8484ED88-BB64-466F-BA27-B08980C3F027}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
 </Project>

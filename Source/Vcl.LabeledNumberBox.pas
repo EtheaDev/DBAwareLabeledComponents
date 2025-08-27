@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -27,13 +27,12 @@ unit Vcl.LabeledNumberBox;
 interface
 
 uses
-  WinApi.Windows
-  , System.Classes
-  , Vcl.Controls
-  , Vcl.NumberBox
-  , Vcl.DBNumberBox
-  , Vcl.BoundLabel
-  ;
+  Winapi.Windows,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.NumberBox,
+  Vcl.DBNumberBox,
+  Vcl.BoundLabel;
 
 type
   {TLabeledNumberBox}

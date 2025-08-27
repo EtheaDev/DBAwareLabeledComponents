@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,16 +29,15 @@ unit Vcl.LabeledMask;
 interface
 
 uses
-  WinApi.Windows
-  , WinApi.Messages
-  , System.Types
-  , System.SysUtils
-  , System.Classes
-  , Vcl.Controls
-  , Vcl.StdCtrls
-  , Vcl.Mask
-  ,Vcl.BoundLabel
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.Types,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.StdCtrls,
+  Vcl.Mask,
+  Vcl.BoundLabel;
 
 type
   {TLabeledMaskEdit}

@@ -1,0 +1,62 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{10FA6AC1-4545-4282-AF9E-228BFFC432A4}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="DBAwareLabeledComponents.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="dclDBAwareLabeledComponents.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="DBAwareLabeledComponents">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj"/>
+    </Target>
+    <Target Name="DBAwareLabeledComponents:Clean">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DBAwareLabeledComponents:Make">
+        <MSBuild Projects="DBAwareLabeledComponents.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents:Clean">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclDBAwareLabeledComponents:Make">
+        <MSBuild Projects="dclDBAwareLabeledComponents.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="DBAwareLabeledComponents;dclDBAwareLabeledComponents"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="DBAwareLabeledComponents:Clean;dclDBAwareLabeledComponents:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="DBAwareLabeledComponents:Make;dclDBAwareLabeledComponents:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='ALL'">
+        <BuildGroupProject Include="DBAwareLabeledComponents.dproj">
+            <ProjectGuid>{FB1B96FA-71A1-4981-9D5C-2FFD37FD4147}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32;Win64</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="dclDBAwareLabeledComponents.dproj">
+            <ProjectGuid>{F55F65F9-79A2-4891-B024-241AFC533E0E}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32;Win64</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
+</Project>

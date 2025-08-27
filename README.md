@@ -4,11 +4,23 @@
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.3.2 (VCL)
+### Actual official version 1.3.4 (VCL)
 
-An advanced TDbGrid component:
+## New Setup for automatic installation of components
 
-TLabeledDbGrid is an advanced version of classic TDbGrid with a boundary Label, plus some extra features:
+From 1.3.3 version a new "Installer" read-to-use is located in the Release area: [Download the Installer](https://github.com/EtheaDev/DBAwareLabeledComponents/releases/latest/download/DBAwareLabeledComponents_Setup.exe).
+
+The Installer automatically detect your Delphi versions, install sources, build and install packages and add source paths.
+
+![Setup](./Images/Setup.png)
+
+## Documentation
+
+Follow the [Project Site](https://ethea.it/docs/dbawarelabeledcomponents/) to known how to use those components to modernize your Delphi VCL applications and the features of the advanced DbGrid.
+
+## An advanced TDbGrid component:
+
+**TLabeledDbGrid** is an advanced version of classic TDbGrid with a boundary Label, plus some extra features:
 - ShowSortOrder: shows an indicator of sorting column
 - Embedeed CheckBox for boolean fields
 - Incremental search, when typing into a ReadOnly DbGrid
@@ -23,7 +35,7 @@ TLabeledDbGrid is an advanced version of classic TDbGrid with a boundary Label, 
 
 ![Preview Thumbnails Dark](./Images/DemoDataAwareDbGridTopCenter.png)
 
-This library contains also the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit). 
+This library contains also the classic VCL editors (standard and data-aware) with the addition of a "label" attached to the component itself (like the native component TLabeledEdit).
 
 It is no longer necessary to keep the Label "connected" and "aligned" by hand to the editor: on every component you can specify 3 simple properties:
 - BoundCaption
@@ -33,9 +45,18 @@ It is no longer necessary to keep the Label "connected" and "aligned" by hand to
 The label can be positioned with 12 alignements:
 **lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom**
 
-## TLabeledButtonEdit:
+## New components not present in VCL:
 
-Also available for D10.3 to latest, TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editors with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.
+TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editors with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.
+
+## Support for new NumberBox component
+
+**TNumberBox** component (available from D10.4.2) is the new component for advanced numeric input. In this library you can find:
+- TDBNumberBox: the standard component with classic DataAeware support (DataSource + DataField) without Label.
+- TLabeledNumberBox: a TNumberBox component with boudary label
+- TLabeledDBNumberBox: a TDBNumberBox with boudary label
+
+## Examples
 
 *Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder*
 
@@ -51,38 +72,21 @@ Also available for D10.3 to latest, TLabeledButtonEdit and TLabeledDBButtonEdit 
 
 A complete Demo is available in Demo Folder.
 
-## Support for new NumberBox component
-
-**TNumberBox** component (available from D10.4.2) is the new component for advanced numeric input. In this library you can find:
-- TDBNumberBox: the standard component with classic DataAeware support (DataSource + DataField) without Label.
-- TLabeledNumberBox: a TNumberBox component with boudary label
-- TLabeledDBNumberBox: a TDBNumberBox with boudary label
-
-### Available from Delphi XE3 to Delphi 12 (32bit and 64bit platforms)
+### Available from Delphi XE3 to Delphi 13 (32bit and 64bit platforms)
 
 ![Delphi Support](./Images/SupportingDelphi.jpg)
 
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
-## INSTALLATION
-
-Clone repository, open Package Group "PackageGroup.groupproj" of your Delphi version located in: 
-
-_DBAwareLabeledComponents\Packages\DXXX_
-
-Build RunTime package: DBAwareLabeledComponents.dproj
-
-Install DesignTime package: dclDBAwareLabeledComponents.dproj
-
-**Remember to add those folders to Search Path:**
-
-_{InstallDir}\Source_
-
-### DOCUMENTATION
-
-Coming soon, into Wiki section.
-
 ### RELEASE NOTES
+27 Aug 2025: ver.1.3.4
+- Added Packages for Delphi 13
+
+25 Mar 2024: ver.1.3.3
+- Added Packages for D10.2
+- Created easy Setup to Install Components
+- Added support for Delphi 12 64bit IDE
+
 08 Jul 2024: ver.1.3.2
 - Fixed error when adding TLabeledNumberBox to a form.
 
@@ -90,7 +94,6 @@ Coming soon, into Wiki section.
 - Fixed DbGrid rendering
 - Updated Copyright
 
-### RELEASE NOTES
 21 Aug 2023: ver.1.3.0
 - Added support for Delphi 12
 - Added WrapAllText, ColMoving and IncrementalSearchType to TLabeledDbGrid

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,15 +29,14 @@ unit Vcl.BoundLabel;
 interface
 
 uses
-  WinApi.Windows
-  , WinApi.Messages
-  , System.Types
-  , System.SysUtils
-  , System.Classes
-  , Vcl.Controls
-  , Vcl.StdCtrls
-  , Vcl.Graphics
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.Types,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.StdCtrls,
+  Vcl.Graphics;
 
 Type
   //Label position around control
@@ -119,21 +118,20 @@ procedure SetEditControlLabelPosition(AEditControl: TControl;
 implementation
 
 uses
-  Vcl.Mask
-  , Vcl.Themes
-  , Vcl.LabeledComCtrls
-  , Vcl.LabeledCtrls
-  , Vcl.LabeledExtCtrls
-  , Vcl.LabeledDBCtrls
-  , Vcl.LabeledMask
-  , Vcl.LabeledDbImage
-  , Vcl.LabeledCheckLst
-  , Vcl.LabeledColorGrd
+  Vcl.Mask,
+  Vcl.Themes,
+  Vcl.LabeledComCtrls,
+  Vcl.LabeledCtrls,
+  Vcl.LabeledExtCtrls,
+  Vcl.LabeledDBCtrls,
+  Vcl.LabeledMask,
+  Vcl.LabeledDbImage,
+  Vcl.LabeledCheckLst,
+  Vcl.LabeledColorGrd,
   {$IFDEF D10_4+}
-  , Vcl.LabeledNumberBox
+  Vcl.LabeledNumberBox,
   {$ENDIF}
-  , Vcl.LabeledCurrencyEdit
-  ;
+  Vcl.LabeledCurrencyEdit;
 
 
 procedure CalcStandardEditSize(Font : TFont;

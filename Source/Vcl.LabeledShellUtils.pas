@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,15 +29,14 @@ unit Vcl.LabeledShellUtils;
 interface
 
 uses
-  SysUtils
-  , WinApi.Windows
-  , WinApi.ShlObj
-  , WinApi.ActiveX
-  , System.Classes
-  , WinApi.ShellAPI
-  , System.Win.Registry
-  , Vcl.Graphics
-  ;
+  Winapi.Windows,
+  Winapi.ShlObj,
+  Winapi.ActiveX,
+  Winapi.ShellAPI,
+  System.Win.Registry,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Graphics;
 
 const
   APP_PATH = '{app}';
@@ -216,11 +215,10 @@ function ColorDialogExecute(var Color : TColor; const Title : string = '';
 implementation
 
 uses
-  System.AnsiStrings
-  , Vcl.Dialogs
-  , Vcl.DbAwareLabeledUtils
-  , Vcl.DbAwareLabeledConsts
-  ;
+  System.AnsiStrings,
+  Vcl.Dialogs,
+  Vcl.DbAwareLabeledUtils,
+  Vcl.DbAwareLabeledConsts;
 
 var
   DictionaryPath : string;
@@ -407,15 +405,15 @@ var
 begin
   PathWithWildCards := IncludeTrailingPathDelimiter(Path) + WildCard;
   //Find the first file
-  R := SysUtils.FindFirst(PathWithWildCards, faAnyFile, SearchRec);
+  R := System.SysUtils.FindFirst(PathWithWildCards, faAnyFile, SearchRec);
   try
     while R = 0 do // file found!
     begin
       FileList.Append(SearchRec.Name); // Add file to list
-      R := SysUtils.FindNext(SearchRec); // Find next file
+      R := System.SysUtils.FindNext(SearchRec); // Find next file
     end;
   finally
-    SysUtils.FindClose(SearchRec);
+    System.SysUtils.FindClose(SearchRec);
   end;
 end;
 

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -27,11 +27,10 @@ unit Vcl.LabeledGraphicUtils;
 interface
 
 uses
-  WinApi.Windows
-  , System.SysUtils
-  , System.Classes
-  , Vcl.Graphics
-  ;
+  Winapi.Windows,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Graphics;
 
 type
   TGraphicFileFormat = (gffUnknown, gffBmp, gffTiff, gffJpeg, gffPng,
@@ -59,8 +58,7 @@ procedure ResizeBitmap(Bitmap: TBitmap; const NewWidth, NewHeight: integer);
 implementation
 
 uses
-  Vcl.DbAwareLabeledConsts
-  ;
+  Vcl.DbAwareLabeledConsts;
 
 var
   GraphicClassList: array[TGraphicFileFormat] OF TGraphicClass;

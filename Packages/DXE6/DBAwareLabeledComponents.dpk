@@ -26,7 +26,7 @@ package DBAwareLabeledComponents;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
-{$LIBSUFFIX '_DXE6'}
+{$LIBSUFFIX '200'}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 

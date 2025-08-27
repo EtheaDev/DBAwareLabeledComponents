@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,17 +29,16 @@ interface
 {$I 'DBAwareLabeledComponents.inc'}
 
 uses
-  WinApi.Windows
-  , System.SysUtils
-  , System.Classes
-  , WinApi.Messages
-  , Vcl.Controls
-  , Vcl.StdCtrls
-  , Vcl.Graphics
-  , Vcl.BoundLabel
-  , Vcl.LabeledCtrls
-  , Vcl.LabeledDBCtrls
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.StdCtrls,
+  Vcl.Graphics,
+  Vcl.BoundLabel,
+  Vcl.LabeledCtrls,
+  Vcl.LabeledDBCtrls;
 
 const
   MAX_LEN_DEFAULT = 15;
@@ -123,10 +122,9 @@ type
 implementation
 
 uses
-  Data.DB
-  , Vcl.DbAwareLabeledConsts
-  , Vcl.DbAwareLabeledUtils
-  ;
+  Data.DB,
+  Vcl.DbAwareLabeledConsts,
+  Vcl.DbAwareLabeledUtils;
 
 function isKeyDownNumber(Key: Word) : boolean;
 begin
@@ -282,7 +280,7 @@ begin
     Key := FormatSettings.DecimalSeparator;
 
   inherited KeyPress(Key);
-  {$IFDEF DXE+}
+  {$IFDEF DXE3+}
   if CharInSet(Key, ['0'..'9',#8,'.',',','-','+',#0]) and EditCanModify then
   {$ELSE}
   if (Key in ['0'..'9',#8,'.',',','-','+',#0]) and EditCanModify then

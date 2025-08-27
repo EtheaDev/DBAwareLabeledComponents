@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,25 +29,24 @@ unit Vcl.LabeledDBCtrls;
 interface
 
 uses
-  WinApi.Windows
-  , WinApi.Messages
-  , System.Types
-  , System.SysUtils
-  , System.Classes
-  , Data.DB
-  , Vcl.ExtCtrls
-  , Vcl.StdCtrls
-  , Vcl.Forms
-  , Vcl.Styles
-  , Vcl.Controls
-  , Vcl.DBCtrls
-  , Vcl.DBGrids
-  , Vcl.Grids
-  , Vcl.Graphics
-  , Vcl.DBCGrids
-  , Vcl.Buttons
-  , Vcl.BoundLabel
-  ;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.Types,
+  System.SysUtils,
+  System.Classes,
+  Data.DB,
+  Vcl.ExtCtrls,
+  Vcl.StdCtrls,
+  Vcl.Forms,
+  Vcl.Styles,
+  Vcl.Controls,
+  Vcl.DBCtrls,
+  Vcl.DBGrids,
+  Vcl.Grids,
+  Vcl.Graphics,
+  Vcl.DBCGrids,
+  Vcl.Buttons,
+  Vcl.BoundLabel;
 
 const
   DB_LABEL_OFFSET = 2;
@@ -459,12 +458,17 @@ Type
 implementation
 
 uses
-  //RTL
-  DBClient, Math, TypInfo, Variants, Consts, Themes,
-  //VCL
-  DBActns, UxTheme, UITypes,
-  //Labeled components
-  Vcl.DbAwareLabeledUtils, Vcl.LabeledCtrls;
+  Winapi.UxTheme,
+  System.Math,
+  System.TypInfo,
+  System.Variants,
+  System.UITypes,
+  Vcl.Consts,
+  Vcl.Themes,
+  Vcl.DBActns,
+  Vcl.DbAwareLabeledUtils,
+  Vcl.LabeledCtrls,
+  Datasnap.DBClient;
   
 type
   TXColumn = class(TColumn)
@@ -2174,7 +2178,7 @@ begin
   if IsCheckBoxedColumn(Columns[SelectedIndex]) then
     Exit;
 
-  {$IFDEF DXE+}
+  {$IFDEF DXE3+}
   if CharInSet(Key, ValidKeys) then
   {$ELSE}
   if (Key in ValidKeys) then
@@ -2214,7 +2218,7 @@ begin
       if SelectedField.InheritsFrom(TNumericField) then
       begin
         if TryStrToInt(StrRicercaIncrementale, IntValue) then
-          Datasource.DataSet.Filter := SelectedField.FieldName + '='+ IntValue.ToString;
+          Datasource.DataSet.Filter := SelectedField.FieldName + '='+ IntToStr(IntValue);
       end
       else if SelectedField.InheritsFrom(TDateField) then
       begin

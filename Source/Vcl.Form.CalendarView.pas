@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -27,25 +27,22 @@ unit Vcl.Form.CalendarView;
 interface
 
 uses
-  //Delphi
-  System.SysUtils
-  , System.Classes
-  , System.Types
-  //Labeled controls
-  , Vcl.LabeledExtCtrls
-  , Vcl.LabeledCtrls
-  , Vcl.LabeledButtonEdit
-  , Vcl.LabeledMask
-  //VCL
-  , WinApi.Windows
-  , Vcl.Forms
-  , Vcl.StdCtrls
-  , Vcl.Controls
-  , Vcl.Mask
-  , Vcl.Graphics
-  , Vcl.ExtCtrls
-  , Vcl.WinXCalendars
-  , Winapi.Messages;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Classes,
+  System.Types,
+  Vcl.LabeledExtCtrls,
+  Vcl.LabeledCtrls,
+  Vcl.LabeledButtonEdit,
+  Vcl.LabeledMask,
+  Vcl.Forms,
+  Vcl.StdCtrls,
+  Vcl.Controls,
+  Vcl.Mask,
+  Vcl.Graphics,
+  Vcl.ExtCtrls,
+  Vcl.WinXCalendars;
 
 type
   TCanChange = function(): boolean of object;
@@ -107,17 +104,13 @@ implementation
 {$R *.dfm}
 
 uses
-  //RTL
-  Data.DB
-  //VCL
-  , Vcl.DBCtrls
-  , Vcl.Themes
-  , System.UITypes
-  //Labeled components
-  , Vcl.BoundLabel
-  , Vcl.DbAwareLabeledUtils
-  , Vcl.DbAwareLabeledConsts
-  ;
+  System.UITypes,
+  Data.DB,
+  Vcl.DBCtrls,
+  Vcl.Themes,
+  Vcl.BoundLabel,
+  Vcl.DbAwareLabeledUtils,
+  Vcl.DbAwareLabeledConsts;
 
 { TCalendarViewEx }
 constructor TCalendarViewEx.Create(AOwner: TComponent);

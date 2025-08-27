@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -27,9 +27,8 @@ unit Vcl.DbAwareLabeledUtils;
 interface
 
 uses
-  System.TypInfo
-  , Vcl.Graphics
-  ;
+  System.TypInfo,
+  Vcl.Graphics;
 
 {$WARN WIDECHAR_REDUCED OFF}
 type
@@ -66,13 +65,12 @@ function LightenColor(Color: TColor; Percentage: Cardinal): TColor;
 implementation
 
 uses
-  System.SysUtils
-  , WinApi.Windows
-  , Vcl.DbAwareLabeledConsts
-  , Vcl.Controls
-  , Vcl.Themes
-  , Vcl.GraphUtil
-  ;
+  Winapi.Windows,
+  System.SysUtils,
+  Vcl.DbAwareLabeledConsts,
+  Vcl.Controls,
+  Vcl.Themes,
+  Vcl.GraphUtil;
 
 //sostituisce un carattere in un altro all'interno di una stringa (zero-based)
 function StrSubstChar( OldChar, NewChar: Char; const S: string ) : String;

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,42 +29,41 @@ unit Main;
 interface
 
 uses
-  Winapi.Windows
-  , Winapi.Messages
-  , System.SysUtils
-  , System.Variants
-  , System.Classes
-  , Vcl.Graphics
-  , Vcl.Controls
-  , Vcl.Forms
-  , Vcl.Dialogs
-  , Vcl.StdCtrls
-  , Data.DB
-  , Vcl.Grids
-  , Vcl.DBGrids
-  , Datasnap.DBClient
-  , Vcl.Mask
-  , Vcl.DBCtrls
-  , Vcl.ExtCtrls
-  , Vcl.LabeledDBCtrls
-  , Vcl.ComCtrls
-  , Vcl.LabeledCtrls
-  , Vcl.LabeledCurrencyEdit
-  , Vcl.LabeledComCtrls
-  , Vcl.LabeledMask
-  , Vcl.LabeledExtCtrls
-  , Vcl.ColorGrd
-  , Vcl.LabeledColorGrd
-  , Vcl.CheckLst
-  , Vcl.LabeledCheckLst
-  , Vcl.LabeledDBListView
-  , Vcl.Samples.Spin
+  Winapi.Windows,
+  Winapi.Messages,
+  System.SysUtils,
+  System.Variants,
+  System.Classes,
+  Data.DB,
+  Vcl.Graphics,
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Dialogs,
+  Vcl.StdCtrls,
+  Vcl.Grids,
+  Vcl.DBGrids,
+  Vcl.Mask,
+  Vcl.DBCtrls,
+  Vcl.ExtCtrls,
+  Vcl.LabeledDBCtrls,
+  Vcl.ComCtrls,
+  Vcl.LabeledCtrls,
+  Vcl.LabeledCurrencyEdit,
+  Vcl.LabeledComCtrls,
+  Vcl.LabeledMask,
+  Vcl.LabeledExtCtrls,
+  Vcl.ColorGrd,
+  Vcl.LabeledColorGrd,
+  Vcl.CheckLst,
+  Vcl.LabeledCheckLst,
+  Vcl.LabeledDBListView,
+  Vcl.Samples.Spin,
+  Datasnap.DBClient,
   {$IFDEF D10_3+}
-  , Vcl.LabeledButtonEdit
+  Vcl.LabeledButtonEdit,
   {$ENDIF}
-  , Vcl.BoundLabel
-  , Vcl.Buttons
-  ;
+  Vcl.BoundLabel,
+  Vcl.Buttons;
 
 type
   TMainForm = class(TForm)
@@ -216,16 +215,16 @@ implementation
 {$R *.dfm}
 
 uses
-  System.Math
-  , Winapi.ShellAPI
+  Winapi.ShellAPI,
+  System.Math,
   {$IFDEF D10_4+}
-  , Vcl.NumberBox
-  , Vcl.DBNumberBox
-  , Vcl.LabeledNumberBox
+  Vcl.NumberBox,
+  Vcl.DBNumberBox,
+  Vcl.LabeledNumberBox,
   {$ENDIF}
-  , System.TypInfo
-  , Vcl.SelectOptionsForm
-  , Vcl.Themes;
+  System.TypInfo,
+  Vcl.SelectOptionsForm,
+  Vcl.Themes;
 
 procedure TMainForm.OpenButtonClick(Sender: TObject);
 begin

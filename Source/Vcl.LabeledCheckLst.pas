@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,12 +29,12 @@ unit Vcl.LabeledCheckLst;
 interface
 
 uses
-  WinApi.Windows
-  , WinApi.Messages
-  , System.Classes
-  , Vcl.Controls
-  , Vcl.CheckLst
-  , Vcl.BoundLabel;
+  Winapi.Windows,
+  Winapi.Messages,
+  System.Classes,
+  Vcl.Controls,
+  Vcl.CheckLst,
+  Vcl.BoundLabel;
 
 type
   TLabeledCheckListBox = class(TCheckListBox)
@@ -69,8 +69,7 @@ type
 implementation
 
 uses
-  System.Types
-  ;
+  System.Types;
 
 { TLabeledCheckListBox }
 

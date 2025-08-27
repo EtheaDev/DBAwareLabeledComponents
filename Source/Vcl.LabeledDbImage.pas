@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2024 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,19 +29,18 @@ unit Vcl.LabeledDbImage;
 interface
 
 uses
-  WinApi.Windows
-  , System.SysUtils
-  , System.Classes
-  , Data.DB
-  , Vcl.Controls
-  , Vcl.ExtCtrls
-  , Vcl.Graphics
-  , Vcl.DbCtrls
-  , Vcl.Dialogs
-  , Vcl.ExtDlgs
-  , Vcl.BoundLabel
-  , Vcl.LabeledExtCtrls
-  ;
+  Winapi.Windows,
+  System.SysUtils,
+  System.Classes,
+  Data.DB,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Graphics,
+  Vcl.DBCtrls,
+  Vcl.Dialogs,
+  Vcl.ExtDlgs,
+  Vcl.BoundLabel,
+  Vcl.LabeledExtCtrls;
 
 type
   TLoadImageOption = (liDefault, liNoChangeDir, liCopyImageFromSource);
@@ -53,7 +52,7 @@ type
   private
     FCBXDbImageLink: TLabeledDbImageLink;
   protected
-    procedure DataEvent(Event: TDataEvent; Info:{$IFNDEF DXE2+}LongInt{$ELSE}NativeInt{$ENDIF}); override;
+    procedure DataEvent(Event: TDataEvent; Info: NativeInt); override;
     procedure EditingChanged; override;
     procedure ActiveChanged; override;
     procedure DataSetChanged; override;
@@ -195,9 +194,8 @@ procedure RegisterImageLinkPath(const Path : string);
 implementation
 
 uses
-  Vcl.DbAwareLabeledConsts
-  , Vcl.DbAwareLabeledUtils
-  ;
+  Vcl.DbAwareLabeledConsts,
+  Vcl.DbAwareLabeledUtils;
 
 var
   ImageLinkPath : string;
@@ -684,7 +682,7 @@ begin
   VisualControl := True;
 end;
 
-procedure TLabeledImageDataLink.DataEvent(Event: TDataEvent; Info:{$IFNDEF DXE2+}LongInt{$ELSE}NativeInt{$ENDIF});
+procedure TLabeledImageDataLink.DataEvent(Event: TDataEvent; Info:NativeInt);
 begin
   inherited;
   FCBXDbImageLink.DataLinkDataEvent(Event, Info);

@@ -1,6 +1,7 @@
 package dclDBAwareLabeledComponents;
 
 {$R *.res}
+{$R '..\dbawarelabeledcomponents.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -26,11 +27,12 @@ package dclDBAwareLabeledComponents;
 {$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
-{$LIBSUFFIX '_D10.1'}
+{$LIBSUFFIX '240'}
 {$DESIGNONLY}
 {$IMPLICITBUILD ON}
 
 requires
+  DesignIDE,
   DBAwareLabeledComponents;
 
 contains

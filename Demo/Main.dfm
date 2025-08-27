@@ -443,17 +443,18 @@ object MainForm: TMainForm
       end
       object LabeledDBEditEx: TLabeledDBEdit
         Left = 88
-        Top = 24
+        Top = 16
         Width = 121
         Height = 23
         DataField = 'StringField'
         DataSource = DataSource
         TabOrder = 0
         BoundCaption = 'LabeledDBEdit:'
-        BoundLabel.Left = 88
-        BoundLabel.Top = 8
         BoundLabel.Width = 79
         BoundLabel.Height = 15
+        BoundLabel.Alignment = taRightJustify
+        BoundLabel.LabelPosition = lpLeftMiddle
+        BoundLabel.LabelSpacing = 10
       end
       object LabeledDBLookupComboBox: TLabeledDBLookupComboBox
         Left = 88
