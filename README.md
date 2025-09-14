@@ -4,7 +4,7 @@
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.3.4 (VCL)
+### Actual official version 1.3.5 (VCL)
 
 ## New Setup for automatic installation of components
 
@@ -79,6 +79,9 @@ A complete Demo is available in Demo Folder.
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
 ### RELEASE NOTES
+14 Sep 2025: ver.1.3.5
+- Fixed Setup for Delphi 13
+
 27 Aug 2025: ver.1.3.4
 - Added Packages for Delphi 13
 
