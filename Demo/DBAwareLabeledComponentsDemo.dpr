@@ -1,6 +1,7 @@
 program DBAwareLabeledComponentsDemo;
 
 uses
+  MidasLib,
   Vcl.Forms,
   Main in 'Main.pas' {MainForm},
   Vcl.LabeledShellUtils in '..\Source\Vcl.LabeledShellUtils.pas',

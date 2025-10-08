@@ -362,23 +362,33 @@ Var
   Negative : Boolean;
   TempText : string;
 begin
-  //modifica il testo del money-edit solo se la tabella è editabile
+  //Modify Text of Component only if Table is Editable
   if (Field <> nil) and (Field.CanModify) then
   begin
     TempText := Text;
     Negative := (Pos('-',TempText)<>0) or not (nvPositive in FNumberValues);
+    //Remove Minus char for the moment
     if Negative then
       TempText := KillChar(TempText,'-');
-    if TempText = '' then TempText := '0';
-    //Elimino eventuali separatori decimali
+    //Inizialize Temp value to Zero
+    if TempText = '' then
+      TempText := '0';
+    //Delete decimal separators
     TempText := KillChar(TempText,FormatSettings.ThousandSeparator);
-    //Elimino eventuale simbolo monetario
+    //Delete currency symbol
     TempText := KillSubString(FormatSettings.CurrencyString,TempText);
-    //Elimino evetuali spazi
+    //Delete spaces
     TempText := KillChar(TempText,' ');
+    //Format Value
     if FFormatFloat <> '' then
       TempText := FormatFloat(FFormatFloat, StrToFloat(TempText));
-    if Negative and (TempText[1]<>'-') then TempText := '-'+TempText;
+    //Add minus in case of Negative value
+    if Negative and (TempText[1]<>'-') then
+      TempText := '-'+TempText;
+    //Remove first zero for Number size > 1
+    if (Copy(TempText,1,1)='0') and (length(TempText) > 1) then
+      TempText := Copy(TempText,2,MaxLength);
+    //Assign Text if different
     if (TempText <> Text) then
       Text := TempText;
   end;

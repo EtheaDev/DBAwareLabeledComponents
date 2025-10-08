@@ -59,7 +59,6 @@ type
     procedure SetReadOnly(const Value: boolean);
     procedure SetFocused(Value: Boolean);
   protected
-    procedure DoChangeValue; override;
     property DataLink: TFieldDataLink read FDataLink;
     procedure RecordChanged(Sender : TFieldDataLink); virtual;
     procedure DataSetChanged(Sender : TFieldDataLink); virtual;
@@ -186,12 +185,6 @@ begin
   inherited;
 end;
 
-procedure TDbNumberBox.DoChangeValue;
-begin
-  inherited;
-//  FDataLink.Edit;
-end;
-
 procedure TDbNumberBox.EditingChange(Sender: TObject);
 begin
   inherited ReadOnly := not FDataLink.Editing;
@@ -204,17 +197,22 @@ end;
 
 procedure TDbNumberBox.DataSetChanged(Sender: TFieldDataLink);
 begin
-  ;
+  ; //Dataset level changes
 end;
 
 procedure TDbNumberBox.LinkEditingChanged(Sender: TFieldDataLink);
 begin
-  ;
+  ; //Dataset level changes
 end;
 
 procedure TDbNumberBox.RecordChanged(Sender: TFieldDataLink);
 begin
-  ;
+  ; //Dataset level changes
+end;
+
+procedure TDbNumberBox.ActiveChange(Sender: TObject);
+begin
+  ; //Dataset level changes
 end;
 
 function TDbNumberBox.GetDataSource: TDataSource;
@@ -466,11 +464,6 @@ begin
     raise;
   end;
   inherited;
-end;
-
-procedure TDbNumberBox.ActiveChange(Sender: TObject);
-begin
-  ;
 end;
 
 initialization

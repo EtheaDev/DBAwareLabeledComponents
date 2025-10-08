@@ -23,6 +23,7 @@ object MainForm: TMainForm
     ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
+    OnChange = PageControlChange
     object DbGridTabSheet: TTabSheet
       Caption = 'Labeled and Advanced DbGrid'
       ImageIndex = 2
@@ -333,7 +334,7 @@ object MainForm: TMainForm
           Top = 153
           Width = 162
           Height = 23
-          EditLabel.Width = 114
+          EditLabel.Width = 113
           EditLabel.Height = 15
           EditLabel.Caption = 'Filter data expression:'
           TabOrder = 5
@@ -384,7 +385,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledDBComboBox:'
         BoundLabel.Left = 88
         BoundLabel.Top = 50
-        BoundLabel.Width = 119
+        BoundLabel.Width = 118
         BoundLabel.Height = 15
       end
       object LabeledDBMemo: TLabeledDBMemo
@@ -438,7 +439,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledDBListBox:'
         BoundLabel.Left = 333
         BoundLabel.Top = 112
-        BoundLabel.Width = 97
+        BoundLabel.Width = 96
         BoundLabel.Height = 15
       end
       object LabeledDBEditEx: TLabeledDBEdit
@@ -470,7 +471,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledDBLookupComboBox:'
         BoundLabel.Left = 88
         BoundLabel.Top = 96
-        BoundLabel.Width = 159
+        BoundLabel.Width = 158
         BoundLabel.Height = 15
       end
       object LabeledDBLookupListBox: TLabeledDBLookupListBox
@@ -487,7 +488,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledDBLookupListBox:'
         BoundLabel.Left = 333
         BoundLabel.Top = 192
-        BoundLabel.Width = 137
+        BoundLabel.Width = 136
         BoundLabel.Height = 15
       end
       object LabeledDBImage: TLabeledDBImage
@@ -523,7 +524,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledEditEx:'
         BoundLabel.Left = 88
         BoundLabel.Top = 8
-        BoundLabel.Width = 76
+        BoundLabel.Width = 75
         BoundLabel.Height = 15
       end
       object LabeledCurrencyEdit: TLabeledCurrencyEdit
@@ -568,7 +569,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledComboBox:'
         BoundLabel.Left = 88
         BoundLabel.Top = 88
-        BoundLabel.Width = 104
+        BoundLabel.Width = 103
         BoundLabel.Height = 15
       end
       object LabeledMaskEdit: TLabeledMaskEdit
@@ -637,7 +638,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledCheckListBox:'
         BoundLabel.Left = 340
         BoundLabel.Top = 208
-        BoundLabel.Width = 115
+        BoundLabel.Width = 114
         BoundLabel.Height = 15
       end
       object LabeledListBox: TLabeledListBox
@@ -654,7 +655,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledListBox:'
         BoundLabel.Left = 341
         BoundLabel.Top = 284
-        BoundLabel.Width = 82
+        BoundLabel.Width = 81
         BoundLabel.Height = 15
         TextDelimited = 'First;Second;Last'
       end
@@ -5356,7 +5357,7 @@ object MainForm: TMainForm
         BoundCaption = 'LabeledColorBox:'
         BoundLabel.Left = 360
         BoundLabel.Top = 224
-        BoundLabel.Width = 93
+        BoundLabel.Width = 92
         BoundLabel.Height = 15
       end
     end

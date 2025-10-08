@@ -179,6 +179,7 @@ type
     procedure VisibleCheckBoxClick(Sender: TObject);
     procedure LabeledButtonEditClick(Sender: TObject);
     procedure cbWrapAllTextClick(Sender: TObject);
+    procedure PageControlChange(Sender: TObject);
   private
     FMemoText: string;
     procedure BkCellColorAssign(Column : TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor);
@@ -201,6 +202,7 @@ type
     procedure FillEditors;
     procedure SetControlsLabelPosition(ARootControl: TWinControl;
       APosition: TControlLabelPosition; AVisible: Boolean);
+    procedure AssignDataSourceToNavigator;
   protected
     procedure Loaded; override;
   public
@@ -255,6 +257,11 @@ begin
   PositionLabeledComboBoxSelect(PositionLabeledComboBox);
 end;
 
+procedure TMainForm.PageControlChange(Sender: TObject);
+begin
+  AssignDataSourceToNavigator;
+end;
+
 procedure TMainForm.PositionLabeledComboBoxSelect(Sender: TObject);
 var
   LLabelPosition: TControlLabelPosition;
@@ -295,7 +302,9 @@ begin
   LDBCurrencyEdit.TextHint := 'Text Hint';
   LDBCurrencyEdit.DataSource := DataSource;
   LDBCurrencyEdit.DataField := AField.FieldName;
+  LDBCurrencyEdit.NumberValues := [nvNegative, nvPositive];
   LDBCurrencyEdit.parent := NumberBoxTabSheet;
+
 end;
 
 procedure TMainForm.Loaded;
@@ -552,6 +561,16 @@ begin
   DataSource.DataSet := ClientDataSet;
 end;
 
+procedure TMainForm.AssignDataSourceToNavigator;
+begin
+  if PageControl.ActivePage = DbGridTabSheet then
+    DBNavigator.DataSource := DbGrid.DataSource
+  else if DataSource.DataSet.Active then
+    DBNavigator.DataSource := DataSource
+  else
+    DBNavigator.DataSource := nil;
+end;
+
 procedure TMainForm.BkCellColorAssign(Column: TColumn;
   DrawingCurrentRecord: boolean; var CellColor: TColor);
 begin
@@ -644,6 +663,7 @@ begin
   LineTrackBarChange(LineTrackBar);
   RowMarginTrackBar.Position := DbGrid.RowMargin;
   RowMarginTrackBarChange(RowMarginTrackBar);
+  AssignDataSourceToNavigator;
 end;
 
 procedure TMainForm.gridDrawColumnCell(Sender: TObject; const Rect: TRect;
