@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -54,6 +54,10 @@ const
 
 Type
   {TLabeledDBEdit}
+  /// <summary>
+  ///  Data-aware single-line edit control (descendant of TDBEdit) with an
+  ///  attached boundary label (BoundLabel) managed automatically.
+  /// </summary>
   TLabeledDBEdit = class(TDBEdit)
   private
     FBoundLabel: TControlBoundLabel;
@@ -68,15 +72,35 @@ Type
     procedure DoEnter; override;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached boundary label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBLabel}
+  /// <summary>
+  ///  Data-aware read-only text control (descendant of TDBText) with an
+  ///  attached boundary label, a framed window-colored background and
+  ///  optional automatic height adjustment to fit the displayed text.
+  /// </summary>
   TLabeledDBLabel = class(TDBText)
   private
     FBoundLabel: TControlBoundLabel;
@@ -95,23 +119,65 @@ Type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the control, its boundary label, enables AutoHeight and sets
+    ///  the background to the styled window color.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached boundary label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
+    /// <summary>
+    ///  When True the control height is adjusted automatically to fit the
+    ///  displayed text whenever the font changes. Default True.
+    /// </summary>
     property AutoHeight: boolean read FAutoHeight write SetAutoHeight default True;
   end;
 
   {TCBComboBoxStrings}
+  /// <summary>
+  ///  String list class used by TLabeledDBComboBox to back its Items, adding
+  ///  items directly to the underlying Windows combo box control.
+  /// </summary>
   TCBComboBoxStrings = class(TCustomComboBoxStrings)
   public
+    /// <summary>
+    ///  Adds a string to the combo box and returns its index.
+    /// </summary>
+    /// <param name="S">The string to add.</param>
+    /// <returns>The zero-based index of the added item.</returns>
     function Add(const S: string): Integer; override;
+    /// <summary>
+    ///  Inserts a string at the given position in the combo box.
+    /// </summary>
+    /// <param name="Index">The position at which to insert the item.</param>
+    /// <param name="S">The string to insert.</param>
     procedure Insert(Index: Integer; const S: string); override;
+    /// <summary>
+    ///  Returns the index of the given string, performing a case-sensitive
+    ///  search first and falling back to a case-insensitive exact match.
+    /// </summary>
+    /// <param name="S">The string to look for.</param>
+    /// <returns>The zero-based index, or -1 if not found.</returns>
     function IndexOf(const S: string): Integer; override;
   end;
 
   {TLabeledDBComboBox}
+  /// <summary>
+  ///  Data-aware combo box (descendant of TDBComboBox) with an attached
+  ///  boundary label and a separate Values list, so that the value stored in
+  ///  the field can differ from the text shown in Items.
+  /// </summary>
   TLabeledDBComboBox = class(TDBComboBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -140,21 +206,53 @@ Type
     procedure VisibleChanging; override;
     function GetItemsClass: TCustomComboBoxStringsClass; override;
   public
+    /// <summary>
+    ///  Creates the control, hooks the inherited field data link and creates
+    ///  the Values list and the attached boundary label.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Frees the Values list and destroys the control.
+    /// </summary>
     destructor Destroy; override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached boundary label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  Highlights the attached boundary label when the control gains focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the attached boundary label when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption: TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
-    // Values written to the field instead of the corresponding displayed
-    // text values (which are in Items).
+    /// <summary>
+    ///  Values written to the field instead of the corresponding displayed
+    ///  text values (which are in Items). Each entry maps positionally to the
+    ///  matching entry in Items.
+    /// </summary>
     property Values: TStrings read FValues write SetValues;
   end;
 
   {TLabeledDBListBox}
+  /// <summary>
+  ///  Data-aware list box (descendant of TDBListBox) with an attached
+  ///  boundary label managed automatically.
+  /// </summary>
   TLabeledDBListBox = class(TDBListBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -168,15 +266,35 @@ Type
     procedure DoEnter; override;
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Recalculates and sets the control bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBMemo}
+  /// <summary>
+  ///  Data-aware multi-line memo control (descendant of TDBMemo) with an
+  ///  attached boundary label managed automatically.
+  /// </summary>
   TLabeledDBMemo = class(TDBMemo)
   private
     FBoundLabel: TControlBoundLabel;
@@ -190,16 +308,39 @@ Type
     procedure DoExit; override;
     procedure DoEnter; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Recalculates and sets the control bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Controls the letter case applied to the entered text (published from the base class).
+    /// </summary>
     property CharCase;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBImage}
+  /// <summary>
+  ///  Data-aware image control (descendant of TDBImage) with an attached
+  ///  boundary label; the image is stretched by default.
+  /// </summary>
   TLabeledDBImage = class(TDBImage)
   private
     FBoundLabel: TControlBoundLabel;
@@ -210,14 +351,31 @@ Type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the control, its boundary label and enables image stretching.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Recalculates and sets the control bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBLookupListBox}
+  /// <summary>
+  ///  Data-aware lookup list box (descendant of TDBLookupListBox) with an
+  ///  attached boundary label managed automatically.
+  /// </summary>
   TLabeledDBLookupListBox = class(TDBLookupListBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -229,17 +387,43 @@ Type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Recalculates and sets the control bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  Highlights the attached boundary label when the control gains focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the attached boundary label when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBLookupComboBox}
+  /// <summary>
+  ///  Data-aware lookup combo box (descendant of TDBLookupComboBox) with an
+  ///  attached boundary label managed automatically.
+  /// </summary>
   TLabeledDBLookupComboBox = class(TDBLookupComboBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -253,15 +437,34 @@ Type
     procedure DoEnter; override;
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached boundary label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  True when the linked Field is unassigned or its string value is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   {TLabeledDBRichEdit}
+  /// <summary>
+  ///  Data-aware rich text editor (descendant of TDBRichEdit) with an
+  ///  attached boundary label managed automatically.
+  /// </summary>
   TLabeledDBRichEdit = class(TDBRichEdit)
   private
     FBoundLabel: TControlBoundLabel;
@@ -273,31 +476,101 @@ Type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated TControlBoundLabel.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Highlights the attached boundary label when the control gains focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the attached boundary label when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
+    /// <summary>
+    ///  Recalculates and sets the control bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  True when the rich edit text (trimmed) is empty.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpy;
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
   { TLabeledDBCtrlGrid }
+  /// <summary>
+  ///  Data-aware control grid (descendant of TDBCtrlGrid) provided for
+  ///  consistency with the other labeled controls in this unit.
+  /// </summary>
   TLabeledDBCtrlGrid = class( TDBCtrlGrid )
   end;
 
   {TLabeledDbGrid}
+  /// <summary>
+  ///  Forward declaration of the advanced data-aware grid TLabeledDbGrid.
+  /// </summary>
   TLabeledDbGrid = class;
+  /// <summary>
+  ///  Sort direction reported for a grid column: none, descending or ascending.
+  /// </summary>
   TCBSortOrder = (soNone, soDescending, soAscending);
+  /// <summary>
+  ///  Event invoked to determine the current sort order of a field so that the
+  ///  proper sort indicator is drawn on the column title.
+  /// </summary>
+  /// <param name="Sender">The grid raising the event.</param>
+  /// <param name="Field">The field whose sort state is being queried.</param>
+  /// <param name="Sorted">Set this to the current sort order of the field.</param>
   TCBSortedFieldEvent = procedure(Sender: TLabeledDbGrid; Field: TField; var Sorted : TCBSortOrder) of object;
+  /// <summary>
+  ///  Event allowing custom assignment of a cell's background color while drawing.
+  /// </summary>
+  /// <param name="Column">The column being drawn.</param>
+  /// <param name="DrawingCurrentRecord">True when the cell belongs to the current record row.</param>
+  /// <param name="CellColor">In/out background color to use for the cell.</param>
   TCBBkCellColorAssign = procedure (Column: TColumn; DrawingCurrentRecord : boolean; var CellColor : TColor) of object;
+  /// <summary>
+  ///  Event allowing the application to override whether a column can be edited.
+  /// </summary>
+  /// <param name="Column">The column being tested.</param>
+  /// <param name="CanEdit">In/out flag indicating whether editing is allowed.</param>
   TCBCanEditColumn = procedure (Column: TColumn; var CanEdit: Boolean) of object;
+  /// <summary>
+  ///  Event allowing the application to override whether a column is rendered as a checkbox.
+  /// </summary>
+  /// <param name="Column">The column being tested.</param>
+  /// <param name="IsCheckBoxedColumn">In/out flag indicating whether the column is checkbox-rendered.</param>
   TCBCheckBoxedColumnEvent = procedure (Column: TColumn; var IsCheckBoxedColumn: Boolean) of object;
+  /// <summary>
+  ///  Notification event carrying a single grid column.
+  /// </summary>
+  /// <param name="Column">The column the notification refers to.</param>
   TColumnNotifyEvent = procedure (Column: TColumn) of object;
 
+  /// <summary>
+  ///  Incremental search mode: stBeginsWith locates the first matching record,
+  ///  stFilterBy filters the dataset by the typed text.
+  /// </summary>
   TGridIncrementalSearchType = (stBeginsWith, stFilterBy);
 
+  /// <summary>
+  ///  Advanced data-aware grid (descendant of TDBGrid) with a boundary label,
+  ///  clickable sort indicators, current-row highlight, alternate row colors,
+  ///  inplace boolean checkbox rendering, incremental search (locate or
+  ///  filter), multi-line rows (LinesPerRow / RowMargin / WrapAllText) and
+  ///  wrapped multi-line column titles (WrapColumnTitles / TitleLines).
+  /// </summary>
   TLabeledDbGrid = class(TDBGrid)
   private
     FBoundLabel: TControlBoundLabel;
@@ -308,7 +581,7 @@ Type
     FDrawingCurrentRecord : boolean;
     FHighlightCurrRow: boolean;
     FIncrementalSearch: boolean;
-    StrRicercaIncrementale: string;
+    StrIncrementalSearch: string;
     FOnBkCellColorAssign: TCBBkCellColorAssign;
     FAlternateRowColor: boolean;
     FSearchTimer: TTimer;
@@ -321,6 +594,8 @@ Type
     FLinesPerRow: Integer;
     FRowMargin: Integer;
     FWrapAllText: Boolean;
+    FWrapColumnTitles: Boolean;
+    FTitleLines: Integer;
     FColMoving: Boolean;
     FTitleMouseDown: boolean;
     FIncrementalSearchType: TGridIncrementalSearchType;
@@ -363,6 +638,11 @@ Type
       const AField: TField; Const AColumn: TColumn);
     function CalcRowMargin(const ARect: TRect): Integer;
     procedure SetWrapAllText(const Value: Boolean);
+    procedure SetWrapColumnTitles(const Value: Boolean);
+    procedure SetTitleLines(const Value: Integer);
+    function CalcTitleHeight: Integer;
+    procedure DrawWrappedTitle(const ARect: TRect; AColumn: TColumn;
+      const AText: string; AState: TGridDrawState);
     procedure SetColMoving(const Value: Boolean);
   protected
     procedure SetParent(AParent: TWinControl); override;
@@ -397,62 +677,281 @@ Type
     function  CreateColumns: TDBGridColumns; override;
 
   public
+    /// <summary>
+    ///  Draws a column cell using the grid's own text-writing routine
+    ///  (honoring row margins, wrapping and memo fields).
+    /// </summary>
+    /// <param name="Rect">The cell rectangle.</param>
+    /// <param name="DataCol">The visible data column index.</param>
+    /// <param name="Column">The column being drawn.</param>
+    /// <param name="State">The current grid draw state.</param>
     procedure DefaultDrawColumnCell(const Rect: TRect; DataCol: Integer;
       Column: TColumn; State: TGridDrawState);
+    /// <summary>
+    ///  Default data-cell drawing, skipping checkbox-rendered boolean fields
+    ///  and applying the row margin. Retained for backward compatibility.
+    /// </summary>
+    /// <param name="Rect">The cell rectangle.</param>
+    /// <param name="Field">The field being drawn.</param>
+    /// <param name="State">The current grid draw state.</param>
     procedure DefaultDrawDataCell(const Rect: TRect; Field: TField;
       State: TGridDrawState); { obsolete }
+    /// <summary>
+    ///  Default title-click handler that toggles the dataset sort order
+    ///  (ascending/descending) on the clicked column, using either the
+    ///  OrderByClause or IndexFieldNames dataset property.
+    /// </summary>
+    /// <param name="Column">The clicked column.</param>
     procedure StandardTitleClick(Column : TColumn);
+    /// <summary>
+    ///  Creates the grid, its boundary label and search timer, and applies the
+    ///  default options and feature flags.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Frees the incremental-search timer and destroys the grid.
+    /// </summary>
     destructor Destroy; override;
+    /// <summary>
+    ///  Recalculates and sets the grid bounds, reserving space for the
+    ///  attached boundary label, then repositions the label.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  Finds the column bound to the given field.
+    /// </summary>
+    /// <param name="Field">The field to search for.</param>
+    /// <param name="Column">Receives the matching column when found.</param>
+    /// <returns>True if a column for the field was found.</returns>
     function FindColumnByField(Field : TField; out Column : TColumn) : boolean;
+    /// <summary>
+    ///  Finds the column bound to the given field name (case-insensitive).
+    /// </summary>
+    /// <param name="FieldName">The field name to search for.</param>
+    /// <param name="Column">Receives the matching column when found.</param>
+    /// <returns>True if a column for the field name was found.</returns>
     function FindColumnByFieldName(const FieldName : string; out Column : TColumn) : boolean;
+    /// <summary>
+    ///  Shows or hides the column bound to the given field.
+    /// </summary>
+    /// <param name="Field">The field whose column visibility is changed.</param>
+    /// <param name="Visible">True to show the column, False to hide it.</param>
     procedure ShowColumnByField(Field : TField; Visible : boolean);
+    /// <summary>
+    ///  Draws a themed checkbox (checked, unchecked or grayed for null) in the
+    ///  cell of a boolean/checkbox column.
+    /// </summary>
+    /// <param name="Rect">The cell rectangle.</param>
+    /// <param name="Column">The column being drawn.</param>
+    /// <param name="State">The current grid draw state.</param>
     procedure DrawCheckImage(Rect: TRect; Column: TColumn; const State: TGridDrawState);
+    /// <summary>
+    ///  Handles a click on a data cell (inherited behavior).
+    /// </summary>
+    /// <param name="Column">The clicked column.</param>
     procedure CellClick(Column: TColumn); override;
+    /// <summary>
+    ///  Determines whether the inplace editor can be shown; suppressed for
+    ///  checkbox-rendered columns.
+    /// </summary>
+    /// <returns>True if the editor may be displayed.</returns>
     function CanEditShow: Boolean; override;
+    /// <summary>
+    ///  Changes the FieldName of the column currently bound to OldFieldName.
+    /// </summary>
+    /// <param name="OldFieldName">The current field name of the column.</param>
+    /// <param name="NewFieldName">The new field name to assign.</param>
+    /// <returns>True if a matching column was found and updated.</returns>
     function ChangeColumnFieldName(const OldFieldName, NewFieldName : string) : boolean;
+    /// <summary>
+    ///  True while the grid is painting the cell row of the current record;
+    ///  can be tested inside OnDrawColumnCell.
+    /// </summary>
     property DrawingCurrentRecord : boolean read FDrawingCurrentRecord;
+    /// <summary>
+    ///  The index of the leftmost visible (scrollable) column (published from the base class).
+    /// </summary>
     property LeftCol;
+    /// <summary>
+    ///  The scroll bars displayed by the grid (published from the base class).
+    /// </summary>
     property ScrollBars;
+    /// <summary>
+    ///  Returns the column bound to the given field name, or nil if none.
+    /// </summary>
+    /// <param name="AFieldName">The field name to look up.</param>
+    /// <returns>The matching column, or nil.</returns>
     function ColumnByFieldName(const AFieldName: string): TColumn;
+    /// <summary>
+    ///  Returns the index of the column bound to the given field name, or -1.
+    /// </summary>
+    /// <param name="AFieldName">The field name to look up.</param>
+    /// <returns>The zero-based column index, or -1 if not found.</returns>
     function ColumnIndexByFieldName(const AFieldName: string): Integer;
+    /// <summary>
+    ///  Returns the field under the given mouse coordinates, or nil when over a
+    ///  title or no active data cell.
+    /// </summary>
+    /// <param name="X">The mouse X coordinate (client).</param>
+    /// <param name="Y">The mouse Y coordinate (client).</param>
+    /// <returns>The field under the point, or nil.</returns>
     function GetMouseOverField(X, Y: Integer): TField;
+    /// <summary>
+    ///  Returns the current default data-row height in pixels.
+    /// </summary>
+    /// <returns>The default row height.</returns>
     function GetDefaultRowHeight: Integer;
+    /// <summary>
+    ///  Clears the incremental-search string and re-runs the search/filter,
+    ///  effectively removing any active incremental filter.
+    /// </summary>
     procedure ClearFilters;
 
   published
+    /// <summary>
+    ///  The font used for the column titles. Not stored, since it is kept
+    ///  aligned with the grid Font on DPI/scale changes.
+    /// </summary>
     property TitleFont: TFont read GetTitleFont write SetTitleFont stored False;
+    /// <summary>
+    ///  True when the grid has no rows (RowCount = 0).
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Grid display options, defaulting to titles, indicator, column resize,
+    ///  grid lines and delete confirmation.
+    /// </summary>
     property Options default [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgConfirmDelete];
+    /// <summary>
+    ///  Caption text displayed by the attached boundary label.
+    /// </summary>
     property BoundCaption: TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and positioned next to the grid.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
+    /// <summary>
+    ///  The mouse cursor; automatically switches to a hand pointer over
+    ///  editable checkboxes and sortable column titles. Default crDefault.
+    /// </summary>
     property Cursor: TCursor read GetCursor write SetCursor default crDefault;
+    /// <summary>
+    ///  When True the current record row is highlighted with a distinct
+    ///  background color. Default True.
+    /// </summary>
     property HighlightCurrRow: boolean read FHighlightCurrRow write SetHighlightCurrRow default True;
+    /// <summary>
+    ///  When True odd data rows are painted with the registered alternate row
+    ///  color (see RegisterGridOddRowsColor). Default True.
+    /// </summary>
     property AlternateRowColor: boolean read FAlternateRowColor write SetAlternateRowColor default True;
+    /// <summary>
+    ///  Fired after the column widths have changed (outside of layout locking).
+    /// </summary>
     property OnColWidthsChanged: TNotifyEvent read FOnColWidthsChanged write FOnColWidthsChanged;
+    /// <summary>
+    ///  When True sortable column titles are clickable and display an
+    ///  ascending/descending sort indicator. Default True.
+    /// </summary>
     property ShowSortOrder: Boolean read FShowSortOrder write SetShowSortOrder default True;
+    /// <summary>
+    ///  Fired while drawing a column title to query the current sort order of
+    ///  the field, so a custom sort implementation can drive the indicator.
+    /// </summary>
     property OnSortedField: TCBSortedFieldEvent read FOnSortedField write FOnSortedField;
+    /// <summary>
+    ///  Fired to let the application override whether a column is rendered as a
+    ///  checkbox, in addition to the automatic boolean/CheckBoxedFields detection.
+    /// </summary>
     property OnIsCheckBoxedColumn: TCBCheckBoxedColumnEvent read FOnIsCheckBoxedColumn write FOnIsCheckBoxedColumn;
+    /// <summary>
+    ///  When True, typing in the grid performs incremental search on the
+    ///  selected column (locate or filter, per IncrementalSearchType). Default False.
+    /// </summary>
     property IncrementalSearch: boolean read FIncrementalSearch write SetIncrementalSearch default False;
+    /// <summary>
+    ///  Delay in milliseconds after the last keystroke before the incremental
+    ///  search is executed. Default INCREMENTAL_DELAY_DEFAULT.
+    /// </summary>
     property IncrementalSearchDelay: integer read GetIncrementalSearchDelay write SetIncrementalSearchDelay default INCREMENTAL_DELAY_DEFAULT;
+    /// <summary>
+    ///  Number of text lines per data row, used to compute the row height.
+    ///  Must be greater than zero. Default 1.
+    /// </summary>
     property LinesPerRow: Integer read FLinesPerRow write SetLinesPerRow default 1;
+    /// <summary>
+    ///  Fired while drawing to let the application override the background
+    ///  color of each cell.
+    /// </summary>
     property OnBkCellColorAssign: TCBBkCellColorAssign read FOnBkCellColorAssign write SetOnBkCellColorAssign;
+    /// <summary>
+    ///  Semicolon-separated list of field names (in addition to boolean fields)
+    ///  to be rendered as checkboxes.
+    /// </summary>
     property CheckBoxedFields: string read FCheckBoxedFields write SetCheckBoxedFields;
+    /// <summary>
+    ///  When True boolean/checkbox columns are drawn as themed checkbox images
+    ///  instead of true/false text. Default True.
+    /// </summary>
     property DrawCheckBoxImages: Boolean read FDrawCheckBoxImages write SetDrawCheckBoxImages default True;
+    /// <summary>
+    ///  Semicolon-separated list of field names that cannot be sorted by
+    ///  clicking their title (blob/memo fields are always unsortable).
+    /// </summary>
     property UnsortableFields: string read FUnsortableFields write FUnsortableFields;
+    /// <summary>
+    ///  Fired to let the application override whether a given column is editable.
+    /// </summary>
     property CanEditColumn: TCBCanEditColumn read FCanEditColumn write FCanEditColumn;
+    /// <summary>
+    ///  Extra vertical margin in pixels added above and below the content of
+    ///  each data row. Must not be negative. Default 0.
+    /// </summary>
     property RowMargin: Integer read FRowMargin write SetRowMargin default 0;
+    /// <summary>
+    ///  When True (and LinesPerRow greater than 1) long cell text is word-wrapped
+    ///  across the available lines instead of being truncated. Default False.
+    /// </summary>
     property WrapAllText: Boolean read FWrapAllText write SetWrapAllText default False;
+    /// <summary>
+    ///  When True column titles are word-wrapped across multiple lines instead
+    ///  of being truncated with ellipsis. Default False.
+    /// </summary>
+    property WrapColumnTitles: Boolean read FWrapColumnTitles write SetWrapColumnTitles default False;
+    /// <summary>
+    ///  Number of text lines reserved for the title row height. Must be greater
+    ///  than zero. Default 1.
+    /// </summary>
+    property TitleLines: Integer read FTitleLines write SetTitleLines default 1;
+    /// <summary>
+    ///  When True columns can be reordered by dragging their titles
+    ///  (goColMoving). Default True.
+    /// </summary>
     property ColMoving: Boolean read FColMoving write SetColMoving default True;
+    /// <summary>
+    ///  Selects how incremental search behaves: stBeginsWith locates the first
+    ///  matching record, stFilterBy filters the dataset. Default stBeginsWith.
+    /// </summary>
     property IncrementalSearchType: TGridIncrementalSearchType read FIncrementalSearchType write FIncrementalSearchType default stBeginsWith;
   end;
 
+  /// <summary>
+  ///  Insert mode for navigator-driven record creation: insert before the
+  ///  current record or append at the end.
+  /// </summary>
   TNavInsMode = (imInsert, imAppend);
 
-  //Color registration for Odd Rows
+  /// <summary>
+  ///  Registers the color used to paint odd (alternate) rows in every
+  ///  TLabeledDbGrid when AlternateRowColor is enabled.
+  /// </summary>
+  /// <param name="Color">The alternate row color to use.</param>
   procedure RegisterGridOddRowsColor(Color: TColor);
-  //Default Row margin for DbGrid
+  /// <summary>
+  ///  Registers the default vertical row margin applied to newly created
+  ///  TLabeledDbGrid instances (their RowMargin property).
+  /// </summary>
+  /// <param name="AValue">The default row margin, in pixels.</param>
   procedure RegisterGridRowMargin(AValue: Integer);
 
 implementation
@@ -1163,18 +1662,18 @@ begin
       Left := ARect.Left + (ARect.Right - ARect.Left) div 2
         - (ACanvas.TextWidth(Text) div 2);
     end;
-    //Se il campo è un memo lo stampa su n righe:
+    //If the field is a memo, print it across several lines:
     if LMemoField or LWrapText then
     begin
       LFormat := dt_WordBreak or dt_NoPrefix;
-      //Riduce l'area di stampa in base ai margini
+      //Shrink the printing area according to the margins
       InflateRect(ARect, -DX, -((FRowMargin*2) div 2) - DY);
       DrawText(Canvas.Handle, PChar(Text), Length(Text), ARect,
         AlignFlags[AColumn.Alignment] or RTL[ARightToLeft] or LFormat);
     end
     else
     begin
-      //se non è un memo considera il margine
+      //if it is not a memo, take the margin into account
       ACanvas.TextRect(ARect, Left, ARect.Top + DY + CalcRowMargin(ARect), Text);
     end;
   end
@@ -1233,6 +1732,8 @@ begin
   FSearchTimer.Enabled := False;
   FSearchTimer.OnTimer := OnSearchTimer;
   FColMoving := True;
+  FWrapColumnTitles := False;
+  FTitleLines := 1;
 end;
 
 function TLabeledDbGrid.CreateColumns: TDBGridColumns;
@@ -1374,10 +1875,17 @@ var
   LDataLinkActive: Boolean;
 
   Text: string;
+  LFullTitle: string;
+  LCustomTitle: Boolean;
 begin
-  dxGridSortedShapeMinWidth := ARect.Bottom - ARect.Top; //16
-  //se è il record corrente aggiorno il flag in modo tale che nell'evento
-  //ondrawcolumncell il programmatore può testate questo flag!
+  LFullTitle := '';
+  //We take over title drawing (to control vertical centering) whenever the
+  //title is wrapped OR the title row is taller than a single line.
+  LCustomTitle := FWrapColumnTitles or (FTitleLines > 1);
+  //dxGridSortedShapeMinWidth is computed in the sort-order block below as a
+  //fixed single-title-line size (independent of TitleLines)
+  //if this is the current record, update the flag so that in the
+  //OnDrawColumnCell event the developer can test this flag!
   Dec(ACol, IndicatorOffset);
   try
     if not ((gdFixed in AState) and (ACol < 0)) and
@@ -1389,8 +1897,11 @@ begin
     else
       FDrawingCurrentRecord := False;
 
-    // artifizio per avere i puntini di sospensione anche in caso di troncatura del testo sul titolo
-    if not FTitleMouseDown and (gdFixed in AState) and (ACol > 0) and not(csDesigning in ComponentState) then
+    // trick to get the ellipsis dots when the title text is truncated, or to
+    // draw the title ourselves (wrapped and/or vertically centered) when
+    // WrapColumnTitles is enabled or the title row spans multiple lines
+    if (gdFixed in AState) and (ACol >= 0) and not(csDesigning in ComponentState)
+      and (LCustomTitle or not FTitleMouseDown) then
     begin
       DrawColumn := Columns[ACol];
       Text := TXColumn(DrawColumn).TitleCaption;
@@ -1398,13 +1909,20 @@ begin
       if Text = '' then
       begin
         Text := DrawColumn.Title.Caption;
-        TXColumn(DrawColumn).TitleCaption := Text; // prima assegnazione della caption originale
+        TXColumn(DrawColumn).TitleCaption := Text; // first assignment of the original caption
       end;
 
-      if (StrRicercaIncrementale <> '') and (SelectedIndex = ACol) then
-        Text := '[' + StrRicercaIncrementale + '] '+Text;
+      if (StrIncrementalSearch <> '') and (SelectedIndex = ACol) then
+        Text := '[' + StrIncrementalSearch + '] '+Text;
 
-      DrawColumn.Title.Caption := TruncStringInRect(Canvas, ARect, Text, 2) ;
+      if LCustomTitle then
+      begin
+        //the title text is drawn (wrapped and/or centered) after the inherited DrawCell
+        LFullTitle := Text;
+        DrawColumn.Title.Caption := '';
+      end
+      else if ACol > 0 then
+        DrawColumn.Title.Caption := TruncStringInRect(Canvas, ARect, Text, 2) ;
     end;
     //--ale
 
@@ -1414,13 +1932,13 @@ begin
 
   inherited DrawCell(ACol, ARow, ARect, AState);
 
-  //Nuova implementazione
+  //New implementation
   Dec(ARow, TitleOffset);
   Dec(ACol, IndicatorOffset);
 
   LDataLinkActive := Assigned(DataLink) and DataLink.Active;
 
-  //stampa il triangolino se è una colonna di sort
+  //draw the small triangle if this is a sort column
   if LDataLinkActive and (TitleOffset > 0) and (FShowSortOrder) and (ACol >= 0) and
     (not (csLoading in ComponentState)) and
     (DataSource <> nil) and
@@ -1428,7 +1946,7 @@ begin
     (gdFixed in AState) then
   begin
     DrawColumn := Columns[ACol];
-    //verifica che la colonna faccia parte del sort attuale
+    //check that the column is part of the current sort
     SortOrder := soNone;
     if (DrawColumn.Field <> nil) then
     begin
@@ -1438,21 +1956,34 @@ begin
     end;
     if SortOrder <> soNone then
     begin
+      //Fixed sort-triangle size: always one title line high, regardless of
+      //TitleLines, so it never grows with a multi-line title.
+      Canvas.Font := TitleFont;
+      dxGridSortedShapeMinWidth := Canvas.TextHeight('Wg') + 4;
+      if dgRowLines in Options then
+        Inc(dxGridSortedShapeMinWidth, GridLineWidth);
       with ARect do
       begin
         if (Right - Left) >= dxGridSortedShapeMinWidth then
         begin
-          //c'è spazio per disegnare il triangolino
+          //there is room to draw the small triangle; always draw it on the
+          //first line of the title (Top .. Top + size), not over the full height
           if DrawColumn.Title.Alignment = taRightJustify then
-            LRect := Rect(Left, Top, Left + dxGridSortedShapeMinWidth, Bottom) else
-            LRect := Rect(Right - dxGridSortedShapeMinWidth, Top, Right, Bottom);
+            LRect := Rect(Left, Top, Left + dxGridSortedShapeMinWidth, Top + dxGridSortedShapeMinWidth) else
+            LRect := Rect(Right - dxGridSortedShapeMinWidth, Top, Right, Top + dxGridSortedShapeMinWidth);
           Dec(Right, dxGridSortedShapeMinWidth);
-          //disegno il triangolino
+          //draw the small triangle
           DrawSortedShape(Canvas, LRect, (SortOrder = soAscending));
         end;
       end;
     end;
   end;
+
+  //Draw the title ourselves (wrapped and/or vertically centered): ARect has
+  //already been reduced by any space taken by the sort triangle drawn above.
+  if LCustomTitle and (gdFixed in AState) and (ARow < 0) and (ACol >= 0)
+    and (LFullTitle <> '') and (ACol < Columns.Count) then
+    DrawWrappedTitle(ARect, Columns[ACol], LFullTitle, AState);
 
   if (csLoading in ComponentState) or
     ((gdFixed in AState) and (ACol < 0)) or
@@ -1490,8 +2021,8 @@ begin
       end;
     end;
 
-    // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
-    // false e true, l'immagine check e uncheck
+    // If the data type is Boolean, show the checked/unchecked image
+    // instead of the "false" and "true" captions
     if (not (csLoading in ComponentState)) and isCheckBoxedColumn(DrawColumn) and FDrawCheckBoxImages then
 
     begin
@@ -1563,6 +2094,83 @@ begin
   end;
 end;
 
+procedure TLabeledDbGrid.SetWrapColumnTitles(const Value: Boolean);
+begin
+  if FWrapColumnTitles <> Value then
+  begin
+    FWrapColumnTitles := Value;
+    Invalidate;
+  end;
+end;
+
+procedure TLabeledDbGrid.SetTitleLines(const Value: Integer);
+begin
+  if Value <= 0 then
+    raise Exception.Create('TLabeledDbGrid.TitleLines must be greater than zero!');
+  if Value <> FTitleLines then
+  begin
+    FTitleLines := Value;
+    //the title row height is defined by TitleLines, not computed from the content
+    LayoutChanged;
+    Invalidate;
+  end;
+end;
+
+function TLabeledDbGrid.CalcTitleHeight: Integer;
+begin
+  //Title row height, configurable through TitleLines (in text rows), never
+  //computed from the content. With TitleLines = 1 the behavior is identical
+  //to the standard version.
+  Canvas.Font := TitleFont;
+  Result := Canvas.TextHeight('Wg') * FTitleLines + 4;
+end;
+
+procedure TLabeledDbGrid.DrawWrappedTitle(const ARect: TRect; AColumn: TColumn;
+  const AText: string; AState: TGridDrawState);
+const
+  AlignFlags: array [TAlignment] of Integer = (DT_LEFT, DT_RIGHT, DT_CENTER);
+var
+  LFlags, LTextHeight: Integer;
+  LRect, LCalcRect: TRect;
+  Style: TCustomStyleServices;
+begin
+  Canvas.Font := TitleFont;
+  //font color consistent with the active VCL Styles
+  if TStyleManager.IsCustomStyleActive then
+  begin
+    Style := StyleServices{$IFDEF D10_4+}(Self){$ENDIF};
+    if seFont in StyleElements then
+      Canvas.Font.Color := Style.GetStyleFontColor(sfGridItemFixedNormal);
+  end;
+  SetBkMode(Canvas.Handle, TRANSPARENT);
+
+  LRect := ARect;
+  InflateRect(LRect, -2, -1);
+
+  if FWrapColumnTitles then
+  begin
+    //word-wrapped title: vertically center the multi-line text block
+    LFlags := AlignFlags[AColumn.Title.Alignment] or DT_WORDBREAK or
+      DT_NOPREFIX or DT_EXPANDTABS;
+    LCalcRect := LRect;
+    DrawText(Canvas.Handle, PChar(AText), Length(AText), LCalcRect,
+      LFlags or DT_CALCRECT);
+    LTextHeight := LCalcRect.Bottom - LCalcRect.Top;
+    if LTextHeight < (LRect.Bottom - LRect.Top) then
+      Inc(LRect.Top, ((LRect.Bottom - LRect.Top) - LTextHeight) div 2);
+    DrawText(Canvas.Handle, PChar(AText), Length(AText), LRect, LFlags);
+  end
+  else
+  begin
+    //single-line title (no wrap): vertically centered, truncated with ellipsis.
+    //DT_SINGLELINE + DT_VCENTER centers the text within the (possibly multi-line
+    //tall) title cell.
+    LFlags := AlignFlags[AColumn.Title.Alignment] or DT_SINGLELINE or
+      DT_VCENTER or DT_END_ELLIPSIS or DT_NOPREFIX or DT_EXPANDTABS;
+    DrawText(Canvas.Handle, PChar(AText), Length(AText), LRect, LFlags);
+  end;
+end;
+
 procedure TLabeledDbGrid.StandardSort(Field: TField; var SortOrder: TCBSortOrder);
 var
   DataSet: TDataSet;
@@ -1625,7 +2233,7 @@ begin
     if isPublishedProp(Field.DataSet,'OrderByClause') then
     begin
       ActualOrderBy := GetStrProp(Field.DataSet, 'OrderByClause');
-      //gestisco il descending se l'order-by è lo stesso
+      //handle descending order if the order-by is the same
       if SameText(ActualOrderBy, Field.FieldName) then
         NewOrderBy := Field.FieldName+' DESC'
       else
@@ -1634,10 +2242,10 @@ begin
     end
     else if isPublishedProp(Field.DataSet,'IndexFieldNames') then
     begin
-      //prima di cambiare indice recupero il valore del campo chiave
+      //before changing the index, capture the key field value
       Value := Field.DataSet.FieldByName(Field.FieldName).Value;
       SetStringPropCheck(Field.DataSet, 'IndexFieldNames', Field.FieldName);
-      //mi riposiziono sul record precedente
+      //reposition on the previous record
       Field.DataSet.Locate(Field.FieldName, Value, []);
     end;
   Finally
@@ -1757,8 +2365,7 @@ begin
     else
       LPixelsPerRow := LPixelsPerRow + 1;
 
-    Canvas.Font := TitleFont;
-    LPixelsTitle := Canvas.TextHeight('Wg') + 4;
+    LPixelsTitle := CalcTitleHeight;
     if dgRowLines in Options then
       Inc (LPixelsTitle, GridLineWidth);
 
@@ -1815,12 +2422,12 @@ var
     if IsCurrentRowOdd then
     begin
       if DefaultWindowsStyleEnabled then
-        Result := StandardOddRowsColor  //Colore righe pari e dispari alternato
+        Result := StandardOddRowsColor  //Alternating color for even/odd rows
       else
         Result := GetStyledColor(clBtnFace);
     end
     else
-      Result := Column.Color; //Colore righe pari e dispari uguale
+      Result := Column.Color; //Same color for even and odd rows
   end;
 
 begin
@@ -1863,11 +2470,11 @@ begin
   end
   else
   begin
-    // colore sfondo cella NORMALE solo se non è la cella corrente
+    // NORMAL cell background color, only if it is not the current cell
     if not ((gdSelected in State) and (gdFocused in State)) and
       not (dgMultiSelect in Options) then
     begin
-      CellColor := GetCellColor; //Colore righe pari e dispari uguale
+      CellColor := GetCellColor; //Same color for even and odd rows
       if Assigned(OnBkCellColorAssign) then
         OnBkCellColorAssign(Column, FDrawingCurrentRecord, CellColor);
       Canvas.Brush.Color := CellColor;
@@ -1896,8 +2503,8 @@ begin
     end;
   end;
 
-  // Se il tipo di dato è Boolean, mostra in alternativa alle diciture
-  // false e true, l'immagine check e uncheck
+  // If the data type is Boolean, show the checked/unchecked image
+  // instead of the "false" and "true" captions
   if (not (csLoading in ComponentState)) and isCheckBoxedColumn(Column) and FDrawCheckBoxImages then
   begin
     // Event Handler
@@ -2089,7 +2696,7 @@ begin
   inherited;
   if (Owner is TFrame) and (M <> D) then
   begin
-    //Ripristina il font delle colonne in base al TitleFont
+    //Restore the columns font based on TitleFont
     TitleFont.Assign(Font);
     for I := 0 to Columns.Count - 1 do
       Columns[I].Title.Font.Height := TitleFont.Height;
@@ -2107,12 +2714,12 @@ begin
   if (SelectedIndex < 0) or (Columns.Count < SelectedIndex) then
     Exit;
 
-  StrRicercaIncrementale := str;
+  StrIncrementalSearch := str;
   S := Trim(Columns[SelectedIndex].Title.Caption);
   I := Pos(']-',S);
   if I > 0 then S := CopyToEnd(s,I+2);
-  if StrRicercaIncrementale <> '' then
-    S := '[' + StrRicercaIncrementale + ']-'+ S;
+  if StrIncrementalSearch <> '' then
+    S := '[' + StrIncrementalSearch + ']-'+ S;
   Columns[SelectedIndex].Title.Caption := S;
 end;
 
@@ -2122,7 +2729,7 @@ var
   KeyPressed: Word;
 begin
   KeyPressed := Key;
-  //Workaround per il tastierino numerico
+  //Workaround for the numeric keypad
   if (KeyPressed >= 96) and (KeyPressed <= 105) then
     KeyPressed := KeyPressed - 96 + Ord('0');
 
@@ -2185,14 +2792,14 @@ begin
   {$ENDIF}
   begin
     if (Key = #8) then  //Backspace
-      ChangeStrSearch(copy(StrRicercaIncrementale,1,length(StrRicercaIncrementale)-1))
+      ChangeStrSearch(copy(StrIncrementalSearch,1,length(StrIncrementalSearch)-1))
     else
-      ChangeStrSearch(StrRicercaIncrementale + Key);
+      ChangeStrSearch(StrIncrementalSearch + Key);
   end
   else
     ChangeStrSearch('');
 
-  //Ricerca solo se il timer è scaduto
+  //Search only after the timer has elapsed
   FSearchTimer.Enabled := False;
   FSearchTimer.Enabled := True;
 end;
@@ -2209,7 +2816,7 @@ begin
 
   Datasource.DataSet.Filtered := False;
 
-  if StrRicercaIncrementale = '' then
+  if StrIncrementalSearch = '' then
     Datasource.DataSet.Filter := ''
   else
   begin
@@ -2217,21 +2824,21 @@ begin
     Try
       if SelectedField.InheritsFrom(TNumericField) then
       begin
-        if TryStrToInt(StrRicercaIncrementale, IntValue) then
+        if TryStrToInt(StrIncrementalSearch, IntValue) then
           Datasource.DataSet.Filter := SelectedField.FieldName + '='+ IntToStr(IntValue);
       end
       else if SelectedField.InheritsFrom(TDateField) then
       begin
-        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+        if TryStrToDateTime(StrIncrementalSearch, DateValue) then
           Datasource.DataSet.Filter := SelectedField.FieldName + '='+ QuotedStr(DateToStr(DateValue));
       end
       else if SelectedField.InheritsFrom(TDateTimeField) or SelectedField.InheritsFrom(TSQLTimeStampField) then
       begin
-        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+        if TryStrToDateTime(StrIncrementalSearch, DateValue) then
           Datasource.DataSet.Filter := SelectedField.FieldName + '>='+ QuotedStr(DateTimeToStr(DateValue));
       end
       else
-        Datasource.DataSet.Filter := SelectedField.FieldName+ ' like ' +QuotedStr('%'+StrRicercaIncrementale+'%');
+        Datasource.DataSet.Filter := SelectedField.FieldName+ ' like ' +QuotedStr('%'+StrIncrementalSearch+'%');
 
       Datasource.DataSet.Filtered := True;
     Finally
@@ -2258,31 +2865,31 @@ begin
   if (DataSource = nil) or (Datasource.DataSet = nil) or (SelectedField = nil) then
     Exit;
 
-  if StrRicercaIncrementale <> '' then
+  if StrIncrementalSearch <> '' then
   begin
     Screen.Cursor := crHourGlass;
     Try
       if SelectedField.InheritsFrom(TNumericField) then
       begin
-        if TryStrToInt(StrRicercaIncrementale, IntValue) then
+        if TryStrToInt(StrIncrementalSearch, IntValue) then
           Datasource.DataSet.Locate(SelectedField.FieldName,
             IntValue,[]);
       end
       else if SelectedField.InheritsFrom(TDateTimeField) then
       begin
-        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+        if TryStrToDateTime(StrIncrementalSearch, DateValue) then
           Datasource.DataSet.Locate(SelectedField.FieldName,
             DateValue,[]);
       end
       else if SelectedField.InheritsFrom(TSQLTimeStampField) then
       begin
-        if TryStrToDateTime(StrRicercaIncrementale, DateValue) then
+        if TryStrToDateTime(StrIncrementalSearch, DateValue) then
           Datasource.DataSet.Locate(SelectedField.FieldName,
             DateValue,[]);
       end
       else
         Datasource.DataSet.Locate(SelectedField.FieldName,
-          StrRicercaIncrementale,[loCaseInsensitive, loPartialKey]);
+          StrIncrementalSearch,[loCaseInsensitive, loPartialKey]);
     Finally
       Screen.Cursor := crDefault;
     End;
@@ -2346,7 +2953,7 @@ var
   RowIndex: integer;
 begin
   Result := False;
-  //Verifico se entro nello spazio della cella selezionata
+  //Check whether we are inside the area of the selected cell
   Cell := MouseCoord(X, Y);
   ColIndex := Cell.X-Indicatoroffset;
   RowIndex := Cell.Y-Ord(dgtitles in Options);
@@ -2354,10 +2961,10 @@ begin
   begin
     if isCheckBoxedColumn(Columns[ColIndex]) then
     begin
-      //Recupero le dimensioni del checkbox
+      //Retrieve the checkbox bounds
       Rect := CellRect(Cell.X, Cell.Y);
       OutRect := GetCheckBounds(Rect,Columns[ColIndex].Alignment);
-      //Verifico se con il mouse ci sono finito sopra
+      //Check whether the mouse is over it
       if (X > OutRect.Left) and (Y > OutRect.Top) and
         (X < OutRect.Right) and (Y < OutRect.Bottom) then
       begin
@@ -2410,7 +3017,7 @@ end;
 procedure TLabeledDbGrid.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited;
-  //Cambio il cursore da freccia a dito
+  //Change the cursor from arrow to hand
   if (Shift=[]) then
   begin
     if (isMouseOverCheck(X,Y) and CanEditCell(X,Y)) or //Mouse over editable boolean field
@@ -2588,7 +3195,7 @@ begin
   Result.Bottom := Result.Bottom-1;
   Result.Right := Result.Right-1;
 (*
-  //Sposta di un pixel l'area client
+  //Shift the client area by one pixel
   Result.Left := Result.Left + 2;
   Result.Top := Result.Top + 2;
 *)
@@ -2597,7 +3204,7 @@ end;
 procedure TLabeledDBLabel.Loaded;
 begin
   inherited;
-  //MARTELLATA: Forza sempre il colore a clWindow
+  //HACK: always force the color to clWindow
   inherited Color := GetStyledColor(clWindow);
 end;
 
@@ -2609,7 +3216,7 @@ begin
   with Canvas do
   begin
     R := ClientRect;
-    //Disegna il bordino del controllo
+    //Draw the control's thin border
     Brush.Color := GetStyledColor(cl3DDkShadow);
     InflateRect(R, +1, +1);
     FrameRect(R);

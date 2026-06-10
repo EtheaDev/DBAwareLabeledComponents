@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'DataAwareLabeledComponents Demo'
-  ClientHeight = 687
+  ClientHeight = 585
   ClientWidth = 896
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 896
-    Height = 628
+    Height = 526
     ActivePage = DbGridTabSheet
     Align = alClient
     TabOrder = 0
@@ -31,7 +31,7 @@ object MainForm: TMainForm
         Left = 0
         Top = 18
         Width = 888
-        Height = 362
+        Height = 253
         Cursor = crHandPoint
         Align = alClient
         DataSource = DataSource
@@ -140,34 +140,42 @@ object MainForm: TMainForm
       end
       object DbGridOptionsPanel: TPanel
         Left = 0
-        Top = 380
+        Top = 271
         Width = 888
-        Height = 218
+        Height = 225
         Align = alBottom
         TabOrder = 1
         object FontLabel: TLabel
-          Left = 368
-          Top = 129
+          Left = 355
+          Top = 96
           Width = 66
           Height = 15
           Alignment = taRightJustify
           Caption = 'Font Height:'
         end
         object RowLinesLabel: TLabel
-          Left = 378
-          Top = 154
+          Left = 365
+          Top = 127
           Width = 56
           Height = 15
           Alignment = taRightJustify
           Caption = 'Row Lines:'
         end
         object RowMarginLabel: TLabel
-          Left = 367
-          Top = 186
+          Left = 354
+          Top = 160
           Width = 67
           Height = 15
           Alignment = taRightJustify
           Caption = 'Row Margin:'
+        end
+        object TitleLinesLabel: TLabel
+          Left = 365
+          Top = 193
+          Width = 56
+          Height = 15
+          Alignment = taRightJustify
+          Caption = 'Title Lines:'
         end
         object cbHcr: TCheckBox
           Left = 8
@@ -249,14 +257,14 @@ object MainForm: TMainForm
           OnClick = cbCustomDrawClick
         end
         object FontTrackBar: TTrackBar
-          Left = 440
-          Top = 119
-          Width = 133
+          Left = 427
+          Top = 93
+          Width = 140
           Height = 25
           Max = 30
           Min = 10
           Position = 11
-          TabOrder = 12
+          TabOrder = 13
           OnChange = FontTrackBarChange
         end
         object cbEditing: TCheckBox
@@ -265,7 +273,7 @@ object MainForm: TMainForm
           Width = 102
           Height = 17
           Caption = 'Inplace Editing'
-          TabOrder = 8
+          TabOrder = 9
           OnClick = cbEditingClick
         end
         object cbAutoEdit: TCheckBox
@@ -274,16 +282,16 @@ object MainForm: TMainForm
           Width = 131
           Height = 17
           Caption = 'AutoEdit Datasource'
-          TabOrder = 9
+          TabOrder = 10
           OnClick = cbAutoEditClick
         end
         object lbOptions: TCheckListBox
-          Left = 583
+          Left = 607
           Top = 6
           Width = 201
           Height = 203
-          ItemHeight = 15
-          TabOrder = 15
+          ItemHeight = 17
+          TabOrder = 17
           OnClickCheck = lbOptionsClickCheck
         end
         object cbDrawCheckBoxImages: TCheckBox
@@ -292,7 +300,7 @@ object MainForm: TMainForm
           Width = 195
           Height = 17
           Caption = 'Draw CheckBox for Boolean Fields'
-          TabOrder = 10
+          TabOrder = 11
           OnClick = cbDrawCheckBoxImagesClick
         end
         object rgCtl3D: TRadioGroup
@@ -310,28 +318,28 @@ object MainForm: TMainForm
           OnClick = rgCtl3DClick
         end
         object LineTrackBar: TTrackBar
-          Left = 440
-          Top = 150
-          Width = 133
+          Left = 427
+          Top = 124
+          Width = 140
           Height = 25
           Max = 5
           Min = 1
           Position = 1
-          TabOrder = 13
+          TabOrder = 14
           OnChange = LineTrackBarChange
         end
         object RowMarginTrackBar: TTrackBar
-          Left = 440
-          Top = 181
-          Width = 133
+          Left = 427
+          Top = 155
+          Width = 140
           Height = 25
           Max = 20
-          TabOrder = 14
+          TabOrder = 15
           OnChange = RowMarginTrackBarChange
         end
         object filterDataEdit: TLabeledEdit
           Left = 8
-          Top = 153
+          Top = 182
           Width = 162
           Height = 23
           EditLabel.Width = 113
@@ -347,8 +355,28 @@ object MainForm: TMainForm
           Width = 195
           Height = 17
           Caption = 'Wrap All Text'
-          TabOrder = 11
+          TabOrder = 12
           OnClick = cbWrapAllTextClick
+        end
+        object cbWrapColumnTitles: TCheckBox
+          Left = 192
+          Top = 190
+          Width = 155
+          Height = 17
+          Caption = 'Wrap Column Titles'
+          TabOrder = 8
+          OnClick = cbWrapColumnTitlesClick
+        end
+        object TitleLinesTrackBar: TTrackBar
+          Left = 427
+          Top = 192
+          Width = 140
+          Height = 25
+          Max = 4
+          Min = 1
+          Position = 1
+          TabOrder = 16
+          OnChange = TitleLinesTrackBarChange
         end
       end
     end
@@ -357,7 +385,7 @@ object MainForm: TMainForm
       ImageIndex = 3
       object LabeledDBLabel: TLabeledDBLabel
         Left = 88
-        Top = 153
+        Top = 156
         Width = 144
         Height = 22
         Color = clWhite
@@ -366,7 +394,7 @@ object MainForm: TMainForm
         ParentColor = False
         BoundCaption = 'LabeledDBLabel:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 137
+        BoundLabel.Top = 140
         BoundLabel.Width = 87
         BoundLabel.Height = 15
       end
@@ -397,11 +425,12 @@ object MainForm: TMainForm
         DataSource = DataSource
         ScrollBars = ssVertical
         TabOrder = 3
-        BoundCaption = 'LabeledDBMemo:'
+        BoundCaption = 'Memo:'
         BoundLabel.Left = 88
-        BoundLabel.Top = 192
-        BoundLabel.Width = 94
+        BoundLabel.Top = 278
+        BoundLabel.Width = 38
         BoundLabel.Height = 15
+        BoundLabel.LabelPosition = lpBottomLeft
       end
       object LabeledDBRichEdit: TLabeledDBRichEdit
         Left = 332
@@ -443,19 +472,18 @@ object MainForm: TMainForm
         BoundLabel.Height = 15
       end
       object LabeledDBEditEx: TLabeledDBEdit
-        Left = 88
-        Top = 16
+        Left = 124
+        Top = 336
         Width = 121
         Height = 23
         DataField = 'StringField'
         DataSource = DataSource
         TabOrder = 0
         BoundCaption = 'LabeledDBEdit:'
+        BoundLabel.Left = 124
+        BoundLabel.Top = 320
         BoundLabel.Width = 79
         BoundLabel.Height = 15
-        BoundLabel.Alignment = taRightJustify
-        BoundLabel.LabelPosition = lpLeftMiddle
-        BoundLabel.LabelSpacing = 10
       end
       object LabeledDBLookupComboBox: TLabeledDBLookupComboBox
         Left = 88
@@ -5364,7 +5392,7 @@ object MainForm: TMainForm
   end
   object BottomPanel: TPanel
     Left = 0
-    Top = 628
+    Top = 526
     Width = 896
     Height = 59
     Align = alBottom
@@ -5443,8 +5471,8 @@ object MainForm: TMainForm
     Aggregates = <>
     Params = <>
     AfterEdit = ClientDataSetAfterEdit
-    Left = 568
-    Top = 401
+    Left = 656
+    Top = 329
     object ClientDataSetIntegerField: TIntegerField
       DisplayLabel = 'Integer Field:'
       FieldName = 'IntegerField'
@@ -5517,15 +5545,15 @@ object MainForm: TMainForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 648
-    Top = 400
+    Left = 656
+    Top = 392
   end
   object ListClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     AfterEdit = ClientDataSetAfterEdit
-    Left = 728
-    Top = 400
+    Left = 744
+    Top = 328
     object ListClientDataSetKey: TStringField
       FieldName = 'Key'
       Size = 10
@@ -5537,7 +5565,7 @@ object MainForm: TMainForm
   end
   object ListDataSource: TDataSource
     DataSet = ListClientDataSet
-    Left = 800
-    Top = 400
+    Left = 744
+    Top = 392
   end
 end

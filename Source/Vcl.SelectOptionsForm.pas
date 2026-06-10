@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -63,6 +63,10 @@ resourcestring
   STR_HELP = 'Help';
 
 type
+  /// <summary>
+  ///  Modal form that presents a list of mutually exclusive options in a radio
+  ///  group and lets the user pick one, with optional OK/Cancel and Help buttons.
+  /// </summary>
   TfmSelectOption = class(TForm)
     paBottom: TPanel;
     paButtons: TPanel;
@@ -78,18 +82,68 @@ type
     FScaleFactor: Single;
   public
   {$IFDEF D10_3+}
+    /// <summary>
+    ///  Overridden to track the current scaling factor (NewPPI relative to the
+    ///  design-time PixelsPerInch) so the form is sized correctly for the active DPI.
+    /// </summary>
+    /// <param name="NewPPI">The new pixels-per-inch value the form is being scaled to.</param>
     procedure ScaleForPPI(NewPPI: Integer); override;
   {$ENDIF}
+    /// <summary>
+    ///  Creates and initializes the selection form: assigns the font, computes the
+    ///  client size (enlarging it to fit the buttons when Resize is True), fills the
+    ///  radio group with the options, selects SelectedIndex, sets the caption and
+    ///  enables the Help button when a help context is supplied.
+    /// </summary>
+    /// <param name="AOwner">Owner component for the form.</param>
+    /// <param name="NewFont">Font to use; when nil the application default font is used.</param>
+    /// <param name="Resize">When True, the window is enlarged to fit the bottom panel and all buttons.</param>
+    /// <param name="AOptions">List of option captions to display in the radio group.</param>
+    /// <param name="Title">Text shown in the form caption.</param>
+    /// <param name="NewWidth">Requested client width in design-time pixels (scaled by the DPI factor).</param>
+    /// <param name="NewHeight">Requested client height in design-time pixels (scaled by the DPI factor).</param>
+    /// <param name="HelpContext">Help context id; when non-zero the Help panel is shown.</param>
+    /// <param name="SelectedIndex">Index of the option initially selected in the radio group.</param>
     Constructor CreateSelectOption( AOwner : TComponent; NewFont : Tfont; Resize : boolean;
        AOptions : TStringList; Title : string; NewWidth : integer = 0; NewHeight : integer = 0;
        HelpContext : integer = 0; SelectedIndex : integer = 0);
+    /// <summary>
+    ///  Destroys the form instance.
+    /// </summary>
     destructor Destroy; override;
   end;
 
+  /// <summary>
+  ///  Displays the option-selection form modally and returns the index of the
+  ///  chosen option. AOptions is the newline-separated list of options; the form
+  ///  size and number of columns are computed automatically from the option text
+  ///  and font.
+  /// </summary>
+  /// <param name="AOptions">Newline-separated text containing one option per line.</param>
+  /// <param name="Font">Font used to size the form; when nil the application default font is used.</param>
+  /// <param name="Resize">When True, the window is resized to fit its content and buttons.</param>
+  /// <param name="Title">Caption shown on the form.</param>
+  /// <param name="HelpContext">Help context id; when non-zero the Help button is shown.</param>
+  /// <param name="SelectedIndex">Index of the option initially selected.</param>
+  /// <returns>The zero-based index of the selected option, or -1 if the user cancels.</returns>
   function CBSelectOption(AOptions : string; Font : Tfont; Resize : boolean;
     Title : string = ''; HelpContext : integer = 0; SelectedIndex : integer = 0) : integer;
 
+  /// <summary>
+  ///  Prompts the user to pick a VCL style from the sorted list of registered
+  ///  style names, preselecting the currently active style.
+  /// </summary>
+  /// <param name="SourceFont">Font used to size the selection form.</param>
+  /// <returns>The name of the chosen style; raises EAbort if the user cancels the selection.</returns>
   function CBSelectStyleName(SourceFont: TFont): string;
+  /// <summary>
+  ///  Computes the standard size of a single-line edit control for the given font,
+  ///  mirroring the VCL's TCustomEdit.AdjustHeight calculation.
+  /// </summary>
+  /// <param name="Font">Font whose text metrics drive the size calculation.</param>
+  /// <param name="Ctl3D">Whether the control uses the 3D border style (affects the height).</param>
+  /// <param name="Width">Returns the computed average character width plus padding.</param>
+  /// <param name="Height">Returns the computed standard control height.</param>
   procedure CalcStandardEditSize(Font : TFont;
     Ctl3D : boolean; out Width, Height : integer);
 
@@ -110,8 +164,8 @@ var
   I: Integer;
   SysMetrics, Metrics: TTextMetric;
 begin
-  //VCL: questo pezzo è copiato da TCustomEdit.AdjustHeight per calcolare l'altezza
-  //Standard di un controllo di edit come fa la VCL
+  //VCL: this section is copied from TCustomEdit.AdjustHeight to compute the
+  //standard height of an edit control the same way the VCL does
   DC := GetDC(0);
   GetTextMetrics(DC, SysMetrics);
   SaveFont := SelectObject(DC, Font.Handle);
@@ -129,7 +183,7 @@ begin
     I := I div 4 + GetSystemMetrics(SM_CYBORDER) * 4;
   end;
   Height := Metrics.tmHeight + I;
-  Width := Metrics.tmAveCharWidth + 2; //2 l'ho determinato a mano!
+  Width := Metrics.tmAveCharWidth + 2; //the 2 was determined manually!
 end;
 
 function CBSelectOption(AOptions : string; Font : Tfont; Resize : boolean;
@@ -229,9 +283,9 @@ begin
   ClientHeight := Round(NewHeight * FScaleFactor);
   if Resize then
   begin
-    //Allungo l'altezza per farci stare il pannello Bottom e un po' di spazio sopra
+    //Increase the height to fit the Bottom panel and some space above it
     ClientHeight := ClientHeight + Round(paBottom.Height * FScaleFactor) * 2;
-    //Allargo la finestra almeno per farci stare tutti i pulsanti
+    //Widen the window at least enough to fit all the buttons
     ClientWidth := max(ClientWidth,
       paButtons.Width+Round(paHelp.Width+10 * FScaleFactor));
   end;
@@ -258,7 +312,7 @@ end;
 
 procedure TfmSelectOption.FormCreate(Sender: TObject);
 begin
-  //Traduzione in lingua delle stringhe della form
+  //Localize the form's caption strings
   gb.Caption := STR_OPTIONS;
   bbOK.Caption := STR_SELECT;
   bbCancel.Caption := STR_EXIT;

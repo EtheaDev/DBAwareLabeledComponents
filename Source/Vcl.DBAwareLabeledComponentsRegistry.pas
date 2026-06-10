@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -29,6 +29,13 @@ unit Vcl.DBAwareLabeledComponentsRegistry;
 
 interface
 
+/// <summary>
+///  Registers all DBAwareLabeledComponents design-time components on the
+///  'ETHEA LabeledControls' palette page (and TDBNumberBox on 'DbControls'),
+///  and integrates the package with the IDE by adding it to the splash screen.
+///  Components guarded by {$IFDEF D10_1+} and {$IFDEF D10_4+} are only
+///  registered on supported Delphi versions.
+/// </summary>
 procedure Register;
 
 implementation
@@ -61,7 +68,7 @@ uses
   ;
 
 const
-  ComponentsVersion = '1.3.6';
+  ComponentsVersion = '1.4.0';
   Component_Docs_URL = 'https://ethea.it/docs/dbawarelabeledcomponents/Overview.html';
   {$IFDEF D11+}
   ABOUT_RES_NAME = 'DBAWARESPLASH48PNG';

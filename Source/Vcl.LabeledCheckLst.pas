@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -37,6 +37,12 @@ uses
   Vcl.BoundLabel;
 
 type
+  /// <summary>
+  ///  A TCheckListBox descendant that owns and manages an attached
+  ///  TControlBoundLabel boundary label, kept positioned alongside the list,
+  ///  and adds an optional ReadOnly behavior that prevents the user from
+  ///  toggling the check boxes via mouse or keyboard.
+  /// </summary>
   TLabeledCheckListBox = class(TCheckListBox)
   strict private
   private
@@ -56,13 +62,45 @@ type
     procedure DoEnter; override;
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Unchecks every item in the list by setting Checked[i] to False for
+    ///  all items.
+    /// </summary>
     procedure UncheckAll;
+    /// <summary>
+    ///  Checks every item in the list by setting Checked[i] to True for
+    ///  all items.
+    /// </summary>
     procedure CheckAll;
+    /// <summary>
+    ///  Creates the control and instantiates the associated
+    ///  TControlBoundLabel boundary label, owned by this control.
+    /// </summary>
+    /// <param name="AOwner">The component that owns the new instance.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds, recalculating and repainting the bound label
+    ///  so it stays aligned with the list box.
+    /// </summary>
+    /// <param name="ALeft">New left coordinate, in pixels.</param>
+    /// <param name="ATop">New top coordinate, in pixels.</param>
+    /// <param name="AWidth">New width, in pixels.</param>
+    /// <param name="AHeight">New height, in pixels.</param>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  When True, the user cannot change the item check states: pressing the
+    ///  space bar and clicking on the check box are both suppressed.
+    /// </summary>
     property ReadOnly: boolean read FReadOnly write FReadOnly default False;
+    /// <summary>
+    ///  The caption text displayed by the associated bound label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The TControlBoundLabel boundary label automatically created and
+    ///  managed by this control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
@@ -85,7 +123,7 @@ end;
 
 procedure TLabeledCheckListBox.KeyPress(var Key: Char);
 begin
-  //Se è read-only non consento che alla pressione della barra si modifichi il checkbox
+  //When read-only, prevent the space bar from toggling the check box
   if (Key = ' ') and FReadOnly then
     Key := #0;
   inherited;
@@ -95,7 +133,7 @@ procedure TLabeledCheckListBox.MouseDown(Button: TMouseButton; Shift: TShiftStat
 var
   Index: Integer;
 begin
-  //In caso di ReadOnly devo prevenire la modifica del checkbox
+  //In ReadOnly mode, prevent the user from changing the check box
   if FReadOnly and (Button = mbLeft) then
   begin
     Index := ItemAtPos(Point(X,Y),True);

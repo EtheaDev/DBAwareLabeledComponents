@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -45,27 +45,76 @@ uses
   Vcl.WinXCalendars;
 
 type
+  /// <summary>
+  ///  Callback signature used to ask the owner whether the currently selected
+  ///  date may be changed/applied. Returns True when the change is allowed.
+  /// </summary>
   TCanChange = function(): boolean of object;
 
+  /// <summary>
+  ///  Extended calendar view control used inside the popup form. Adds an
+  ///  OnCanChangeDate hook so the mouse cursor reflects whether the highlighted
+  ///  date can be picked, and forces the Monday-first, parent-font layout.
+  /// </summary>
   TCalendarViewEx = class(TCalendarView)
   private
     FOnCanChangeDate : TCanChange;
   protected
+    /// <summary>
+    ///  Handles WM_MOUSEMOVE. When OnCanChangeDate is assigned, sets the cursor
+    ///  to crHandPoint while the date can be changed, otherwise to crDefault.
+    /// </summary>
     procedure WMMouseMove(var Message: TWMMouseMove); message WM_MOUSEMOVE;
   public
+    /// <summary>
+    ///  Callback queried on mouse move to decide whether the date under the
+    ///  cursor can be selected; drives the visual cursor feedback.
+    /// </summary>
     property OnCanChangeDate: TCanChange read FOnCanChangeDate write FOnCanChangeDate;
+    /// <summary>
+    ///  Creates the control, enabling ParentFont, copying the font into the
+    ///  header and setting Monday as the first day of the week.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
   published
+    /// <summary>
+    ///  Indicates whether the control uses its parent's font; published as
+    ///  stored so it is persisted with the form.
+    /// </summary>
     property ParentFont stored True;
   end;
 
-  // Calendar Form Type Definition
+  /// <summary>
+  ///  Borderless popup form hosting a calendar (and an optional time edit) that
+  ///  lets the user pick a date/time for an associated edit control, then writes
+  ///  the chosen value back into that control on confirmation.
+  /// </summary>
   TCalendarViewPopupForm = class( TForm )
+    /// <summary>
+    ///  Cancels the selection (sets the result to mrCancel) and closes the form.
+    /// </summary>
     procedure FormCancel;
+    /// <summary>
+    ///  OnDeactivate handler: cancels the selection and closes the form when it
+    ///  loses focus.
+    /// </summary>
     procedure FormDeactivate(Sender: TObject);
+    /// <summary>
+    ///  OnClose handler: when confirmed (mrOk), formats the selected date/time
+    ///  using the field's display format (or a default) and writes it back to
+    ///  the owner edit; always frees the form via caFree.
+    /// </summary>
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    /// <summary>
+    ///  OnKeyDown handler for the form: Enter applies the current date/time,
+    ///  Escape cancels. Ignored when any modifier key is pressed.
+    /// </summary>
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    /// <summary>
+    ///  OnKeyDown handler for the time mask edit: swallows arrow keys and
+    ///  applies the current date/time on Enter.
+    /// </summary>
     procedure meKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
@@ -88,14 +137,41 @@ type
     procedure CalendarDrawDayItem(Sender: TObject; DrawParams: TDrawViewInfoParams;
     CalendarViewViewInfo: TCellItemViewInfo);
     procedure CalendarViewChange(Sender: TObject);
-    procedure ImpostaDataOra;
+    procedure SetDateAndTime;
     function GetDayColor(DayOfWeek : integer) : TColor;
   public
+    /// <summary>
+    ///  Overridden to recompute the scale factor (NewPPI relative to the design
+    ///  PixelsPerInch) used when sizing and positioning the time edit control.
+    /// </summary>
+    /// <param name="NewPPI">Target pixels-per-inch the form is scaled to.</param>
     procedure ScaleForPPI(NewPPI: Integer); override;
+    /// <summary>
+    ///  Initializes the popup for the given owner edit control: builds the
+    ///  calendar (and an optional time edit when the style includes a time
+    ///  component), positions itself adjacent to the owner, and seeds the
+    ///  current date/time from the owner's text.
+    /// </summary>
+    /// <param name="Owner">The edit control the calendar is attached to and
+    ///  whose text will receive the picked value.</param>
+    /// <param name="ButtonEditStyle">Determines whether a time portion (HH:MM or
+    ///  HH:MM:SS) is shown and edited in addition to the date.</param>
     procedure InitForm( Owner: TCustomEdit; ButtonEditStyle : TButtonEditStyle = besDate );
+    /// <summary>
+    ///  Creates the borderless popup form and applies its default geometry,
+    ///  style, key-preview and event handlers.
+    /// </summary>
     constructor Create(AOwner : TComponent); override;
   end;
 
+  /// <summary>
+  ///  Entry point that displays the calendar popup for the supplied edit
+  ///  control. Does nothing if the control cannot be focused or is not visible;
+  ///  otherwise creates the form, initializes it for the given style and shows
+  ///  it.
+  /// </summary>
+  /// <param name="EditControl">The edit control to attach the popup to.</param>
+  /// <param name="ButtonEditStyle">The date/time editing style to use.</param>
   procedure CalendarViewPopUp(EditControl : TCustomEdit;
     ButtonEditStyle : TButtonEditStyle);
 
@@ -172,7 +248,7 @@ begin
 
     if (DateToStr(CV.Date) = '00/00/0000') then exit;
 
-    ImpostaDataOra;
+    SetDateAndTime;
   end;
 end;
 
@@ -221,8 +297,8 @@ var
 
   function GetTextDateTime : string;
   begin
-    //Funzione utilizzata per formattare l'output quando non c'è una display format sul campo
-    //o quando si tratta di un TCBXEditButton semplice
+    //Function used to format the output when the field has no display format
+    //or when dealing with a plain TCBXEditButton
     if not (isGestioneOra) then
       Result := datetostr(m_CurrentDateSelected)
     else if EditStyle = besDateHHMM then
@@ -239,12 +315,12 @@ begin
     begin
       if CanChangeData then
       begin
-        //Tenta di mandare in edit il dataset del campo se il suo datasource è autoedit
+        //Try to put the field's dataset into edit mode if its datasource is autoedit
         if not (Field.DataSet.State in [dsEdit, dsInsert]) then
           Field.DataSet.Edit;
       end
       else
-        Exit; //Non sono in edit: non modifica il testo del campo
+        Exit; //Not in edit mode: do not change the field text
 
       if Field is TDateTimeField then
         FDisplayFormat := TDateTimeField(Field).DisplayFormat
@@ -289,7 +365,7 @@ begin
     begin
       if DateToStr(CV.Date) = '00/00/0000' then exit;
 
-      ImpostaDataOra;
+      SetDateAndTime;
     end;
     VK_ESCAPE: FormCancel;
 
@@ -300,20 +376,20 @@ function TCalendarViewPopupForm.GetDayColor(DayOfWeek: integer): TColor;
   function CalcDayColor: TColor;
   begin
     case DayOfWeek of
-      1 :  //domenica
+      1 :  //Sunday
       begin
         if ColorToRgb(CALENDAR_COLOR) <> ColorToRgb(clRed) then
           Result := clRed else
           Result := GetStyledColor(clGrayText);
       end;
-      7 : //sabato
+      7 : //Saturday
       begin
         if ColorToRgb(CALENDAR_COLOR) <> ColorToRgb(clBlue) then
           Result := clBlue else
         Result := GetStyledColor(clGrayText);
       end;
     else
-      Result := GetStyledColor(clWindowText); //giorni feriali
+      Result := GetStyledColor(clWindowText); //weekdays
     end;
   end;
 
@@ -321,11 +397,11 @@ begin
   if IsVCLStyled then
   begin
     if (DayOfWeek = 1)  then
-      Result := GetStyledColor(clHighlight) //Domenica
+      Result := GetStyledColor(clHighlight) //Sunday
     else if (DayOfWeek = 7) then
-      Result := GetStyledColor(clHighlight) // Sabato
+      Result := GetStyledColor(clHighlight) // Saturday
     else
-      Result := GetStyledColor(clWindowText); //giorni feriali
+      Result := GetStyledColor(clWindowText); //weekdays
   end
   else
     Result := CalcDayColor;
@@ -338,10 +414,10 @@ begin
   else if editOwner is TLabeledButtonEdit then
     Result := TLabeledButtonEdit(editOwner).Font
   else
-    Raise EComponentError.Create('la Funzione TfrmCalPop.GetEditFont non è in grado di restituire un valore valido');
+    Raise EComponentError.Create('The GetEditFont function is unable to return a valid value');
 end;
 
-procedure TCalendarViewPopupForm.ImpostaDataOra;
+procedure TCalendarViewPopupForm.SetDateAndTime;
 begin
   if isGestioneOra then
   begin
@@ -397,8 +473,8 @@ begin
     OnChange := CalendarViewChange;
     OnCanChangeDate := CanChangeDate;
 
-    //VCL: questo pezzo è copiato da TCustomEdit.AdjustHeight per calcolare l'altezza
-    //Standard di un controllo di edit come fa la VCL
+    //VCL: this snippet is copied from TCustomEdit.AdjustHeight to compute the
+    //standard height of an edit control the same way the VCL does
     DC := GetDC(0);
     GetTextMetrics(DC, SysMetrics);
     SaveFont := SelectObject(DC, HeaderInfo.Font.Handle);
@@ -406,8 +482,8 @@ begin
     SelectObject(DC, SaveFont);
     ReleaseDC(0, DC);
 
-    CV.Height := Metrics.tmHeight * 13; //13 l'ho determinato a mano!
-    CV.Width := (Metrics.tmAveCharWidth * 21) + Metrics.tmMaxCharWidth  ; //31 l'ho determinato a mano!
+    CV.Height := Metrics.tmHeight * 13; //13 was determined manually!
+    CV.Width := (Metrics.tmAveCharWidth * 21) + Metrics.tmMaxCharWidth  ; //31 was determined manually!
 
     Self.Width := CV.Width;
     Align := alTop;
@@ -489,9 +565,9 @@ begin
   if isGestioneOra then
   begin
     DecodeTime(m_CurrentDateSelected, m_CurrentHour, m_CurrentMin, m_CurrentSec, m_CurrentMsec );
-    //inizializzo editmask dell'ora e minuti
+    //initialize the edit mask with hours and minutes
     me.Text := PadL(IntToStr(m_CurrentHour),2,'0')+FormatSettings.TimeSeparator+PadL(IntToStr(m_CurrentMin),2,'0');
-    //aggiungo eventualmente i secondi
+    //optionally append the seconds
     if ButtonEditStyle = besDateHHMMSS then
       me.Text := me.Text + FormatSettings.TimeSeparator+PadL(IntToStr(m_CurrentSec),2,'0');
   end;
@@ -507,7 +583,7 @@ begin
   if (key = VK_RETURN) then
   begin
     if DateToStr(CV.Date) = '00/00/0000' then exit;
-    ImpostaDataOra;
+    SetDateAndTime;
   end;
 
 end;

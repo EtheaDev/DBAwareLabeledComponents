@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -33,26 +33,129 @@ uses
   Vcl.Graphics;
 
 type
+  /// <summary>
+  ///  Enumerates the graphic file formats recognized by the unit.
+  ///  gffUnknown indicates an unrecognized or undetected format.
+  /// </summary>
   TGraphicFileFormat = (gffUnknown, gffBmp, gffTiff, gffJpeg, gffPng,
     gffDcx, gffPcx, gffEmf, gffGif, gffIco);
 
 const
+  /// <summary>
+  ///  Maps each TGraphicFileFormat value to its default file extension
+  ///  (without the leading dot). gffUnknown maps to an empty string.
+  /// </summary>
   AGraphicFileFormatExt : Array[TGraphicFileFormat] of string =
     ('', 'bmp', 'tif', 'jpg', 'png', 'dcx', 'pcx', 'emf', 'gif', 'ico');
 
+/// <summary>
+///  Detects the graphic file format of a stream by inspecting the magic-number
+///  signature in its leading bytes, without altering the stream contents.
+/// </summary>
+/// <param name="AStream">
+///  Source stream to inspect. Its Position is reset to 0 on entry; for a bitmap
+///  preceded by a TGraphicHeader the Position is advanced past the header.
+/// </param>
+/// <returns>
+///  The detected TGraphicFileFormat, or gffUnknown when the stream is nil,
+///  too short, or its signature is not recognized.
+/// </returns>
 function ResolveGraphicFileType( AStream: TStream ): TGraphicFileFormat;
+/// <summary>
+///  Returns the TGraphicClass registered for the given file format.
+/// </summary>
+/// <param name="GraphicFileFormat">The format whose graphic class is requested.</param>
+/// <returns>The registered TGraphicClass, or nil when none is registered.</returns>
 function GraphicFileFormatToGraphicClass(GraphicFileFormat : TGraphicFileFormat) : TGraphicClass;
+/// <summary>
+///  Associates a TGraphicClass with a graphic file format so the unit can
+///  instantiate the proper graphic when loading streams of that format.
+/// </summary>
+/// <param name="GraphicFileFormat">The format to register the class for.</param>
+/// <param name="AGraphicClass">The graphic class to associate with the format.</param>
 procedure RegisterGraphicClass(GraphicFileFormat : TGraphicFileFormat; AGraphicClass: TGraphicClass);
+/// <summary>
+///  Detects the format of the source stream, creates the matching registered
+///  graphic, loads it and assigns it to the destination picture.
+/// </summary>
+/// <param name="Source">Stream containing the image data to load.</param>
+/// <param name="Dest">Picture that receives the loaded image.</param>
+/// <param name="RaiseException">
+///  When True, raises EComponentError (UNSUPPORTED_FILE) for a recognized format.
+/// </param>
+/// <returns>The detected TGraphicFileFormat, or gffUnknown when not recognized.</returns>
 function LoadPictureFromStream(Source: TStream; Dest: TPicture; RaiseException: boolean): TGraphicFileFormat;
+/// <summary>
+///  Returns the default file extension for a format, including the leading dot
+///  (for example '.bmp').
+/// </summary>
+/// <param name="GraphicFileFormat">The format whose default extension is requested.</param>
+/// <returns>The dotted default extension string.</returns>
 function GetDefaultExt(GraphicFileFormat: TGraphicFileFormat): string;
+/// <summary>
+///  Builds a single Open/Save dialog filter entry for the given format using
+///  the EXT_FILES_FILTER resource string (description plus '*.ext' mask).
+/// </summary>
+/// <param name="GraphicFileFormat">The format the dialog filter is built for.</param>
+/// <returns>The formatted dialog filter string for the format.</returns>
 function GetDialogFilter(GraphicFileFormat: TGraphicFileFormat): string;
+/// <summary>
+///  Returns the file mask for the given format in the form '*.ext'.
+/// </summary>
+/// <param name="GraphicFileFormat">The format whose mask is requested.</param>
+/// <returns>The '*.ext' mask string.</returns>
 function GetExtFilter(GraphicFileFormat: TGraphicFileFormat): string;
+/// <summary>
+///  Builds a pipe-separated Open/Save dialog filter combining every currently
+///  registered graphic format.
+/// </summary>
+/// <param name="IncludeAllPictures">
+///  When True, prepends an "All pictures" entry (ALL_IMAGES_FILTER) listing the
+///  masks of all registered formats.
+/// </param>
+/// <returns>The combined dialog filter string.</returns>
 function GetRegisteredDialogFilters(IncludeAllPictures: Boolean = False): string;
+/// <summary>
+///  Converts a 6-character hexadecimal RRGGBB string into a TColor.
+/// </summary>
+/// <param name="sColor">The hexadecimal color string (6 hex digits, RRGGBB).</param>
+/// <returns>The corresponding TColor, or clBlack when the input is not 6 characters.</returns>
 function HexToColor(Const sColor: string): TColor;
+/// <summary>
+///  Converts a TColor into its 6-character hexadecimal RRGGBB representation.
+/// </summary>
+/// <param name="Color">The color to convert.</param>
+/// <returns>The RRGGBB hexadecimal string.</returns>
 function ColorToHex(Color: TColor): string;
+/// <summary>
+///  Replaces the unit-wide list of custom colors with a copy of the supplied
+///  list; passing nil releases the current list.
+/// </summary>
+/// <param name="Colors">The colors to store, or nil to clear the custom colors.</param>
 procedure RegisterCustomColors(Colors: TStrings);
+/// <summary>
+///  Returns the unit-wide list of custom colors previously registered.
+/// </summary>
+/// <returns>The custom colors list, or nil when none has been registered.</returns>
 function GetCustomColors: TStrings;
+/// <summary>
+///  Computes a contrasting color for the given color, suitable for drawing
+///  readable text or foreground content over it.
+/// </summary>
+/// <param name="Color">The background color to contrast against.</param>
+/// <param name="UseBW">
+///  When True, returns either clBlack or clWhite based on the perceived
+///  luminance (YIQ); when False, returns the complementary color.
+/// </param>
+/// <returns>The contrasting TColor.</returns>
 function HighlightColor(const Color: TColor; UseBW: Boolean = False): TColor;
+/// <summary>
+///  Resizes a bitmap in place to the requested dimensions using a stretched
+///  draw through a temporary buffer.
+/// </summary>
+/// <param name="Bitmap">The bitmap to resize in place.</param>
+/// <param name="NewWidth">The target width in pixels.</param>
+/// <param name="NewHeight">The target height in pixels.</param>
 procedure ResizeBitmap(Bitmap: TBitmap; const NewWidth, NewHeight: integer);
 
 implementation
@@ -157,7 +260,7 @@ begin
   end
   else
     Result := gffUnknown;
-  if not (Result=gffUnknown) and raiseException then
+  if (Result=gffUnknown) and raiseException then
     raise EComponentError.Create(UNSUPPORTED_FILE);
 end;
 
@@ -253,7 +356,7 @@ begin
   LColor := ColorToRGB(Color);
   if UseBW then
   begin
-    //Usa bianco e nero
+    //Use black and white
     r := GetRValue(LColor);
     g := GetGValue(LColor);
   	b := GetBValue(LColor);
@@ -265,7 +368,7 @@ begin
   end
   else
   begin
-    //Usa colore complementare
+    //Use the complementary color
     result := TColor(WinApi.Windows.RGB(255 - GetRValue(LColor),
                                  255 - GetGValue(LColor),
                                  255 - GetBValue(LColor)));

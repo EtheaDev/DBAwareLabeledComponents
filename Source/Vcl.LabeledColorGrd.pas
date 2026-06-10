@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -38,6 +38,11 @@ uses
   Vcl.BoundLabel;
 
 Type
+  /// <summary>
+  ///  A VCL TColorGrid extended with an associated boundary label (BoundLabel).
+  ///  The label is created automatically, follows the grid's position and font,
+  ///  mirrors its visibility, and highlights when the grid receives focus.
+  /// </summary>
   TLabeledColorGrid = Class(TColorGrid)
   private
     FBoundLabel: TControlBoundLabel;
@@ -51,10 +56,30 @@ Type
     procedure DoEnter; override;
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the color grid and instantiates its associated bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds, first recalculating the geometry to make room
+    ///  for the bound label, then repositioning and repainting the label.
+    /// </summary>
+    /// <param name="ALeft">New left coordinate of the control.</param>
+    /// <param name="ATop">New top coordinate of the control.</param>
+    /// <param name="AWidth">New width of the control.</param>
+    /// <param name="AHeight">New height of the control.</param>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Text displayed in the associated bound label. Setting this updates the
+    ///  label caption and stores the value.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label control associated with this grid, created and
+    ///  managed automatically. Read-only.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 

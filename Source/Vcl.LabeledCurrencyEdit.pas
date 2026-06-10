@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -48,21 +48,27 @@ type
   TNumberValues = set of TNumberValue;
 
   {TLabeledCurrencyEdit}
+  /// <summary>
+  ///  Edit control with an attached BoundLabel that formats numeric input as a
+  ///  currency/decimal value. It keeps the value right-aligned, manages a fixed
+  ///  number of decimals with thousands separators, restricts input to allowed
+  ///  signs (positive/negative), and can prepend a currency symbol (Sigla).
+  /// </summary>
   TLabeledCurrencyEdit = class(TLabeledEditEx)
   private
-    FDeleteBuffer: Boolean; //per gestire azzeramento valore se il primo tasto premuto è un numero
-    FDecimalOffset: 0..1; //per gestire se esiste o meno la virgola nel numero imputato
-    FMaxLength: integer; //per gestire la dimensione massima del numero
-    FDecimals: integer; //numero di cifre decimali
-    FNumberValues : TNumberValues; //valori accettati in input (pos/neg o entrambi)
+    FDeleteBuffer: Boolean; //tracks whether the previous value must be cleared when the first key pressed is a digit
+    FDecimalOffset: 0..1; //indicates whether a decimal separator is present in the entered number
+    FMaxLength: integer; //maximum allowed length of the number
+    FDecimals: integer; //number of decimal digits
+    FNumberValues : TNumberValues; //values accepted as input (positive/negative or both)
     FFormatString: string;
-    FSigla: string; //Sigla della divisa
+    FSigla: string; //currency symbol
     FAlignment : TAlignment;
     procedure SetAlignment(Value: TAlignment);
     procedure Reformat;
     procedure SetMaxLength(const Value: integer);
     procedure SetNumberValues(const Value: TNumberValues);
-    procedure SetSigla(const Value: string); //Formattazione applicata al valore
+    procedure SetSigla(const Value: string); //formatting applied to the value
     function DeleteSigla( const MyTesto, MySigla : string) : string;
     procedure AddSigla;
     function GetTextAsFloat: Extended;
@@ -77,29 +83,69 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure KeyPress(var Key: char); override;
   public
+    /// <summary>
+    ///  Creates the control and initializes it with right-aligned text,
+    ///  AutoSelect disabled, 2 decimals, the default maximum length, only
+    ///  positive values allowed, and an initial value of zero.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
   published
+    /// <summary>
+    ///  Horizontal alignment of the edit text. Defaults to taRightJustify;
+    ///  changing it recreates the window handle.
+    /// </summary>
     property Alignment: TAlignment read FAlignment write SetAlignment default taRightJustify;
+    /// <summary>
+    ///  Disabled by default so the whole value is not selected on focus,
+    ///  allowing the caret to be positioned for digit-by-digit editing.
+    /// </summary>
     property AutoSelect default False;
+    /// <summary>
+    ///  Maximum number of characters allowed in the value. Must be greater
+    ///  than zero; defaults to MAX_LEN_DEFAULT.
+    /// </summary>
     property MaxLength: integer read FMaxLength write SetMaxLength default MAX_LEN_DEFAULT;
+    /// <summary>
+    ///  Set of sign values accepted as input (positive, negative or both).
+    ///  Must not be empty; defaults to [nvPositive].
+    /// </summary>
     property NumberValues: TNumberValues read FNumberValues write SetNumberValues default [nvPositive];
+    /// <summary>
+    ///  Gets or sets the edited value as a floating-point number, stripping
+    ///  the currency symbol and thousands separators when reading.
+    /// </summary>
     property TextAsFloat: Extended read GetTextAsFloat write SetTextAsFloat;
+    /// <summary>
+    ///  Currency symbol prepended to the displayed value when the control
+    ///  loses focus; removed for editing while the control is focused.
+    /// </summary>
     property Sigla : string read FSigla write SetSigla;
+    /// <summary>
+    ///  Number of decimal digits shown and maintained while editing.
+    ///  Defaults to 2 and updates the internal format string.
+    /// </summary>
     property Decimals: integer read FDecimals write SetDecimals default 2;
   end;
 
   {TLabeledDBCurrencyEdit}
+  /// <summary>
+  ///  Data-aware edit control with an attached BoundLabel that edits a numeric
+  ///  dataset field as a currency/decimal value. It derives its decimal and
+  ///  formatting settings from the field's EditMask, EditFormat or DisplayFormat,
+  ///  keeps the value right-aligned, restricts input to the allowed signs, and
+  ///  strips thousands separators before posting the value to the field.
+  /// </summary>
   TLabeledDBCurrencyEdit = class(TLabeledDBEdit)
   private
-    FDeleteBuffer: Boolean; //per gestire azzeramento valore se il primo tasto premuto è un numero
-    FDecimalOffset: 0..1; //per gestire se esiste o meno la virgola nel numero imputato
-    FMaxLength: integer; //per gestire la dimensione massima del numero
-    FDecimals: integer; //numero di cifre decimali
-    FNumberValues : TNumberValues; //valori accettati in input (pos/neg o entrambi)
-    FFormatFloat: string; //Formato di editing
+    FDeleteBuffer: Boolean; //tracks whether the previous value must be cleared when the first key pressed is a digit
+    FDecimalOffset: 0..1; //indicates whether a decimal separator is present in the entered number
+    FMaxLength: integer; //maximum allowed length of the number
+    FDecimals: integer; //number of decimal digits
+    FNumberValues : TNumberValues; //values accepted as input (positive/negative or both)
+    FFormatFloat: string; //editing format
     procedure Reformat;
     procedure SetMaxLength(const Value: integer);
-    procedure SetNumberValues(const Value: TNumberValues); //Formattazione applicata al valore
+    procedure SetNumberValues(const Value: TNumberValues); //formatting applied to the value
     procedure CheckFieldEmpty;
     procedure SetFieldFormat;
     function GetTextAsFloat: Extended;
@@ -110,12 +156,36 @@ type
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure KeyPress(var Key: char); override;
   public
+    /// <summary>
+    ///  Creates the control and initializes it with AutoSelect disabled,
+    ///  2 decimals, the default maximum length and only positive values allowed.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Validates the edited text before it is posted to the field, removing
+    ///  the thousands separators so the value can be parsed correctly.
+    /// </summary>
     procedure ValidateEdit; override;
+    /// <summary>
+    ///  Returns the current edited value as a floating-point number, stripping
+    ///  the thousands separators from the text.
+    /// </summary>
     property TextAsFloat : Extended read GetTextAsFloat;
   published
+    /// <summary>
+    ///  Disabled by default so the whole value is not selected on focus,
+    ///  allowing the caret to be positioned for digit-by-digit editing.
+    /// </summary>
     property AutoSelect default False;
+    /// <summary>
+    ///  Set of sign values accepted as input (positive, negative or both).
+    ///  Must not be empty; defaults to [nvPositive].
+    /// </summary>
     property NumberValues: TNumberValues read FNumberValues write SetNumberValues default [nvPositive];
+    /// <summary>
+    ///  Maximum number of characters allowed in the value. Must be greater
+    ///  than zero; defaults to MAX_LEN_DEFAULT.
+    /// </summary>
     property MaxLength: integer read FMaxLength write SetMaxLength default MAX_LEN_DEFAULT;
   end;
 
@@ -141,7 +211,7 @@ end;
 
 procedure TLabeledDBCurrencyEdit.CheckFieldEmpty;
 begin
-  //recupera la maschera dal field
+  //retrieve the mask from the field
   if (Assigned(Field)) then
   begin
     SetFieldFormat;
@@ -191,7 +261,7 @@ end;
 
 function TLabeledDBCurrencyEdit.GetTextAsFloat: Extended;
 begin
-  //elimina i punti decimali
+  //remove the decimal separators
   Result := StrToFloat(StripCommas(Text, FDecimals));
 end;
 
@@ -203,7 +273,7 @@ var
 begin
   inherited KeyDown(Key,Shift);
 
-  //Se il numero è il primo tasto premuto e il cursore è sulla virgola prima azzera il valore precedente
+  //If a digit is the first key pressed and the caret is at the decimal separator, clear the previous value first
   if (FDeleteBuffer) and isKeyDownNumber(Key) and
     ((Text = '') or (SelStart = InitialPos)) then
   begin
@@ -216,7 +286,7 @@ begin
       SelStart := InitialPos;
     end;
   end
-  //Se c'è una selezione estesa prima cancella il contenuto
+  //If there is a non-empty selection, delete its content first
   else if (SelLength > 0) and (Shift=[]) and
     ((isKeyDownNumber(Key)) or (Key = VK_DELETE)) then
   begin
@@ -234,9 +304,9 @@ begin
         SelStart := initialPos else
         SelStart := CursorPos;
       SelLength := 0;
-    end;  
+    end;
   end
-  //Se viene premuto Canc cancella una cifra
+  //If Delete is pressed, remove a single digit
   else if Key = VK_DELETE then
   begin
     if EditCanModify then
@@ -332,7 +402,7 @@ begin
       '-':
         if (nvNegative in FNumberValues) then
         begin
-          //aggiunge il segno meno
+          //add the minus sign
           if (pos('-',Buffer) = 0) then
           begin
             if Length(Buffer) < FMaxLength then Buffer := '-'+Buffer;
@@ -341,7 +411,7 @@ begin
       '+':
         if (nvPositive in FNumberValues) then
         begin
-          //toglie il segno meno
+          //remove the minus sign
           if (pos('-',Buffer) <> 0) then
           begin
             Buffer := KillChar(Buffer,'-');
@@ -370,7 +440,7 @@ begin
     //Remove Minus char for the moment
     if Negative then
       TempText := KillChar(TempText,'-');
-    //Inizialize Temp value to Zero
+    //Initialize Temp value to Zero
     if TempText = '' then
       TempText := '0';
     //Delete decimal separators
@@ -398,23 +468,23 @@ procedure TLabeledDBCurrencyEdit.SetFieldFormat;
 var
   FEditformat : string;
 begin
-  //Come priorità utilizzo la EditMask del campo
+  //as first priority use the field's EditMask
   if Field.EditMask <> '' then
   begin
     FEditformat := Copy(Field.EditMask,1,length(Field.EditMask)-4);
   end
   else
   begin
-    //per i campi numerici ho a disposizione anche EditFormat e DisplayFormat
+    //for numeric fields EditFormat and DisplayFormat are also available
     if (Field is TNumericField) then
     with TNumericField(Field) do
     begin
-      //Se non esiste EditMask sul field uso la EditFormat
+      //if the field has no EditMask, use the EditFormat
       if (FEditFormat = '') and (EditFormat <> '') then
       begin
         FEditformat := EditFormat;
       end
-      //Se non esiste ne EditMask ne EditFormst uso la DisplayFormat
+      //if neither EditMask nor EditFormat exist, use the DisplayFormat
       else if (FEditFormat = '') and (DisplayFormat <> '') then
       begin
         FEditformat := DisplayFormat;
@@ -422,7 +492,7 @@ begin
     end;
   end;
 
-  //tolgo dalla formatstring tutti i caratteri non validi alla formattazione float
+  //strip from the format string all characters that are invalid for float formatting
   FFormatFloat := GetValidChars(FEditFormat,['#','0'..'9','-','+','.',',']);
 
   if pos('.', FFormatFloat) <> 0 then
@@ -462,7 +532,7 @@ end;
 
 procedure TLabeledDBCurrencyEdit.ValidateEdit;
 begin
-  //Pulisco sempre i separatori delle migliaia dal testo
+  //always strip the thousands separators from the text
   Text := KillChar(Text,FormatSettings.ThousandSeparator);
   inherited;
 end;
@@ -489,14 +559,14 @@ constructor TLabeledCurrencyEdit.Create(AOwner: TComponent);
 begin
   inherited;
 {$IFDEF CBCLX}
-  inherited Alignment := taRightJustify; //Allineamento di default a destra
+  inherited Alignment := taRightJustify; //right alignment by default
 {$ELSE}
   FAlignment := taRightJustify;
 {$ENDIF}
   inherited AutoSelect := False;
   FDecimalOffset := 1;
   FDecimals := 2;
-  FFormatString := CURRENCY_FORMAT; //NB: per la stringa di formattazione si usa sempre il .
+  FFormatString := CURRENCY_FORMAT; //NB: the format string always uses the dot as decimal separator
   Text := '0'+FormatSettings.decimalSeparator+'00';
   FMaxLength := MAX_LEN_DEFAULT;
   FNumberValues := [nvPositive];
@@ -530,7 +600,7 @@ begin
   Result := MyTesto;
   if pos(MySigla, MyTesto) <> 0 then
   begin
-    //elimina la sigla
+    //remove the currency symbol
     delete(Result, Pos(MySigla+' ', Result), Length(MySigla+' '));
   end;
 end;
@@ -556,9 +626,9 @@ var
   Testo : string;
 begin
   Testo := Text;
-  //elimina eventualmente la sigla
+  //remove the currency symbol if present
   Testo := DeleteSigla( Testo, FSigla );
-  //elimina i punti decimali
+  //remove the decimal separators
   Result := StrToFloat(StripCommas(Testo, FDecimals));
 end;
 
@@ -571,8 +641,8 @@ begin
   inherited KeyDown(Key,Shift);
   if ReadOnly then Exit;
 
-  //Se il numero è il primo tasto premuto e il cursore è sulla virgola prima azzera il valore precedente
-  //Se il numero è il primo tasto premuto e il cursore è sulla virgola prima azzera il valore precedente
+  //If a digit is the first key pressed and the caret is at the decimal separator, clear the previous value first
+  //If a digit is the first key pressed and the caret is at the decimal separator, clear the previous value first
   if (FDeleteBuffer) and isKeyDownNumber(Key) and
     ((Text = '') or (SelStart = InitialPos)) then
   begin
@@ -581,7 +651,7 @@ begin
     Reformat;
     SelStart := InitialPos;
   end
-  //Se c'è una selezione estesa prima cancella il contenuto
+  //If there is a non-empty selection, delete its content first
   else if (SelLength > 0) and (Shift=[]) and
     ((isKeyDownNumber(Key)) or (Key = VK_DELETE)) then
   begin
@@ -598,7 +668,7 @@ begin
       SelStart := CursorPos;
     SelLength := 0;
   end
-  //Se viene premuto Canc cancella una cifra
+  //If Delete is pressed, remove a single digit
   else if Key = VK_DELETE then
   begin
     Buffer := Text;
@@ -682,7 +752,7 @@ begin
     '-':
       if (nvNegative in FNumberValues) then
       begin
-        //aggiunge il segno meno
+        //add the minus sign
         if (pos('-',Buffer) = 0) then
         begin
           if Length(Buffer) < FMaxLength then Buffer := '-'+Buffer;
@@ -691,7 +761,7 @@ begin
     '+':
       if (nvPositive in FNumberValues) then
       begin
-        //toglie il segno meno
+        //remove the minus sign
         if (pos('-',Buffer) <> 0) then
         begin
           Buffer := KillChar(Buffer,'-');
@@ -713,7 +783,7 @@ var
   TempText : string;
 begin
   TempText := Text;
-  P := Pos(FSigla, TempText); //rimuove eventualmente la sigla
+  P := Pos(FSigla, TempText); //remove the currency symbol if present
   if P <> 0 then
     TempText := Trim(Copy(TempText,1,P-1)+Copy(TempText,P+length(FSigla),Length(TempText)));
   Negative := (Pos('-',TempText)<>0) or not (nvPositive in FNumberValues);
@@ -723,7 +793,7 @@ begin
   if FFormatString <> '' then
     TempText := FormatFloat(FFormatString, StrToFloat(KillChar(TempText,FormatSettings.ThousandSeparator)));
   if Negative and (TempText[1]<>'-') then TempText := '-'+TempText;
-  //rimette eventualmente la sigla
+  //re-add the currency symbol if it was present
   Text := TempText;
   if P <> 0 then
     AddSigla;

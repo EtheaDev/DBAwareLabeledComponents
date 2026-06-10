@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -26,6 +26,11 @@ unit Vcl.DbAwareLabeledConsts;
 
 interface
 
+/// <summary>
+///  Default formatting strings and edit masks used by the data-aware
+///  labeled components (numeric/currency formats, date and time input
+///  masks, color mask, and the default VCL style name).
+/// </summary>
 const
   INTEGER_FORMAT  = '###0';
   CURRENCY_FORMAT = '#,##0.00';
@@ -38,6 +43,12 @@ const
   COLOR_MASK = '>aaaaaa;1; ';
   STYLE_WINDOWS = 'Windows';
 
+/// <summary>
+///  Localizable user-facing strings used across the library: error and
+///  warning messages, button/menu captions, file dialog filters and titles,
+///  and field labels. These resource strings can be translated for
+///  internationalization.
+/// </summary>
 resourcestring
   ERR_NO_CHANGE_DIR = 'Warning: is not possible to save data in a different folder';
   ERR_COPY_FILE = 'Cannot copy file "%s" as "%s"';

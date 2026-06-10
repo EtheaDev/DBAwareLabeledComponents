@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -62,12 +62,26 @@ Type
   strict protected
     procedure PaintNC(Canvas: TCanvas); override;
   public
+    /// <summary>
+    ///  Creates the style hook for the given control.
+    /// </summary>
+    /// <param name="AControl">The control the style hook is attached to.</param>
     constructor Create(AControl: TWinControl); override;
   end;
 
+  /// <summary>
+  ///  Defines the behavior and indicator icon of the embedded button: search (besFind),
+  ///  date/time picker (besDate, besDateHHMM, besDateHHMMSS), calculator (besCalc),
+  ///  folder selection (besFolder), file selection (besFile) and color selection (besColor).
+  /// </summary>
   TButtonEditStyle = (besFind, besDate, besDateHHMM, besDateHHMMSS, besCalc, besFolder, besFile, besColor);
 
   { TLabeledButtonEdit }
+  /// <summary>
+  ///  Masked edit control with a BoundLabel boundary label and an embedded button on the right.
+  ///  Depending on ButtonEditStyle the button opens a popup calendar, a file/folder or a color dialog,
+  ///  or simply fires the OnButtonEditClick event for custom search behavior.
+  /// </summary>
   TLabeledButtonEdit = class(TLabeledMaskEdit)
   strict private
     class constructor Create;
@@ -136,12 +150,35 @@ Type
     /// <summary>Property providing access to the internal FCanvas field. Used for drawing search indicator.</summary>
     property Canvas: TCanvas read FCanvas;
   public
+    /// <summary>
+    ///  Creates the control, building the internal canvas and image lists for the
+    ///  text and calendar indicators, and initializes ButtonEditStyle to besFind,
+    ///  ButtonWidth to DEFAULT_BUTTON_WIDTH and ShortCut to VK_F3.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Destroys the control, freeing the internal canvas and indicator image lists.
+    /// </summary>
     destructor Destroy; override;
+    /// <summary>
+    ///  Returns True when ButtonEditStyle is a date/time style (besDate, besDateHHMM or besDateHHMMSS).
+    /// </summary>
+    /// <returns>True if the control is configured for date/time input.</returns>
     function isDateTimeInput : boolean;
+    /// <summary>
+    ///  Returns True when ButtonEditStyle is besColor.
+    /// </summary>
+    /// <returns>True if the control is configured for color input.</returns>
     function isColorInput : boolean;
+    /// <summary>
+    ///  Sets the control bounds, forcing the width to CollapsedWidth when Collapsed is True.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Read-only run-time property; True when the text contains no significant characters
+    ///  (ignoring spaces and date/time/number separators). Not stored.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty stored False;
     /// <summary>Specifies the width of the search indicator button.</summary>
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default DEFAULT_BUTTON_WIDTH;
@@ -152,14 +189,37 @@ Type
     /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besFind,
     /// the OnButtonEditClick event also occurs when the Enter key is pressed.</summary>
     property OnButtonEditClick: TNotifyEvent read FOnButtonEditClick write FOnButtonEditClick;
+    /// <summary>
+    ///  File filter applied by the Open dialog when ButtonEditStyle is besFile.
+    /// </summary>
     property DialogFilter: string read FDialogFilter write FDialogFilter;
+    /// <summary>
+    ///  Keyboard shortcut that triggers the button action; defaults to VK_F3.
+    /// </summary>
     property ShortCut: TShortCut read FShortCut write FShortCut default VK_F3;
+    /// <summary>
+    ///  When True the edit area is hidden and the control is shrunk to CollapsedWidth,
+    ///  showing only the button; defaults to False.
+    /// </summary>
     property Collapsed: boolean read FCollapsed write SetCollapsed default False;
+    /// <summary>
+    ///  Event fired just before the file or color dialog is executed, allowing the dialog to be customized.
+    /// </summary>
     property BeforeDialogExecute : TNotifyEvent read FBeforeDialogExecute write FBeforeDialogExecute;
+    /// <summary>
+    ///  Gets or sets the edited text as a TDateTime value; returns 0 when the control is not a
+    ///  date/time input or the text cannot be parsed.
+    /// </summary>
     property DateTimeValue: TDateTime read GetDateTimeValue write SetDateTimeValue;
   end;
 
   { TLabeledDBButtonEdit }
+  /// <summary>
+  ///  Data-aware version of TLabeledButtonEdit: a masked DB edit bound to a dataset field,
+  ///  with a BoundLabel boundary label and an embedded button on the right. The button opens a
+  ///  popup calendar, a file/folder or a color dialog according to ButtonEditStyle, which is
+  ///  also derived automatically from the linked field type.
+  /// </summary>
   TLabeledDBButtonEdit = class(TLabeledDBEdit)
   strict private
     class constructor Create;
@@ -231,15 +291,46 @@ Type
     /// <summary>Property providing access to the internal FCanvas field. Used for drawing search indicator.</summary>
     property Canvas: TCanvas read FCanvas;
   public
+    /// <summary>
+    ///  Returns True when the linked field's dataset is already in edit/insert state, or
+    ///  when the datasource allows AutoEdit.
+    /// </summary>
+    /// <returns>True if the field value can be modified.</returns>
     function CanChangeData : boolean;
+    /// <summary>
+    ///  Assigns Value to the linked field, putting the dataset into edit mode first when CanChangeData allows it.
+    /// </summary>
+    /// <param name="Value">The new value to store into the linked field.</param>
     procedure SetFieldValue(const Value: Variant);
 
+    /// <summary>
+    ///  Creates the control, building the internal canvas and image lists for the
+    ///  text and calendar indicators, and initializes ButtonEditStyle to besFind,
+    ///  ButtonWidth to DEFAULT_BUTTON_WIDTH and ShortCut to VK_F3.
+    /// </summary>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Destroys the control, freeing the internal canvas and indicator image lists.
+    /// </summary>
     destructor Destroy; override;
+    /// <summary>
+    ///  Returns True when ButtonEditStyle is a date/time style (besDate, besDateHHMM or besDateHHMMSS).
+    /// </summary>
+    /// <returns>True if the control is configured for date/time input.</returns>
     function isDateTimeInput : boolean;
+    /// <summary>
+    ///  Returns True when ButtonEditStyle is besColor.
+    /// </summary>
+    /// <returns>True if the control is configured for color input.</returns>
     function isColorInput : boolean;
+    /// <summary>
+    ///  Sets the control bounds, forcing the width to CollapsedWidth when Collapsed is True.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Read-only run-time property; True when the linked field exists and is null. Not stored.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty stored False;
     /// <summary>Specifies the width of the search indicator button.</summary>
     property ButtonWidth: Integer read FButtonWidth write SetButtonWidth default DEFAULT_BUTTON_WIDTH;
@@ -250,15 +341,36 @@ Type
     /// <summary>This event occurs when the search indicator button is clicked. When ButtonEditStyle is set to besFind,
     /// the OnButtonEditClick event also occurs when the Enter key is pressed.</summary>
     property OnButtonEditClick: TNotifyEvent read FOnButtonEditClick write FOnButtonEditClick;
+    /// <summary>
+    ///  File filter applied by the Open dialog when ButtonEditStyle is besFile.
+    /// </summary>
     property DialogFilter: string read FDialogFilter write FDialogFilter;
+    /// <summary>
+    ///  Keyboard shortcut that triggers the button action; defaults to VK_F3.
+    /// </summary>
     property ShortCut: TShortCut read FShortCut write FShortCut default VK_F3;
+    /// <summary>
+    ///  Name of the dataset field the control is bound to. Setting it automatically selects
+    ///  the besDate ButtonEditStyle for ftDate and ftDateTime fields.
+    /// </summary>
     property DataField: string read GetDataField write SetDataField;
+    /// <summary>
+    ///  When True the edit area is hidden and the control is shrunk to CollapsedWidth,
+    ///  showing only the button; defaults to False.
+    /// </summary>
     property Collapsed: boolean read FCollapsed write SetCollapsed default False;
+    /// <summary>
+    ///  Event fired just before the file or color dialog is executed, allowing the dialog to be customized.
+    /// </summary>
     property BeforeDialogExecute : TNotifyEvent read FBeforeDialogExecute write FBeforeDialogExecute;
+    /// <summary>
+    ///  Gets or sets the edited text as a TDateTime value; returns 0 when the control is not a
+    ///  date/time input or the text cannot be parsed.
+    /// </summary>
     property DateTimeValue: TDateTime read GetDateTimeValue write SetDateTimeValue;
   end;
 
-{$R VCLButtonEdit.res}   //utilizza il file VCLButtonEdit.res con le immagini per i bottoni
+{$R VCLButtonEdit.res}   //uses the VCLButtonEdit.res file containing the button images
 
 implementation
 
@@ -315,7 +427,7 @@ begin
       ResizeBitmap(Bmp, Round(Bmp.Width*LScale), Round(Bmp.Height*LScale));
       LCalendarIndicatorImages.Add(Bmp, nil);
 
-      //Esempio caricamento bitmap con colore fuchsia trasparente
+      //Example of loading a bitmap with transparent fuchsia color
 (*
       Bmp.Transparent := True;
       Bmp.TransparentColor := clFuchsia;
@@ -345,14 +457,14 @@ begin
   else
     Exit;
 
-  //Trasformo il FileName modificando le cartelle di sistema (es.{app}\pippo.txt)
-  Path := ExtractFilePath(FileName); //estraggo {app}
-  RealizedPath := RealizeAliasPath(Application.Handle, Path); //trasformo {app} nella cartella reale
-  FileName := RealizedPath+ExtractFileName(FileName); //modifico il nome del file con la cartella reale
+  //Transform the FileName by resolving system folders (e.g. {app}\pippo.txt)
+  Path := ExtractFilePath(FileName); //extract {app}
+  RealizedPath := RealizeAliasPath(Application.Handle, Path); //convert {app} into the actual folder
+  FileName := RealizedPath+ExtractFileName(FileName); //rebuild the file name with the actual folder
   if not OpenDialogExecute(FileName, Title, DialogFilter, BeforeDialogExecute) then
     Exit;
 
-  //Provo a convertire la path del file selezionato in path di sistema
+  //Try to convert the path of the selected file back into a system path
   Path := ExtractFilePath(FileName);
   RealizeSystemPath(Application.Handle, Path);
   FileName := Path+ExtractFileName(FileName);
@@ -400,12 +512,12 @@ begin
   else
     Exit;
 
-  //Trasformo il Path modificando le cartelle di sistema (es.{app}\)
-  Path := RealizeAliasPath(Application.Handle, Path); //trasformo {app} nella cartella reale
+  //Transform the Path by resolving system folders (e.g. {app}\)
+  Path := RealizeAliasPath(Application.Handle, Path); //convert {app} into the actual folder
   if not SelectDirectory('', '', Path, [sdShowEdit, sdShowShares, sdValidateDir, sdNewUI]) then
     Exit;
 
-  //Provo a convertire la path del file selezionato in path di sistema
+  //Try to convert the path of the selected file back into a system path
   RealizeSystemPath(Application.Handle, Path);
 
   if Sender is TLabeledButtonEdit then
@@ -484,7 +596,7 @@ begin
   end
   else // No Styles
   begin
-    //Disegno il pulsante
+    //Draw the button
     if not LEnabled then
     begin
       ImageIndex := 3;
@@ -668,20 +780,20 @@ end;
 { TLabeledButtonEdit }
 procedure TLabeledButtonEdit.ButtonEditClick;
 begin
-  //Se il controllo non è enabled non lancia l'onclick
+  //If the control is not enabled it does not fire the onclick
   if not Enabled or ReadOnly then exit;
   if Assigned(FOnButtonEditClick) then
     FOnButtonEditClick(Self) else
   begin
     if ButtonEditStyle in [besDate, besDateHHMM, besDateHHMMSS] then
     begin
-      //crea la form di scelta della data
+      //create the date selection form
       CalendarViewPopUp(self, ButtonEditStyle);
     end
     (*
     else if ButtonEditStyle in [besTime, besTimeHHMMSS] then
     begin
-      //crea la form di scelta dell'ora
+      //create the time selection form
       //ClockPopUp(self, ButtonEditStyle); //TODO
     end
     *)
@@ -737,8 +849,8 @@ end;
 procedure TLabeledButtonEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   if ((Key = VK_DOWN) and (Shift = [ssAlt])) or //Alt-down
-    (Key = FShortCut) or  //Shortcut definito
-    ((Key = VK_SPACE) and Collapsed) then //Spazio se collapsed
+    (Key = FShortCut) or  //defined shortcut
+    ((Key = VK_SPACE) and Collapsed) then //Space when collapsed
     ButtonEditClick
   else if ((Key = VK_DELETE) or (Key = VK_BACK)) and (Collapsed) then
     Text := ''
@@ -869,7 +981,7 @@ end;
 
 procedure TLabeledButtonEdit.DoExit;
 begin
-  //Se la data inputata è "vuota" sbianco il controllo di edit
+  //If the entered date is "empty" clear the edit control
   if isDateTimeInput then
   begin
     if isEmpty then
@@ -1023,13 +1135,13 @@ procedure TLabeledDBButtonEdit.ButtonEditClick;
 var
   LFileName: string;
 begin
-  //Se il controllo non è enabled non lancia l'onclick ma apre il file, se è valorizzato
+  //If the control is not enabled it does not fire the onclick but opens the file, if it has a value
   if not Enabled or ReadOnly then
   begin
     if (ButtonEditStyle = besFile) then
     begin
       LFileName := Field.Value;
-      //Apro il file
+      //Open the file
       if LFileName <> '' then
         ShowFileByShellExecute(Handle, LFileName);
     end;
@@ -1039,22 +1151,22 @@ begin
   if Assigned(FOnButtonEditClick) then
     FOnButtonEditClick(Self) else
   begin
-    //Forza il ButtonEditStyle in base al tipo di campo
+    //Force the ButtonEditStyle based on the field type
     if (Field <> nil) and (Field.EditMask = DATE_TIME_HH_MM_MASK) then
       ButtonEditStyle := besDateHHMM;
-    //Forza il ButtonEditStyle in base al tipo di campo
+    //Force the ButtonEditStyle based on the field type
     if (Field <> nil) and (Field.EditMask = DATE_TIME_HH_MM_SS_MASK) then
       ButtonEditStyle := besDateHHMMSS;
 
     if ButtonEditStyle in [besDate, besDateHHMM, besDateHHMMSS] then
     begin
-      //crea la form di scelta della data
+      //create the date selection form
       CalendarViewPopUp(self, ButtonEditStyle);
     end
     (*
     else if ButtonEditStyle in [besTime, besTimeHHMMSS] then
     begin
-      //crea la form di scelta dell'ora
+      //create the time selection form
       ClockPopUp(self, ButtonEditStyle);
     end
     *)
@@ -1110,8 +1222,8 @@ end;
 procedure TLabeledDBButtonEdit.KeyDown(var Key: Word; Shift: TShiftState);
 begin
   if ((Key = VK_DOWN) and (Shift = [ssAlt])) or //Alt-down
-    (Key = FShortCut) or  //Shortcut definito
-    ((Key = VK_SPACE) and Collapsed) then //Spazio se collapsed
+    (Key = FShortCut) or  //defined shortcut
+    ((Key = VK_SPACE) and Collapsed) then //Space when collapsed
     ButtonEditClick
   else if (Field <> nil) and (Field.CanModify) and ((Key = VK_DELETE) or (Key = VK_BACK)) and (Collapsed) then
     Field.Clear
@@ -1322,7 +1434,7 @@ end;
 
 procedure TLabeledDBButtonEdit.SetFieldValue(const Value: Variant);
 begin
-  //Tenta di mandare in edit il dataset del campo se il suo datasource è autoedit
+  //Try to put the field's dataset into edit mode if its datasource is autoedit
   if CanChangeData then
   begin
     if not (DataSource.DataSet.State in [dsEdit, dsInsert]) then

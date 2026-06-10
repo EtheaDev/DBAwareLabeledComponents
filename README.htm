@@ -1,4 +1,7 @@
 <style type="text/css">
+body{
+  font-family: Arial, Helvetica, sans-serif;
+}
 code{
   font-family: "Consolas", monospace;
 }
@@ -32,7 +35,7 @@ td{
 <h1>DBAwareLabeledComponents</h1>
 <p><a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="License"/></a></p>
 <p>An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox</p>
-<h3>Actual official version 1.3.6 (VCL)</h3>
+<h3>Actual official version 1.4.0 (VCL)</h3>
 <h2>New Setup for automatic installation of components</h2>
 <p>From 1.3.3 version a new &ldquo;Installer&rdquo; read-to-use is located in the Release area: <a href="https://github.com/EtheaDev/DBAwareLabeledComponents/releases/latest/download/DBAwareLabeledComponents_Setup.exe">Download the Installer</a>.</p>
 <p>The Installer automatically detect your Delphi versions, install sources, build and install packages and add source paths.</p>
@@ -51,6 +54,8 @@ td{
 <li>Incremental search</li>
 <li>Lines per Rows (to show memo fields with multiple lines)</li>
 <li>RowMargin (to enlarge heigh of any row)</li>
+<li>WrapColumnTitles (word-wrap of the column titles)</li>
+<li>TitleLines (set the title-row height in number of text lines, with titles always vertically centered)</li>
 </ul>
 <p>*Example of a TLabeledDbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (inside the client area of the grid aligned alClient).</p>
 <p><img src="./Images/DemoDataAwareDbGridTopCenter.png" alt="Preview Thumbnails Dark"/></p>
@@ -113,6 +118,12 @@ td{
 <p><img src="./Images/SupportingDelphi.jpg" alt="Delphi Support"/></p>
 <p>Related links: https://www.embarcadero.com/ - https://learndelphi.org/</p>
 <h3>RELEASE NOTES</h3>
+<p>10 Jun 2026: ver.1.4.0</p>
+<ul>
+<li>Added WrapColumnTitles to TLabeledDbGrid: word-wrap of column titles</li>
+<li>Added TitleLines to TLabeledDbGrid: fixed title-row height (in text lines), with titles always vertically centered</li>
+<li>Internationalization: translated all source comments to English and added XMLDoc (Help Insight) documentation to public properties and methods</li>
+</ul>
 <p>08 Oct 2025: ver.1.3.6</p>
 <ul>
 <li>Fixed Formatting value of TLabeledDBCurrencyEdit</li>

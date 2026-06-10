@@ -4,7 +4,7 @@
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
 
-### Actual official version 1.3.6 (VCL)
+### Actual official version 1.4.0 (VCL)
 
 ## New Setup for automatic installation of components
 
@@ -30,6 +30,8 @@ Follow the [Project Site](https://ethea.it/docs/dbawarelabeledcomponents/) to kn
 - Incremental search
 - Lines per Rows (to show memo fields with multiple lines)
 - RowMargin (to enlarge heigh of any row)
+- WrapColumnTitles (word-wrap of the column titles)
+- TitleLines (set the title-row height in number of text lines, with titles always vertically centered)
 
 *Example of a TLabeledDbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (inside the client area of the grid aligned alClient).
 
@@ -79,6 +81,11 @@ A complete Demo is available in Demo Folder.
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
 ### RELEASE NOTES
+10 Jun 2026: ver.1.4.0
+- Added WrapColumnTitles to TLabeledDbGrid: word-wrap of column titles
+- Added TitleLines to TLabeledDbGrid: fixed title-row height (in text lines), with titles always vertically centered
+- Internationalization: translated all source comments to English and added XMLDoc (Help Insight) documentation to public properties and methods
+
 08 Oct 2025: ver.1.3.6
 - Fixed Formatting value of TLabeledDBCurrencyEdit
 - Fixed Demo using static MidasLib

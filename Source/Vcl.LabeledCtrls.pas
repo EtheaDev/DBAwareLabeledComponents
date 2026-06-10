@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -39,29 +39,75 @@ uses
   Vcl.BoundLabel;
 
 type
-  {TLabeledEditEx}
+  /// <summary>
+  ///  Standard VCL TEdit extended with an attached boundary label
+  ///  (BoundLabel) whose caption is set through BoundCaption.
+  /// </summary>
   TLabeledEditEx = class(TEdit)
   private
     FBoundLabel: TControlBoundLabel;
     FBoundCaption: TCaption;
   protected
+    /// <summary>
+    ///  Returns True when the edit Text is an empty string.
+    /// </summary>
+    /// <returns>True if the control contains no text; otherwise False.</returns>
     function GetIsEmpty: Boolean; virtual;
+    /// <summary>
+    ///  Updates the bound label caption and stores the new BoundCaption value.
+    /// </summary>
+    /// <param name="Value">The new caption to assign to the bound label.</param>
     procedure SetBoundCaption(const Value: TCaption); virtual;
+    /// <summary>
+    ///  Reparents the bound label together with the control.
+    /// </summary>
+    /// <param name="AParent">The new parent window control.</param>
     procedure SetParent(AParent: TWinControl); override;
+    /// <summary>
+    ///  Clears the internal reference when the bound label is being removed.
+    /// </summary>
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    /// <summary>
+    ///  Keeps the bound label visibility synchronized with the control.
+    /// </summary>
     procedure VisibleChanging; override;
+    /// <summary>
+    ///  Highlights the bound label when the control receives focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the bound label appearance when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the bound label accordingly.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Indicates whether the edit text is empty. Read-only and not streamed.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty stored False;
+    /// <summary>
+    ///  Caption displayed by the associated bound label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically attached to this control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
-  {TLabeledComboBox}
+  /// <summary>
+  ///  Standard VCL TComboBox extended with an attached boundary label
+  ///  (BoundLabel) whose caption is set through BoundCaption.
+  /// </summary>
   TLabeledComboBox = class(TComboBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -70,21 +116,56 @@ type
     procedure SetBoundCaption(const Value: TCaption);
     function GetIsEmpty: Boolean;
   protected
+    /// <summary>
+    ///  Reparents the bound label together with the control.
+    /// </summary>
+    /// <param name="AParent">The new parent window control.</param>
     procedure SetParent(AParent: TWinControl); override;
+    /// <summary>
+    ///  Clears the internal reference when the bound label is being removed.
+    /// </summary>
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    /// <summary>
+    ///  Keeps the bound label visibility synchronized with the control.
+    /// </summary>
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the bound label accordingly.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  Highlights the bound label when the control receives focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the bound label appearance when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   published
+    /// <summary>
+    ///  Indicates whether the combo box text is empty. Read-only.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption displayed by the associated bound label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically attached to this control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
-  {TLabeledListBox}
+  /// <summary>
+  ///  Standard VCL TListBox extended with an attached boundary label
+  ///  (BoundLabel) and a semicolon-delimited representation of its items.
+  /// </summary>
   TLabeledListBox = class(TListBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -95,23 +176,68 @@ type
     procedure SetTextDelimited(const Value: string);
     function GetIsEmpty: Boolean;
   protected
+    /// <summary>
+    ///  Reparents the bound label together with the control.
+    /// </summary>
+    /// <param name="AParent">The new parent window control.</param>
     procedure SetParent(AParent: TWinControl); override;
+    /// <summary>
+    ///  Clears the internal reference when the bound label is being removed.
+    /// </summary>
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    /// <summary>
+    ///  Keeps the bound label visibility synchronized with the control.
+    /// </summary>
     procedure VisibleChanging; override;
+    /// <summary>
+    ///  Highlights the bound label when the control receives focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the bound label appearance when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the bound label accordingly.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  Draws an item using the inherited list box rendering, temporarily
+    ///  detaching the OnDrawItem handler so the default drawing is exposed.
+    /// </summary>
+    /// <param name="Index">The index of the item to draw.</param>
+    /// <param name="Rect">The bounding rectangle of the item.</param>
+    /// <param name="State">The owner-draw state of the item.</param>
     procedure DefaultDrawItem(Index: Integer; Rect: TRect; State: TOwnerDrawState);
   published
+    /// <summary>
+    ///  Indicates whether the list box has no selected/current text. Not streamed.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty stored False;
+    /// <summary>
+    ///  Caption displayed by the associated bound label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically attached to this control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
+    /// <summary>
+    ///  Gets or sets all list items as a single semicolon-delimited string.
+    /// </summary>
     property TextDelimited : string read GetTextDelimited write SetTextDelimited;
   end;
 
-  {TLabeledMemo}
+  /// <summary>
+  ///  Standard VCL TMemo extended with an attached boundary label
+  ///  (BoundLabel) whose caption is set through BoundCaption.
+  /// </summary>
   TLabeledMemo = class(TMemo)
   private
     FBoundLabel: TControlBoundLabel;
@@ -120,17 +246,49 @@ type
     procedure SetBoundCaption(const Value: TCaption);
     function GetIsEmpty: Boolean;
   protected
+    /// <summary>
+    ///  Reparents the bound label together with the control.
+    /// </summary>
+    /// <param name="AParent">The new parent window control.</param>
     procedure SetParent(AParent: TWinControl); override;
+    /// <summary>
+    ///  Clears the internal reference when the bound label is being removed.
+    /// </summary>
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    /// <summary>
+    ///  Keeps the bound label visibility synchronized with the control.
+    /// </summary>
     procedure VisibleChanging; override;
+    /// <summary>
+    ///  Highlights the bound label when the control receives focus.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Restores the bound label appearance when the control loses focus.
+    /// </summary>
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the control and its associated bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the bound label accordingly.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Indicates whether the memo contains only blank text. Read-only.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  Caption displayed by the associated bound label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically attached to this control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 
@@ -289,8 +447,8 @@ procedure TLabeledListBox.DefaultDrawItem(Index: Integer; Rect: TRect;
 var
   OldEvent :  TDrawItemEvent;
 begin
-  //Rende il metodo visibile al programmatore staccando temporaneamente
-  //l'event handler
+  //Exposes the drawing method to the developer by temporarily detaching
+  //the event handler
   OldEvent := OnDrawItem;
   Try
     OnDrawItem := nil;

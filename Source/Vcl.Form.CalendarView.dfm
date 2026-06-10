@@ -13,7 +13,5 @@ object CalendarViewPopupForm: TCalendarViewPopupForm
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   KeyPreview = True
-  OldCreateOrder = True
-  PixelsPerInch = 96
   TextHeight = 13
 end

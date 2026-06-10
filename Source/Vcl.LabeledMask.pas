@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -40,7 +40,11 @@ uses
   Vcl.BoundLabel;
 
 type
-  {TLabeledMaskEdit}
+  /// <summary>
+  ///  A VCL TMaskEdit extended with an automatically managed boundary label
+  ///  (BoundLabel). The label tracks the edit control's position, parent and
+  ///  visibility, and highlights when the edit receives focus.
+  /// </summary>
   TLabeledMaskEdit = class(TMaskEdit)
   private
     FBoundLabel: TControlBoundLabel;
@@ -48,17 +52,62 @@ type
     procedure SetBoundCaption(const Value: TCaption);
     function GetIsEmpty: Boolean;
   protected
+    /// <summary>
+    ///  Assigns the parent of the control and propagates the same parent to the
+    ///  bound label so it is displayed alongside the edit.
+    /// </summary>
+    /// <param name="AParent">The new parent window control.</param>
     procedure SetParent(AParent: TWinControl); override;
+    /// <summary>
+    ///  Handles component notifications; clears the internal reference when the
+    ///  bound label is being removed to avoid dangling pointers.
+    /// </summary>
+    /// <param name="AComponent">The component the notification refers to.</param>
+    /// <param name="Operation">The operation being performed (insertion or removal).</param>
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    /// <summary>
+    ///  Keeps the bound label visibility synchronized as the inverse of the
+    ///  edit control's visibility while the visible state is changing.
+    /// </summary>
     procedure VisibleChanging; override;
+    /// <summary>
+    ///  Called when the control gains focus; applies the focused highlight to
+    ///  the bound label.
+    /// </summary>
     procedure DoEnter; override;
+    /// <summary>
+    ///  Called when the control loses focus; restores the normal appearance of
+    ///  the bound label.
+    /// </summary>
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the masked edit control and instantiates its associated
+    ///  bound label.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this instance.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control's bounding rectangle and repositions the bound label
+    ///  accordingly.
+    /// </summary>
+    /// <param name="ALeft">The left coordinate.</param>
+    /// <param name="ATop">The top coordinate.</param>
+    /// <param name="AWidth">The control width.</param>
+    /// <param name="AHeight">The control height.</param>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Returns True when the edit contains no text.
+    /// </summary>
     property IsEmpty: Boolean read GetIsEmpty;
+    /// <summary>
+    ///  The caption text displayed by the bound label associated with this edit.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label automatically created and managed for this edit control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 

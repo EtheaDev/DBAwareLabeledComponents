@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -45,8 +45,17 @@ const
   STORAGE_PATH = '{StoragePath}';
 
 Type
+  /// <summary>
+  ///  Pointer to a Windows HICON handle, used to return icon handles by reference.
+  /// </summary>
   PHICON = ^HICON;
 
+  /// <summary>
+  ///  Enumeration of supported system/special folders. The first four values
+  ///  (sfApplication, sfDictionaryPath, sfUserTemp, sfStoragePath) are custom
+  ///  application-level locations; the remaining values map to Windows CSIDL
+  ///  special-folder identifiers.
+  /// </summary>
   TCBSystemFolder = (
     sfApplication,
     sfDictionaryPath,
@@ -89,6 +98,11 @@ Type
     sfSystem);
 
 Const
+  /// <summary>
+  ///  Maps each TCBSystemFolder value to its Windows CSIDL identifier. The four
+  ///  custom application folders use negative sentinel values (-1..-4) since they
+  ///  are not resolved through the Windows shell.
+  /// </summary>
   ACBSystemFolderId : Array[TCBSystemFolder] of integer = (
     -1                           ,
     -2                           ,
@@ -130,6 +144,11 @@ Const
     CSIDL_PROGRAM_FILES_COMMON   ,
     CSIDL_SYSTEM                 );
 
+  /// <summary>
+  ///  Maps each TCBSystemFolder value to its textual alias placeholder (for
+  ///  example '{userdocs}'). These aliases can be embedded in paths and later
+  ///  expanded to the real folder location by RealizeAliasPath.
+  /// </summary>
   ASystemFolderAlias : Array[TCBSystemFolder] of string = (
     APP_PATH,
     DICTIONARY_PATH,
@@ -171,43 +190,165 @@ Const
     '{commonprogramfiles}',
     '{system}');
 
+/// <summary>
+///  Returns the full file-system path of the requested system/special folder.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used as owner for the shell call.</param>
+/// <param name="Folder">The system folder to resolve.</param>
+/// <returns>The absolute path of the requested folder, or an empty string if it cannot be resolved.</returns>
 function GetSystemPath(ApplicationHandle : HWND; Folder: TCBSystemFolder): String;
+/// <summary>
+///  Returns the current user's temporary directory, including the trailing path delimiter.
+/// </summary>
+/// <returns>The temporary directory path terminated by a path delimiter.</returns>
 function GetTempDirectoryDelim: String;
+/// <summary>
+///  Expands the first folder alias placeholder (for example '{app}' or '{userdocs}')
+///  found in the supplied path into its real file-system location.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used as owner for shell folder lookups.</param>
+/// <param name="AliasPath">A path that may contain an alias placeholder.</param>
+/// <returns>The path with the first matching alias replaced; the unchanged path if no alias is found.</returns>
 function RealizeAliasPath(ApplicationHandle : HWND; const AliasPath : string) : string;
+/// <summary>
+///  Performs the reverse of RealizeAliasPath: scans the given path and, when it
+///  starts with a known system folder, replaces that portion with the matching
+///  alias placeholder. The path is updated in place.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used as owner for shell folder lookups.</param>
+/// <param name="Path">The path to convert; modified in place when a match is found.</param>
 procedure RealizeSystemPath(ApplicationHandle : HWND; var Path : string);
+/// <summary>
+///  Converts the directory portion of a file name to alias-based notation using
+///  RealizeSystemPath, leaving the file name component unchanged.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used as owner for shell folder lookups.</param>
+/// <param name="FileName">The fully qualified file name to convert.</param>
+/// <returns>The file name with its directory portion expressed using folder aliases when applicable.</returns>
 function RealizeSystemFileName(ApplicationHandle : HWND; const FileName : string) : string;
+/// <summary>
+///  Registers the global dictionary path used to resolve the '{DictionaryPath}' alias.
+/// </summary>
+/// <param name="Path">The dictionary directory to register; a trailing delimiter is added automatically.</param>
 procedure RegisterDictionaryPath(const Path : string);
+/// <summary>
+///  Registers the global storage path used to resolve the '{StoragePath}' alias.
+/// </summary>
+/// <param name="Path">The storage directory to register; a trailing delimiter is added automatically.</param>
 procedure RegisterStoragePath(const Path : string);
+/// <summary>
+///  Loads the names of all files in the given directory matching the wildcard
+///  into the supplied string list.
+/// </summary>
+/// <param name="Path">The directory to scan.</param>
+/// <param name="WildCard">The file mask to match (for example '*.txt').</param>
+/// <param name="FileList">The list to which the matching file names are appended.</param>
 procedure GlobalLoadFileList(const Path, WildCard: string; FileList: TStringList);
 
-//Copia i files di una cartella in un'altra
+/// <summary>
+///  Copies all files matching the wildcard from a source folder to a destination
+///  folder, with optional overwrite, check-only and logging behaviour.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used to resolve any alias in the destination folder.</param>
+/// <param name="SourceFolder">The folder to copy files from.</param>
+/// <param name="DestFolder">The destination folder; may contain a folder alias.</param>
+/// <param name="WildCard">The file mask selecting which files to copy.</param>
+/// <param name="Overwrite">When True, existing destination files are overwritten.</param>
+/// <param name="OnlyCheck">When True, no copy is performed; returns True if at least one file would need copying.</param>
+/// <param name="LogFileName">Optional log file path; when set, copy results are appended to it.</param>
+/// <returns>In check-only mode, True if a file is missing at the destination; otherwise True when all files were copied successfully.</returns>
+//Copies the files of one folder into another
 function CopyFilesTo(ApplicationHandle : HWND; const SourceFolder, DestFolder, WildCard: string;
   Overwrite : boolean = false; OnlyCheck: boolean = False; const LogFileName: string = ''): Boolean;
 
-//Recupera l'icona associata ad un file
+/// <summary>
+///  Retrieves the large and small icon handles associated with a file, falling
+///  back to default SHELL32.DLL icons for common file types when no association exists.
+/// </summary>
+/// <param name="ApplicationHandle">Window handle used to resolve the system folder when loading SHELL32.DLL.</param>
+/// <param name="FileName">The file whose associated icon is requested.</param>
+/// <param name="PLargeIcon">Receives the large icon handle.</param>
+/// <param name="PSmallIcon">Receives the small icon handle.</param>
+//Retrieves the icon associated with a file
 procedure GetAssociatedIcon(ApplicationHandle : HWND;
   const FileName: TFilename; PLargeIcon, PSmallIcon: PHICON);
 
+/// <summary>
+///  Launches an external application via CreateProcess, optionally waiting for it
+///  to finish and optionally returning the process handle to the caller.
+/// </summary>
+/// <param name="BatchCommand">The full command line of the executable to launch.</param>
+/// <param name="Visibility">One of the SW_XXX window-show constants.</param>
+/// <param name="Wait">When True (and the handle is not retained), waits for the process to terminate and returns its exit code.</param>
+/// <param name="RetainProcessHandle">When True, the process handle is returned in ProcessHandle and the caller is responsible for closing it.</param>
+/// <param name="ProcessHandle">Receives the process handle when RetainProcessHandle is True; otherwise 0.</param>
+/// <param name="CurrentDirectory">Optional working directory for the launched process; when empty the default is used.</param>
+/// <returns>The process exit code when waiting; 0 on success without waiting; 1 if the process could not be created.</returns>
 function InternalExecuteApplication(BatchCommand: string; Visibility: Integer; Wait: Boolean;
   const RetainProcessHandle: Boolean; out ProcessHandle: Cardinal;
   const CurrentDirectory: string = ''): Cardinal;
 
-//Apre il file utilizzando ShellExecute
+/// <summary>
+///  Opens a file with its default associated application using ShellExecute,
+///  resolving any folder alias contained in the file name beforehand.
+/// </summary>
+/// <param name="Handle">Window handle used as owner for the shell operation.</param>
+/// <param name="FileName">The file to open; may contain a folder alias.</param>
+//Opens the file using ShellExecute
 procedure ShowFileByShellExecute(Handle: HWND; const FileName: string);
 
-//Copiare un file in una destinazione
+/// <summary>
+///  Copies a single file to a destination, optionally overwriting an existing file.
+/// </summary>
+/// <param name="SourceFileName">The file to copy.</param>
+/// <param name="DestFileName">The destination file name.</param>
+/// <param name="Overwrite">When True, an existing destination file is overwritten.</param>
+/// <returns>True if the file was copied successfully.</returns>
+//Copies a file to a destination
 function CopyFileTo(const SourceFileName, DestFileName: string;
   Overwrite : boolean = false): Boolean;
 
+/// <summary>
+///  Sets the global default path used for image-link files.
+/// </summary>
+/// <param name="Path">The image-link directory; normalized via ValidPath.</param>
 procedure SetImageLinkPath(const Path : string);
+/// <summary>
+///  Returns the global default path used for image-link files.
+/// </summary>
+/// <returns>The currently configured image-link path.</returns>
 function GetImageLinkPath : string;
 
+/// <summary>
+///  Sets the global default path used when saving or loading BLOB files.
+/// </summary>
+/// <param name="Path">The default BLOB-file directory; normalized via ValidPath.</param>
 procedure SetDefaultBlobFilePath(const Path : string);
+/// <summary>
+///  Returns the global default path used when saving or loading BLOB files.
+/// </summary>
+/// <returns>The currently configured default BLOB-file path.</returns>
 function GetDefaultBlobFilePath: string;
 
+/// <summary>
+///  Displays a standard Open File dialog and returns the file selected by the user.
+/// </summary>
+/// <param name="FileName">On entry, the initial file/folder; on success, receives the selected file name.</param>
+/// <param name="Title">Optional dialog caption; a default title is used when empty.</param>
+/// <param name="Filter">Optional file filter; an all-files filter is used when empty.</param>
+/// <param name="BeforeDialogExecute">Optional callback invoked with the TOpenDialog before it is shown.</param>
+/// <returns>True if the user selected a file and confirmed the dialog.</returns>
 function OpenDialogExecute(var FileName : string; const Title : string = ''; const Filter : string = '';
   BeforeDialogExecute : TNotifyEvent = nil) : boolean;
 
+/// <summary>
+///  Displays a standard Color selection dialog and returns the chosen color.
+/// </summary>
+/// <param name="Color">On entry, the initial color; on success, receives the selected color.</param>
+/// <param name="Title">Optional dialog caption (currently unused).</param>
+/// <param name="CustomColors">Optional set of custom colors to preload into the dialog.</param>
+/// <param name="BeforeDialogExecute">Optional callback invoked with the TColorDialog before it is shown.</param>
+/// <returns>True if the user selected a color and confirmed the dialog.</returns>
 function ColorDialogExecute(var Color : TColor; const Title : string = '';
   CustomColors: TStrings = nil;
   BeforeDialogExecute : TNotifyEvent = nil) : boolean;
@@ -276,8 +417,8 @@ begin
     p := pos(UpperCase(Alias),UpperCase(AliasPath));
     if p > 0 then
     begin
-      //Sostituisco l'alias con la directory vera:
-      //l'alias {app} {Dictionary} sono particolari: non uso GetSystemPath
+      //Replace the alias with the real directory:
+      //the {app} and {Dictionary} aliases are special: GetSystemPath is not used for them
       if SameText(Alias,APP_PATH) then
       begin
         NewPath := ExtractFilePath(ParamStr(0));
@@ -366,10 +507,10 @@ var
   end;
 
 begin
-  //Cerco di convertire la Path passata usando la nomenclatura di ASystemFolderAlias
-  //es: Path = 'C:\Documents and Settings\Carlo\Cartella\' => '{userdocs}\Cartella\'
-  //Per far ciò devo costruire la Path a "pezzi":
-  //es. prima provo con C:\Documents and Settings\ poi con C:\Documents and Settings\Carlo\ e così via.
+  //Try to convert the given Path using the ASystemFolderAlias naming convention
+  //e.g.: Path = 'C:\Documents and Settings\Carlo\Folder\' => '{userdocs}\Folder\'
+  //To do this the Path must be built up "piece by piece":
+  //e.g. first try C:\Documents and Settings\ then C:\Documents and Settings\Carlo\ and so on.
   PathList := TStringList.Create;
   try
     PathList.Text := StringReplace(Path,PathDelim,sLineBreak,[rfReplaceAll]);
@@ -417,7 +558,7 @@ begin
   end;
 end;
 
-//Copiare tutti i files di una cartella in un'altra
+//Copies all the files of one folder into another
 function CopyFilesTo(ApplicationHandle : HWND; const SourceFolder, DestFolder, WildCard: string;
   Overwrite : boolean = false; OnlyCheck: boolean = False; const LogFileName: string = ''): Boolean;
 var
@@ -472,7 +613,7 @@ begin
           end
           else
           begin
-            Result := False; //Almeno un file non è stato copiato
+            Result := False; //At least one file could not be copied
             if Logging then
               WriteLn(f, Format('ERROR: %s - File not copied: FileName=''%s''',
                 [DateTimeToStr(Now), ExtractFileName(FileDest)]));
@@ -507,17 +648,17 @@ begin
   PLargeIcon^ := 0;
   PSmallIcon^ := 0;
   IconIndex := 0;
-  // Recupero l'estensione
+  // Retrieve the extension
   FileExt := UpperCase(ExtractFileExt(FileName));
   if ((FileExt = '.EXE') or (FileExt = '.ICO')) and
     FileExists(FileName) then
   begin
-    // se il file è un exe o una icona recupero l'immagine da se stesso
+    // if the file is an exe or an icon, take the image from the file itself
     IconFileName := FileName;
   end
   else
   begin
-    // altrimenti cerco il file associato ad esso
+    // otherwise look up the file associated with it
     Reg := nil;
     try
       Reg := TRegistry.Create(KEY_QUERY_VALUE);
@@ -554,11 +695,11 @@ begin
 
   if IconFileName <> '' then
   begin
-    // Recupera il filename e l'indice dell'icona
+    // Retrieve the file name and the icon index
     p1 := PChar(IconFileName);
     p2 := StrRScan(p1, ',');
     if p2 <> nil then begin
-      p := p2 - p1 + 1; // Posizione della virgola
+      p := p2 - p1 + 1; // Position of the comma
       IconIndex := StrToInt(Copy(IconFileName, p + 1, Length(IconFileName) - p));
       SetLength(IconFileName, p - 1);
     end;
@@ -566,21 +707,21 @@ begin
 
   if (IconFileName <> '') then
     ExtractIconEx(pchar(IconFileName), IconIndex, PLargeIcon^, PSmallIcon^, 1);
-  // Tenta di recuperare l'icona
+  // Attempt to retrieve the icon
   if (IconFileName = '') or ((IconIndex = 0) and (PLargeIcon^ = 0) and (PLargeIcon^ = 0)) then
   begin
-    // Operazione fallita: il file non ha associazioni
-    // Cerca di prendere le icone di default da SHELL32.DLL
+    // Operation failed: the file has no associations
+    // Try to take the default icons from SHELL32.DLL
     IconFileName := String(GetSystemPath(ApplicationHandle, sfSystem))+
       PathDelim+'shell32.dll';
-    // Determina le icone di default per alcuni tipi di dati
+    // Determine the default icons for some data types
     if      (FileExt = '.DOC')
          or (FileExt = '.DOT')
          or (FileExt = '.ODT')
          or (FileExt = '.OTT')
          or (FileExt = '.SXW')
          or (FileExt = '.STW')
-         or (FileExt = '.RTM') then IconIndex := 1 //Associo l'icona del documento a Word, LibreOffice/OpenOffice e ReportBuilder
+         or (FileExt = '.RTM') then IconIndex := 1 //Assign the document icon to Word, LibreOffice/OpenOffice and ReportBuilder
     else if (FileExt = '.EXE')
          or (FileExt = '.COM') then IconIndex := 2
     else if (FileExt = '.HLP') then IconIndex := 23
@@ -603,18 +744,18 @@ begin
   end;
 end;
 
-// Lancia l'applicazione indicata.
-// FileName è il nome, completo di percorso, dell'eseguibile da lanciare.
-// Visibility è una delle costanti SW_XXX definite in windows.pas.
-// Se Wait = True, aspetta che il processo lanciato termini e ne ritorna l'exit code,
-// oppure -1 in caso di errori.
-// Se Wait = False, ritorna 0 se tutto è ok o -1 in caso di errori.
-// Se RetainProcessHandle è True, l'handle del processo lanciato è restituito
-// in ProcessHandle. ATTENZIONE: in questo caso è responsabilità del chiamante
-// liberare l'handle, non appena smette di averne bisogno, tramite CloseHandle().
-// Se la CurrentDirectory è indicata, viene usata come cartella di avvio per
-// l'applicazione, altrimenti la cartella di avvio è quella predefinita (cioè
-// di norma quella del processo chiamante).
+// Launches the specified application.
+// FileName is the full path name of the executable to launch.
+// Visibility is one of the SW_XXX constants defined in windows.pas.
+// If Wait = True, waits for the launched process to terminate and returns its exit code,
+// or -1 in case of errors.
+// If Wait = False, returns 0 if everything is ok or -1 in case of errors.
+// If RetainProcessHandle is True, the handle of the launched process is returned
+// in ProcessHandle. WARNING: in this case it is the caller's responsibility to
+// release the handle, as soon as it is no longer needed, by calling CloseHandle().
+// If CurrentDirectory is specified, it is used as the startup folder for the
+// application; otherwise the startup folder is the default one (that is,
+// normally the one of the calling process).
 function InternalExecuteApplication(BatchCommand: string; Visibility: Integer; Wait: Boolean;
   const RetainProcessHandle: Boolean; out ProcessHandle: Cardinal;
   const CurrentDirectory: string = ''): Cardinal;
@@ -653,10 +794,10 @@ begin
     ProcessInfo { return information }
     );
   if CreateProcessReturnValue then begin
-    // (ND 09/11/1999) Occorre decrementare il conteggio dei riferimenti dei
-    // due handle ricevuti, in modo che questi vengano eliminati al termine
-    // del processo. Il thread handle lo chiudo subito, il process handle solo
-    // dopo averlo utilizzato.
+    // (ND 09/11/1999) The reference count of the two received handles must be
+    // decremented, so that they are released when the process terminates.
+    // The thread handle is closed immediately, the process handle only
+    // after it has been used.
     CloseHandle(ProcessInfo.hThread);
     if Wait and not RetainProcessHandle then begin
       WaitForSingleObject(ProcessInfo.hProcess, INFINITE);
@@ -678,9 +819,9 @@ procedure ShowFileByShellExecute(Handle: HWND; const FileName: string);
 var
   FileNameEx: string;
 begin
-  //Correggo eventuali alias contenuti nel filename
+  //Resolve any alias contained in the file name
   FileNameEx := RealizeAliasPath(Handle, FileName);
-  //Lancio ShellExecute in modalità Open e Show
+  //Invoke ShellExecute in Open and Show mode
   ShellExecute( Handle, 'open' , PChar(FileNameEx), nil, nil, SW_SHOW );
 end;
 

@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -41,6 +41,10 @@ uses
 
 type
   {TLabeledRadioGroup}
+  /// <summary>
+  ///  A standard VCL TRadioGroup extended with an attached BoundLabel
+  ///  (a boundary label automatically positioned next to the control).
+  /// </summary>
   TLabeledRadioGroup = class(TRadioGroup)
   private
     FBoundLabel: TControlBoundLabel;
@@ -54,14 +58,33 @@ type
     procedure DoEnter; override;
     procedure DoExit; override;
   public
+    /// <summary>
+    ///  Creates the radio group and its attached TControlBoundLabel.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached BoundLabel
+    ///  so it stays aligned with the radio group.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  The text displayed by the attached BoundLabel.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The attached TControlBoundLabel, exposing its position, spacing and
+    ///  other label properties.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   End;
 
   {TLabeledImage}
+  /// <summary>
+  ///  A standard VCL TImage extended with an attached BoundLabel
+  ///  (a boundary label automatically positioned next to the control).
+  /// </summary>
   TLabeledImage = class(TImage)
   private
     FBoundLabel: TControlBoundLabel;
@@ -73,15 +96,42 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure VisibleChanging; override;
   public
+    /// <summary>
+    ///  Creates the image and its attached TControlBoundLabel.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached BoundLabel
+    ///  so it stays aligned with the image.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
+    /// <summary>
+    ///  Indicates whether the image is empty. This implementation always
+    ///  returns False and the value is not stored.
+    /// </summary>
+    /// <returns>Always False.</returns>
     property IsEmpty: Boolean read GetIsEmpty stored False;
+    /// <summary>
+    ///  The text displayed by the attached BoundLabel.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The attached TControlBoundLabel, exposing its position, spacing and
+    ///  other label properties.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
+    /// <summary>
+    ///  The font used by the attached BoundLabel.
+    /// </summary>
     property Font;
   end;
 
+  /// <summary>
+  ///  A standard VCL TColorBox extended with an attached BoundLabel
+  ///  (a boundary label automatically positioned next to the control).
+  /// </summary>
   TLabeledColorBox = class(TColorBox)
   private
     FBoundLabel: TControlBoundLabel;
@@ -97,11 +147,31 @@ type
     procedure DoExit; override;
     function IsItemHeightStored: Boolean; override;
   public
+    /// <summary>
+    ///  Creates the color box, populates the color list and creates the
+    ///  attached TControlBoundLabel.
+    /// </summary>
+    /// <param name="AOwner">The component that owns this control.</param>
     constructor Create(AOwner: TComponent); override;
+    /// <summary>
+    ///  Sets the control bounds and repositions the attached BoundLabel
+    ///  so it stays aligned with the color box.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
+    /// <summary>
+    ///  The set of color categories shown in the list, defaulting to the
+    ///  standard color set.
+    /// </summary>
     property Style default [cbStandardColors];
   published
+    /// <summary>
+    ///  The text displayed by the attached BoundLabel.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The attached TControlBoundLabel, exposing its position, spacing and
+    ///  other label properties.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
   end;
 

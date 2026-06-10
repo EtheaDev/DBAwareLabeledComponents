@@ -1,8 +1,8 @@
-{******************************************************************************}
+ï»¿{******************************************************************************}
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -147,6 +147,9 @@ type
     DBNavigator: TDBNavigator;
     btSelectStyle: TButton;
     cbWrapAllText: TCheckBox;
+    cbWrapColumnTitles: TCheckBox;
+    TitleLinesLabel: TLabel;
+    TitleLinesTrackBar: TTrackBar;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
     procedure OpenButtonClick(Sender: TObject);
     procedure ClientDataSetIntegerFieldChange(Sender: TField);
@@ -179,6 +182,8 @@ type
     procedure VisibleCheckBoxClick(Sender: TObject);
     procedure LabeledButtonEditClick(Sender: TObject);
     procedure cbWrapAllTextClick(Sender: TObject);
+    procedure cbWrapColumnTitlesClick(Sender: TObject);
+    procedure TitleLinesTrackBarChange(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
   private
     FMemoText: string;
@@ -332,6 +337,7 @@ begin
   cbCustomDraw.Checked := Assigned(DbGrid.OnDrawColumnCell);
   cbDrawCheckBoxImages.Checked := DbGrid.DrawCheckBoxImages;
   cbWrapAllText.Checked := DbGrid.WrapAllText;
+  cbWrapColumnTitles.Checked := DbGrid.WrapColumnTitles;
 
   DbGridOptions := GetPropValue(DbGrid, 'Options');
   for i := Low(TDBGridOption) to High(TDBGridOption) do
@@ -482,8 +488,8 @@ begin
 
   ClientDataSet.CreateDataSet;
   ClientDataSetFloatField.DisplayFormat := '#,###.000';
-  ClientDataSetCurrencyField.DisplayFormat := '€ #,###.00';
-  ClientDataSetBCDField.DisplayFormat := '€ #,###.00';
+  ClientDataSetCurrencyField.DisplayFormat := 'â‚¬ #,###.00';
+  ClientDataSetBCDField.DisplayFormat := 'â‚¬ #,###.00';
 
   //Fill ClientDataSet
   LStream := nil;
@@ -624,6 +630,17 @@ begin
   DbGrid.WrapAllText := cbWrapAllText.Checked;
 end;
 
+procedure TMainForm.cbWrapColumnTitlesClick(Sender: TObject);
+begin
+  DbGrid.WrapColumnTitles := cbWrapColumnTitles.Checked;
+end;
+
+procedure TMainForm.TitleLinesTrackBarChange(Sender: TObject);
+begin
+  DbGrid.TitleLines := TitleLinesTrackBar.Position;
+  TitleLinesLabel.Caption := Format('Title Lines: %d',[DbGrid.TitleLines]);
+end;
+
 procedure TMainForm.filterDataEditExit(Sender: TObject);
 begin
   if filterDataEdit.Text <> '' then
@@ -651,7 +668,7 @@ procedure TMainForm.FormAfterMonitorDpiChanged(Sender: TObject; OldDPI,
 begin
   //Quando la main-form cambia di dimensione
   //Il defaultfont dell'oggetto Application non si adatta
-  //perciò tutte le form create successivamente non acquisiscono il defaultfont corretto
+  //perciÃ² tutte le form create successivamente non acquisiscono il defaultfont corretto
   Application.DefaultFont.Assign(Font);
 end;
 
@@ -663,6 +680,8 @@ begin
   LineTrackBarChange(LineTrackBar);
   RowMarginTrackBar.Position := DbGrid.RowMargin;
   RowMarginTrackBarChange(RowMarginTrackBar);
+  TitleLinesTrackBar.Position := DbGrid.TitleLines;
+  TitleLinesTrackBarChange(TitleLinesTrackBar);
   AssignDataSourceToNavigator;
 end;
 

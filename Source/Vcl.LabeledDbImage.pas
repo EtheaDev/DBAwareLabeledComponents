@@ -2,7 +2,7 @@
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
-{       Copyright (c) 2021-2025 (Ethea S.r.l.)                                 }
+{       Copyright (c) 2021-2026 (Ethea S.r.l.)                                 }
 {       Author: Carlo Barazzetta                                               }
 {                                                                              }
 {       https://github.com/EtheaDev/DBAwareLabeledComponents                   }
@@ -43,11 +43,25 @@ uses
   Vcl.LabeledExtCtrls;
 
 type
+  /// <summary>
+  ///  Behaviour options used when loading an image from a file: liDefault keeps
+  ///  the selected file path as-is, liNoChangeDir forbids selecting a file
+  ///  outside the original folder, and liCopyImageFromSource copies the chosen
+  ///  file into the original folder.
+  /// </summary>
   TLoadImageOption = (liDefault, liNoChangeDir, liCopyImageFromSource);
   TLabeledDbImageLink = class;
+  /// <summary>
+  ///  Style used to render the caption shown when no image is present:
+  ///  csDisplayLabel shows the linked field's DisplayLabel, csSize shows the
+  ///  control's client size, and csNone shows nothing.
+  /// </summary>
   TDbImageLinkEmptyCaptionStyle = (csDisplayLabel, csSize, csNone);
 
-  { TLabeledImageDataLink }
+  /// <summary>
+  ///  Field data link that forwards dataset notifications to the owning
+  ///  TLabeledDbImageLink control.
+  /// </summary>
   TLabeledImageDataLink = class(TFieldDataLink)
   private
     FCBXDbImageLink: TLabeledDbImageLink;
@@ -64,7 +78,13 @@ type
     constructor Create(CBXDbImageLink: TLabeledDbImageLink);
   end;
 
-  {TLabeledDbImageLink}
+  /// <summary>
+  ///  Data-aware image control with an attached BoundLabel boundary label.
+  ///  It displays the image whose file name is stored in the linked field,
+  ///  supports loading a picture from a file (double-click or Insert key) and
+  ///  clearing it (Delete key), and can store images either by full path or
+  ///  relative to an ImagesPath folder.
+  /// </summary>
   TLabeledDbImageLink = class(TCustomPanel)
   private
     FDataLink: TLabeledImageDataLink;
@@ -102,7 +122,7 @@ type
     procedure Click; override;
     procedure SetParent(AParent: TWinControl); override;
     procedure Resize; override;
-    //procedure di risposta al DataLink
+    //DataLink response procedures
     procedure DataLinkDataEvent(Event: TDataEvent; Info: Integer);
     procedure LayoutChanged(Sender : TFieldDataLink); virtual;
     procedure RecordChanged(Sender : TFieldDataLink); virtual;
@@ -110,22 +130,56 @@ type
     procedure LinkActive(Sender : TFieldDataLink; Active : boolean); virtual;
     procedure UpdateData(Sender : TFieldDataLink); virtual;
     procedure LinkEditingChanged(Sender : TFieldDataLink); virtual;
-    //metodi di aggiornamento di un datalink
+    //datalink update methods
     procedure Change;
     procedure KeyDown(var Key: Word; Shift: TShiftState); override;
     procedure Notification(AComponent: TComponent;
       Operation: TOperation); override;
     procedure ClearImage;
   public
+    /// <summary>
+    ///  Returns the fully qualified file name of the current image. If the
+    ///  field value is an existing file it is returned as-is; otherwise it is
+    ///  prefixed with ImagesPath when set. Returns an empty string when no
+    ///  image is associated.
+    /// </summary>
+    /// <returns>The resolved image file name, or an empty string.</returns>
     function ImageFileName : string;
+    /// <summary>
+    ///  Opens a picture-selection dialog, puts the linked dataset in edit mode,
+    ///  loads the chosen image and stores its name in the field. The previous
+    ///  picture is restored if storing the field value fails.
+    /// </summary>
     procedure LoadImageFromFile;
+    /// <summary>
+    ///  Stores the given file name in the linked field, putting the dataset in
+    ///  edit mode. When ImagesPath is set only the file name is stored and the
+    ///  file must reside in that folder, otherwise the full path is stored.
+    /// </summary>
+    /// <param name="FileName">Image file name (full path or empty to clear).</param>
     procedure SetImageField(const FileName : string);
+    /// <summary>
+    ///  Creates the control, its BoundLabel, the internal data link and the
+    ///  image container, and applies the default visual settings.
+    /// </summary>
+    /// <param name="AOwner">Owner component of the control.</param>
     constructor Create(AOwner : TComponent); override;
+    /// <summary>
+    ///  Destroys the control and frees the internal data link.
+    /// </summary>
     destructor Destroy; override;
+    /// <summary>
+    ///  Indicates whether the control currently holds no image.
+    /// </summary>
+    /// <returns>True when no picture is loaded; otherwise False.</returns>
     function isEmpty : boolean;
+    /// <summary>
+    ///  Sets the control bounds, keeping the associated BoundLabel positioned
+    ///  and repainted accordingly.
+    /// </summary>
     procedure SetBounds(ALeft, ATop, AWidth, AHeight: Integer); override;
   published
-    //Proprietà pubblicate di TCustomPanel
+    //Published properties inherited from TCustomPanel
     property Align;
     property Alignment;
     property Anchors;
@@ -170,25 +224,81 @@ type
     property OnMouseUp;
     property OnResize;
 
-    //Proprietà di BoundLabel
+    //BoundLabel properties
+    /// <summary>
+    ///  Text displayed by the associated boundary label.
+    /// </summary>
     property BoundCaption : TCaption read FBoundCaption write SetBoundCaption;
+    /// <summary>
+    ///  The boundary label control attached to this image control.
+    /// </summary>
     property BoundLabel: TControlBoundLabel read FBoundLabel;
 
-    //Proprietà per il datalink
+    //Datalink properties
+    /// <summary>
+    ///  The TField the control is bound to (read-only).
+    /// </summary>
     property Field: TField read GetField;
+    /// <summary>
+    ///  The data source supplying the field for this control.
+    /// </summary>
     property DataSource: TDataSource read GetDataSource write SetDataSource;
+    /// <summary>
+    ///  Name of the field holding the image file name.
+    /// </summary>
     property DataField: string read GetDataField write SetDataField;
+    /// <summary>
+    ///  When True the linked data cannot be edited through the control.
+    /// </summary>
     property ReadOnly: Boolean read GetReadOnly write SetReadOnly default False;
+    /// <summary>
+    ///  Inherited dock manager usage flag, defaulting to False.
+    /// </summary>
     property UseDockManager default False;
+    /// <summary>
+    ///  Mouse cursor for the control and its image, defaulting to crHandPoint.
+    /// </summary>
     property Cursor : TCursor read GetCursor write SetCursor default crHandPoint;
+    /// <summary>
+    ///  Base folder used to store and resolve image file names. When set, the
+    ///  field stores only the file name and the file must reside in this folder.
+    /// </summary>
     property ImagesPath : string read GetImagesPath write SetImagesPath;
+    /// <summary>
+    ///  Style of the caption shown when the control holds no image.
+    /// </summary>
     property EmptyCaptionStyle : TDbImageLinkEmptyCaptionStyle read FEmptyCaptionStyle write SetEmptyCaptionStyle default csDisplayLabel;
   end;
 
+/// <summary>
+///  Loads the picture identified by FileName into Image. If the file cannot be
+///  loaded, the fallback image NoImageName is loaded instead.
+/// </summary>
+/// <param name="FileName">Full path of the image file to load.</param>
+/// <param name="Image">Target TImage that will display the picture.</param>
+/// <param name="NoImageName">Fallback image file loaded when FileName fails.</param>
 procedure DrawImage( const FileName : string; Image : TImage; const NoImageName : string);
+/// <summary>
+///  Shows an Open Picture dialog initialised on FileName, and on confirmation
+///  loads the chosen image into Image. Depending on LoadImageOption it may keep
+///  the original folder, raise an error when the folder changes, or copy the
+///  selected file into the original folder. FileName is updated to the final
+///  path.
+/// </summary>
+/// <param name="FileName">In/out image path; updated with the selected file.</param>
+/// <param name="Image">Target TImage that will display the picture.</param>
+/// <param name="NoImageName">Fallback image used when loading fails.</param>
+/// <param name="LoadImageOption">Folder-handling policy for the selection.</param>
+/// <param name="HelpContext">Help context used for the raised error, if any.</param>
+/// <returns>True if the user confirmed the dialog; otherwise False.</returns>
 function LoadImage( var FileName : string; Image : TImage;
   const NoImageName : string; LoadImageOption : TLoadImageOption = liNoChangeDir;
   HelpContext : integer = 2000) : boolean;
+/// <summary>
+///  Registers a global, validated base path used to resolve relative image
+///  file names for all image link controls without an explicit ImagesPath.
+/// </summary>
+/// <param name="Path">Base folder path to register.</param>
 procedure RegisterImageLinkPath(const Path : string);
 
 implementation
@@ -235,9 +345,9 @@ begin
           raise EInOutError.CreateHelp(ERR_NO_CHANGE_DIR,HelpContext)
         else if LoadImageOption = liCopyImageFromSource then
         begin
-          //Copio l'immagine nella cartella di destinazione: se esiste già dà errore
+          //Copy the image into the destination folder: raises an error if it already exists
           CopyFileEx(od.FileName, InitialPath+ExtractFileName(od.FileName));
-          //Cambio la path dell'immagine
+          //Change the image path
           FileName := InitialPath+ExtractFileName(od.FileName);
         end;
       end
@@ -259,11 +369,11 @@ begin
   ImageOK := False;
   Try
     FileImmagine := ExtractFileName(FileName);
-    //Prelevo l'immagine
+    //Retrieve the image
     if FileImmagine <> '' then
     begin
       Try
-        //tento di caricare l'immagine
+        //attempt to load the image
         Image.Picture.LoadFromFile(FileName);
         ImageOK := True;
       Except
@@ -285,15 +395,15 @@ begin
   FBoundLabel := TControlBoundLabel.Create(self);
   FDataLink := TLabeledImageDataLink.Create(Self);
   FDataLink.Control := Self;
-  //inizializzazioni
-  //creazione contenitore immagine
+  //initializations
+  //create the image container
   FImage := CreateImageContainer;
   FImage.Cursor := crHandPoint;
   FImage.OnClick := ImageClick;
   FImage.OnDblClick := ImageDblClick;
   FImage.Parent := self;
 
-  //Inizializzazioni
+  //Initializations
   ParentBackground := False;
   UseDockManager := False;
   Cursor := crHandPoint;
@@ -336,8 +446,8 @@ var
   FileName : string;
   OldImage : TImage;
 begin
-  //Richiamando DataLink.Edit si tenta di mandare in edit il dataset
-  //nel caso sia collegato ad un DataSource in AutoEdit a True!
+  //Calling DataLink.Edit attempts to put the dataset into edit mode
+  //when it is connected to a DataSource with AutoEdit set to True!
   if not DataLink.Edit then
     raise EDatabaseError.Create(ERR_NO_EDITING_DATASET);
   FileName := imageFileName;
@@ -484,7 +594,7 @@ end;
 
 procedure TLabeledDbImageLink.SetImage;
 begin
-  //Carica l'immagine a partire dal nome file contenuto nel campo
+  //Load the image from the file name stored in the field
   if (ImageFileName <> '') then
   begin
     Try
@@ -573,7 +683,7 @@ end;
 
 procedure TLabeledDbImageLink.SetImageField(const FileName: string);
 begin
-  //Se c'è una ImagesPath specificata controllo che corrisponda
+  //If an ImagesPath is specified, verify that the file matches it
   if (ImagesPath <> '') and (FileName <> '') and
     not SamePath(ExtractFilePath(FileName), ImagesPath) then
       raise EInOutError.CreateHelp(ERR_NO_CHANGE_DIR,2000);
