@@ -1,6 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>README</title>
 <style type="text/css">
-body{
-  font-family: Arial, Helvetica, sans-serif;
+:root{color-scheme:light;}
+body{font-family:"Arial",sans-serif;font-size:12pt;color:#000000;background-color:#FFFFFF;}
+a{color:#0000FF;}
+.markdown-alert>:last-child{margin-bottom:0;}
+.markdown-alert-title{margin-top:0;}
+@media print{body{color:#000;background-color:#fff;}}
+</style>
+<script>
+document.addEventListener("click",function(e){var a=e.target.closest("a");if(a){var h=a.getAttribute("href");if(h&&h.charAt(0)==="#"){e.preventDefault();var t=document.getElementById(decodeURIComponent(h.substring(1)));if(t)t.scrollIntoView();}}});
+window.addEventListener("scroll",function(){if(window.chrome&&chrome.webview)chrome.webview.postMessage("scrollY:"+Math.round(window.scrollY)+":"+Math.max(0,Math.round(document.documentElement.scrollHeight-window.innerHeight)));});
+</script>
+</head>
+<body>
+<style type="text/css">
+img{
+  max-width: 100%;
+  height: auto;
+}
+video{
+  max-width: 100%;
+  height: auto;
 }
 code{
   font-family: "Consolas", monospace;
@@ -24,25 +48,82 @@ table{
   border:1px solid;
   border-collapse:collapse;
 }
-th{  padding:5px;
+th{
+  padding:5px;
   border:1px solid;
 }
 td{
   padding:5px;
   border:1px solid;
 }
+mark{
+  background-color: #fff3a0;
+  color: #000;
+}
+kbd{
+  font-family: "Consolas", monospace;
+  border: 1px solid #bbb;
+  padding: 0 4px;
+}
+div.math{
+  text-align: center;
+}
+pre.mermaid{
+  border: none;
+  padding: 0;
+}
+.markdown-alert{
+  padding: 0.5em 1em;
+  margin-bottom: 1em;
+  border-left: 4px solid #d0d7de;
+}
+.markdown-alert-title{
+  font-weight: bold;
+}
+.markdown-alert-note{
+  border-left: 4px solid #0969da;
+}
+.markdown-alert-note .markdown-alert-title{
+  color: #0969da;
+}
+.markdown-alert-tip{
+  border-left: 4px solid #1a7f37;
+}
+.markdown-alert-tip .markdown-alert-title{
+  color: #1a7f37;
+}
+.markdown-alert-important{
+  border-left: 4px solid #8250df;
+}
+.markdown-alert-important .markdown-alert-title{
+  color: #8250df;
+}
+.markdown-alert-warning{
+  border-left: 4px solid #9a6700;
+}
+.markdown-alert-warning .markdown-alert-title{
+  color: #9a6700;
+}
+.markdown-alert-caution{
+  border-left: 4px solid #cf222e;
+}
+.markdown-alert-caution .markdown-alert-title{
+  color: #cf222e;
+}
 </style>
-<h1>DBAwareLabeledComponents</h1>
-<p><a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg" alt="License"/></a></p>
+<h1 id="dbawarelabeledcomponents">DBAwareLabeledComponents</h1>
+<p><a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg" alt="License: Apache" /></a>
+<a href="https://github.com/EtheaDev/DBAwareLabeledComponents/releases"><img src="https://img.shields.io/github/v/release/EtheaDev/DBAwareLabeledComponents?label=release&amp;color=blue" alt="Latest release" /></a>
+<a href="https://www.embarcadero.com/products/delphi"><img src="https://img.shields.io/badge/Delphi-XE3%2B-e62329.svg" alt="Delphi XE3+" /></a>
+<a href="https://docwiki.embarcadero.com/RADStudio/en/Main_Page"><img src="https://img.shields.io/badge/Platform-VCL-8a2be2.svg" alt="Platform: VCL" /></a></p>
 <p>An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox</p>
-<h3>Actual official version 1.4.0 (VCL)</h3>
-<h2>New Setup for automatic installation of components</h2>
-<p>From 1.3.3 version a new &ldquo;Installer&rdquo; read-to-use is located in the Release area: <a href="https://github.com/EtheaDev/DBAwareLabeledComponents/releases/latest/download/DBAwareLabeledComponents_Setup.exe">Download the Installer</a>.</p>
+<h2 id="new-setup-for-automatic-installation-of-components">New Setup for automatic installation of components</h2>
+<p>From 1.3.3 version a new “Installer” read-to-use is located in the Release area: <a href="https://github.com/EtheaDev/DBAwareLabeledComponents/releases/latest/download/DBAwareLabeledComponents_Setup.exe">Download the Installer</a>.</p>
 <p>The Installer automatically detect your Delphi versions, install sources, build and install packages and add source paths.</p>
-<p><img src="./Images/Setup.png" alt="Setup"/></p>
-<h2>Documentation</h2>
+<p><img src="./Images/Setup.png" alt="Setup" /></p>
+<h2 id="documentation">Documentation</h2>
 <p>Follow the <a href="https://ethea.it/docs/dbawarelabeledcomponents/">Project Site</a> to known how to use those components to modernize your Delphi VCL applications and the features of the advanced DbGrid.</p>
-<h2>An advanced TDbGrid component:</h2>
+<h2 id="an-advanced-tdbgrid-component">An advanced TDbGrid component:</h2>
 <p><strong>TLabeledDbGrid</strong> is an advanced version of classic TDbGrid with a boundary Label, plus some extra features:</p>
 <ul>
 <li>ShowSortOrder: shows an indicator of sorting column</li>
@@ -58,9 +139,9 @@ td{
 <li>TitleLines (set the title-row height in number of text lines, with titles always vertically centered)</li>
 </ul>
 <p>*Example of a TLabeledDbGrid (with some extended functionality like inplace checkbox and sorting) with the label aligned TopCenter (inside the client area of the grid aligned alClient).</p>
-<p><img src="./Images/DemoDataAwareDbGridTopCenter.png" alt="Preview Thumbnails Dark"/></p>
-<p>This library contains also the classic VCL editors (standard and data-aware) with the addition of a &ldquo;label&rdquo; attached to the component itself (like the native component TLabeledEdit).</p>
-<p>It is no longer necessary to keep the Label &ldquo;connected&rdquo; and &ldquo;aligned&rdquo; by hand to the editor: on every component you can specify 3 simple properties:</p>
+<p><img src="./Images/DemoDataAwareDbGridTopCenter.png" alt="Preview Thumbnails Dark" /></p>
+<p>This library contains also the classic VCL editors (standard and data-aware) with the addition of a “label” attached to the component itself (like the native component TLabeledEdit).</p>
+<p>It is no longer necessary to keep the Label “connected” and “aligned” by hand to the editor: on every component you can specify 3 simple properties:</p>
 <ul>
 <li>BoundCaption</li>
 <li>BoundLabel.Labelposition (default lpTopLeft)</li>
@@ -68,56 +149,66 @@ td{
 </ul>
 <p>The label can be positioned with 12 alignements:
 <strong>lpTopLeft, lpTopCenter, lpTopRight, lpBottomLeft, lpBottomCenter, lpBottomRight, lpLeftTop, lpLeftMiddle, lpLeftBottom, lpRightTop, lpRightMiddle, lpRightBottom</strong></p>
-<h2>New components not present in VCL:</h2>
+<h2 id="new-components-not-present-in-vcl">New components not present in VCL:</h2>
 <p>TLabeledButtonEdit and TLabeledDBButtonEdit are a classic editors with a button inside (on the right). For Date Fields the button opens automatically a Popup-Calendar.</p>
-<h2>Support for new NumberBox component</h2>
+<h2 id="support-for-new-numberbox-component">Support for new NumberBox component</h2>
 <p><strong>TNumberBox</strong> component (available from D10.4.2) is the new component for advanced numeric input. In this library you can find:</p>
 <ul>
 <li>TDBNumberBox: the standard component with classic DataAeware support (DataSource + DataField) without Label.</li>
 <li>TLabeledNumberBox: a TNumberBox component with boudary label</li>
 <li>TLabeledDBNumberBox: a TDBNumberBox with boudary label</li>
 </ul>
-<h2>Examples</h2>
+<h2 id="examples">Examples</h2>
 <p><em>Look at those examples, showing all the components with different Label alignments: the demo is available into Demo Folder</em></p>
 <table>
-  <tr>
-    <th>Sample</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoDataAwareDbGridLinesPerRow3.png" alt="DemoDataAwareDbGridLinesPerRow3"/></td>
-    <td>Example of LabeledDbGrid with LinesPerRow = 3 to show multiline content of memo fields</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoDataAwareDbGridRowMargin15.png" alt="DemoDataAwareDbGridRowMargin15"/></td>
-    <td>Example of LabeledDbGrid with RowMargin = 15 to to change height of grid Row. Fully compatible with Styles (light and dark)</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoDataAwareTopLeft.png" alt="DemoDataAwareTopLeft"/></td>
-    <td>Example of collection of Dataaware components with label aligned to &ldquo;TopLeft&rdquo;</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoDataAwareNumberEditorsLeftMiddle.png" alt="DemoDataAwareNumberEditorsLeftMiddle"/></td>
-    <td>Example of LabeledDBCurrencyEdit and LabeledDBNumberBox (only for 10.4.2): Dataware components for numeric input (from right to left) with label aligned to &ldquo;LeftMiddle&rdquo;</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoNonDataAwareTopRight.png" alt="Preview Thumbnails Dark"/></td>
-    <td>Example of collection of Standard components with label aligned to &ldquo;TopRight&rdquo;</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoColorsImagesBottomCenter.png" alt="Preview Thumbnails Dark"/></td>
-    <td>Example of collection of components with label aligned to &ldquo;BottomCenter&rdquo;</td>
-  </tr>
-  <tr>
-    <td><img src="./Images/DemoNumberInputStyled.png" alt="Preview Thumbnails Dark"/></td>
-    <td>All components are fully VCL styles compatible</td>
-  </tr>
+<thead>
+<tr>
+<th>Sample</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="./Images/DemoDataAwareDbGridLinesPerRow3.png" alt="DemoDataAwareDbGridLinesPerRow3" /></td>
+<td>Example of LabeledDbGrid with LinesPerRow = 3 to show multiline content of memo fields</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoDataAwareDbGridRowMargin15.png" alt="DemoDataAwareDbGridRowMargin15" /></td>
+<td>Example of LabeledDbGrid with RowMargin = 15 to to change height of grid Row. Fully compatible with Styles (light and dark)</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoDataAwareTopLeft.png" alt="DemoDataAwareTopLeft" /></td>
+<td>Example of collection of Dataaware components with label aligned to “TopLeft”</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoDataAwareNumberEditorsLeftMiddle.png" alt="DemoDataAwareNumberEditorsLeftMiddle" /></td>
+<td>Example of LabeledDBCurrencyEdit and LabeledDBNumberBox (only for 10.4.2): Dataware components for numeric input (from right to left) with label aligned to “LeftMiddle”</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoNonDataAwareTopRight.png" alt="Preview Thumbnails Dark" /></td>
+<td>Example of collection of Standard components with label aligned to “TopRight”</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoColorsImagesBottomCenter.png" alt="Preview Thumbnails Dark" /></td>
+<td>Example of collection of components with label aligned to “BottomCenter”</td>
+</tr>
+<tr>
+<td><img src="./Images/DemoNumberInputStyled.png" alt="Preview Thumbnails Dark" /></td>
+<td>All components are fully VCL styles compatible</td>
+</tr>
+</tbody>
 </table>
 <p>A complete Demo is available in Demo Folder.</p>
-<h3>Available from Delphi XE3 to Delphi 13 (32bit and 64bit platforms)</h3>
-<p><img src="./Images/SupportingDelphi.jpg" alt="Delphi Support"/></p>
-<p>Related links: https://www.embarcadero.com/ - https://learndelphi.org/</p>
-<h3>RELEASE NOTES</h3>
+<h3 id="available-from-delphi-xe3-to-delphi-13-32bit-and-64bit-platforms">Available from Delphi XE3 to Delphi 13 (32bit and 64bit platforms)</h3>
+<p><img src="./Images/SupportingDelphi.jpg" alt="Delphi Support" /></p>
+<p>Related links: <a href="https://www.embarcadero.com/">https://www.embarcadero.com/</a> - <a href="https://learndelphi.org/">https://learndelphi.org/</a></p>
+<h3 id="release-notes">RELEASE NOTES</h3>
+<p>15 Oct 2026: ver.1.4.1</p>
+<ul>
+<li>Fixed TLabeledDbGrid.TitleFont not stored in the DFM (e.g. Bold style set in the Object Inspector was lost at runtime)</li>
+<li>Fixed TLabeledDbGrid inside a TFrame: scaling no longer resets the TitleFont style, name and color</li>
+<li>Demo: added “Bold Column Titles” option, executables in Bin32/Bin64 folders, new BuildDemo.ps1 script</li>
+</ul>
 <p>10 Jun 2026: ver.1.4.0</p>
 <ul>
 <li>Added WrapColumnTitles to TLabeledDbGrid: word-wrap of column titles</li>
@@ -164,7 +255,7 @@ td{
 </ul>
 <p>19 Aug 2022: ver.1.2.1</p>
 <ul>
-<li>Fixed checkbox drawing in &ldquo;Windows&rdquo; style, using rowmargin and/or LinesPerRow</li>
+<li>Fixed checkbox drawing in “Windows” style, using rowmargin and/or LinesPerRow</li>
 <li>Fixed drawing cell right aligned</li>
 <li>Fixed Setting custom cursor for Grid</li>
 </ul>
@@ -179,7 +270,7 @@ td{
 <li>Added LinesPerRow and RowMargin to TLabeledDbGrid</li>
 <li>Updated Demo with full features of TLabeledDbGrid</li>
 <li>Changed LibSuffix for Packages (D10.4 and D11)</li>
-<li>Renamed Package Description to &ldquo;Ethea: Dataaware Labeled Components&rdquo;</li>
+<li>Renamed Package Description to “Ethea: Dataaware Labeled Components”</li>
 </ul>
 <p>10 Oct 2021:</p>
 <ul>
@@ -232,3 +323,5 @@ td{
 <li>TLabeledImage</li>
 <li>TLabeledColorBox</li>
 </ul>
+</body>
+</html>

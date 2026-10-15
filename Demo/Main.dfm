@@ -145,8 +145,9 @@ object MainForm: TMainForm
         Height = 225
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 269
         object FontLabel: TLabel
-          Left = 355
+          Left = 373
           Top = 96
           Width = 66
           Height = 15
@@ -154,7 +155,7 @@ object MainForm: TMainForm
           Caption = 'Font Height:'
         end
         object RowLinesLabel: TLabel
-          Left = 365
+          Left = 383
           Top = 127
           Width = 56
           Height = 15
@@ -162,7 +163,7 @@ object MainForm: TMainForm
           Caption = 'Row Lines:'
         end
         object RowMarginLabel: TLabel
-          Left = 354
+          Left = 372
           Top = 160
           Width = 67
           Height = 15
@@ -170,7 +171,7 @@ object MainForm: TMainForm
           Caption = 'Row Margin:'
         end
         object TitleLinesLabel: TLabel
-          Left = 365
+          Left = 383
           Top = 193
           Width = 56
           Height = 15
@@ -199,9 +200,9 @@ object MainForm: TMainForm
           Left = 176
           Top = 6
           Width = 171
-          Height = 130
+          Height = 132
           Caption = 'Custom Background color'
-          TabOrder = 6
+          TabOrder = 7
           object cbCurrColor: TColorBox
             Left = 16
             Top = 51
@@ -257,55 +258,55 @@ object MainForm: TMainForm
           OnClick = cbCustomDrawClick
         end
         object FontTrackBar: TTrackBar
-          Left = 427
+          Left = 445
           Top = 93
           Width = 140
           Height = 25
           Max = 30
           Min = 10
           Position = 11
-          TabOrder = 13
+          TabOrder = 14
           OnChange = FontTrackBarChange
         end
         object cbEditing: TCheckBox
-          Left = 353
+          Left = 371
           Top = 8
           Width = 102
           Height = 17
           Caption = 'Inplace Editing'
-          TabOrder = 9
+          TabOrder = 10
           OnClick = cbEditingClick
         end
         object cbAutoEdit: TCheckBox
-          Left = 353
+          Left = 371
           Top = 29
           Width = 131
           Height = 17
           Caption = 'AutoEdit Datasource'
-          TabOrder = 10
+          TabOrder = 11
           OnClick = cbAutoEditClick
         end
         object lbOptions: TCheckListBox
           Left = 607
           Top = 6
-          Width = 201
+          Width = 274
           Height = 203
-          ItemHeight = 17
-          TabOrder = 17
+          ItemHeight = 15
+          TabOrder = 18
           OnClickCheck = lbOptionsClickCheck
         end
         object cbDrawCheckBoxImages: TCheckBox
-          Left = 353
+          Left = 371
           Top = 50
           Width = 195
           Height = 17
           Caption = 'Draw CheckBox for Boolean Fields'
-          TabOrder = 11
+          TabOrder = 12
           OnClick = cbDrawCheckBoxImagesClick
         end
         object rgCtl3D: TRadioGroup
           Left = 176
-          Top = 135
+          Top = 140
           Width = 170
           Height = 41
           Caption = 'Ctl3D'
@@ -314,27 +315,27 @@ object MainForm: TMainForm
           Items.Strings = (
             'True'
             'False')
-          TabOrder = 7
+          TabOrder = 8
           OnClick = rgCtl3DClick
         end
         object LineTrackBar: TTrackBar
-          Left = 427
+          Left = 445
           Top = 124
           Width = 140
           Height = 25
           Max = 5
           Min = 1
           Position = 1
-          TabOrder = 14
+          TabOrder = 15
           OnChange = LineTrackBarChange
         end
         object RowMarginTrackBar: TTrackBar
-          Left = 427
+          Left = 445
           Top = 155
           Width = 140
           Height = 25
           Max = 20
-          TabOrder = 15
+          TabOrder = 16
           OnChange = RowMarginTrackBarChange
         end
         object filterDataEdit: TLabeledEdit
@@ -345,17 +346,26 @@ object MainForm: TMainForm
           EditLabel.Width = 113
           EditLabel.Height = 15
           EditLabel.Caption = 'Filter data expression:'
-          TabOrder = 5
+          TabOrder = 6
           Text = ''
           OnExit = filterDataEditExit
         end
+        object cbBoldTitles: TCheckBox
+          Left = 8
+          Top = 136
+          Width = 148
+          Height = 17
+          Caption = 'Bold Column Titles'
+          TabOrder = 5
+          OnClick = cbBoldTitlesClick
+        end
         object cbWrapAllText: TCheckBox
-          Left = 353
+          Left = 371
           Top = 72
           Width = 195
           Height = 17
           Caption = 'Wrap All Text'
-          TabOrder = 12
+          TabOrder = 13
           OnClick = cbWrapAllTextClick
         end
         object cbWrapColumnTitles: TCheckBox
@@ -364,18 +374,18 @@ object MainForm: TMainForm
           Width = 155
           Height = 17
           Caption = 'Wrap Column Titles'
-          TabOrder = 8
+          TabOrder = 9
           OnClick = cbWrapColumnTitlesClick
         end
         object TitleLinesTrackBar: TTrackBar
-          Left = 427
+          Left = 445
           Top = 192
           Width = 140
           Height = 25
           Max = 4
           Min = 1
           Position = 1
-          TabOrder = 16
+          TabOrder = 17
           OnChange = TitleLinesTrackBarChange
         end
       end

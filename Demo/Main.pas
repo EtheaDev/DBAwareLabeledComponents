@@ -148,6 +148,7 @@ type
     btSelectStyle: TButton;
     cbWrapAllText: TCheckBox;
     cbWrapColumnTitles: TCheckBox;
+    cbBoldTitles: TCheckBox;
     TitleLinesLabel: TLabel;
     TitleLinesTrackBar: TTrackBar;
     procedure ClientDataSetAfterEdit(DataSet: TDataSet);
@@ -183,6 +184,7 @@ type
     procedure LabeledButtonEditClick(Sender: TObject);
     procedure cbWrapAllTextClick(Sender: TObject);
     procedure cbWrapColumnTitlesClick(Sender: TObject);
+    procedure cbBoldTitlesClick(Sender: TObject);
     procedure TitleLinesTrackBarChange(Sender: TObject);
     procedure PageControlChange(Sender: TObject);
   private
@@ -224,6 +226,7 @@ implementation
 uses
   Winapi.ShellAPI,
   System.Math,
+  System.UITypes,
   {$IFDEF D10_4+}
   Vcl.NumberBox,
   Vcl.DBNumberBox,
@@ -338,6 +341,7 @@ begin
   cbDrawCheckBoxImages.Checked := DbGrid.DrawCheckBoxImages;
   cbWrapAllText.Checked := DbGrid.WrapAllText;
   cbWrapColumnTitles.Checked := DbGrid.WrapColumnTitles;
+  cbBoldTitles.Checked := fsBold in DbGrid.TitleFont.Style;
 
   DbGridOptions := GetPropValue(DbGrid, 'Options');
   for i := Low(TDBGridOption) to High(TDBGridOption) do
@@ -633,6 +637,14 @@ end;
 procedure TMainForm.cbWrapColumnTitlesClick(Sender: TObject);
 begin
   DbGrid.WrapColumnTitles := cbWrapColumnTitles.Checked;
+end;
+
+procedure TMainForm.cbBoldTitlesClick(Sender: TObject);
+begin
+  if cbBoldTitles.Checked then
+    DbGrid.TitleFont.Style := DbGrid.TitleFont.Style + [fsBold]
+  else
+    DbGrid.TitleFont.Style := DbGrid.TitleFont.Style - [fsBold];
 end;
 
 procedure TMainForm.TitleLinesTrackBarChange(Sender: TObject);

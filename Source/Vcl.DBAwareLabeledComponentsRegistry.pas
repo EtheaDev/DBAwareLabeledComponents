@@ -1,4 +1,4 @@
-{******************************************************************************}
+﻿{******************************************************************************}
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
@@ -68,7 +68,7 @@ uses
   ;
 
 const
-  ComponentsVersion = '1.4.0';
+  ComponentsVersion = '1.4.1';
   Component_Docs_URL = 'https://ethea.it/docs/dbawarelabeledcomponents/Overview.html';
   {$IFDEF D11+}
   ABOUT_RES_NAME = 'DBAWARESPLASH48PNG';

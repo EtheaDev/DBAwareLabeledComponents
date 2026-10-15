@@ -1,4 +1,4 @@
-{******************************************************************************}
+﻿{******************************************************************************}
 {                                                                              }
 {       DataAwareLabeledComponents: Dataaware Edit components with Label       }
 {                                                                              }
@@ -632,6 +632,7 @@ Type
     procedure ClearCell(Rect: TRect; const State: TGridDrawState);
     function GetTitleFont: TFont;
     procedure SetTitleFont(const Value: TFont);
+    function IsTitleFontStored: Boolean;
     function GetCursor: TCursor;
     procedure SetCursor(const Value: TCursor);
     procedure WriteText(ACanvas: TCanvas; ARect: TRect; DX, DY: Integer;
@@ -809,10 +810,11 @@ Type
 
   published
     /// <summary>
-    ///  The font used for the column titles. Not stored, since it is kept
-    ///  aligned with the grid Font on DPI/scale changes.
+    ///  The font used for the column titles. Stored only when it differs from
+    ///  the grid Font (ParentFont = False), so that custom styles such as
+    ///  Bold are persisted in the DFM.
     /// </summary>
-    property TitleFont: TFont read GetTitleFont write SetTitleFont stored False;
+    property TitleFont: TFont read GetTitleFont write SetTitleFont stored IsTitleFontStored;
     /// <summary>
     ///  True when the grid has no rows (RowCount = 0).
     /// </summary>
@@ -2085,6 +2087,12 @@ begin
   inherited TitleFont.Assign(Value);
 end;
 
+function TLabeledDbGrid.IsTitleFontStored: Boolean;
+begin
+  //When ParentFont is True the TitleFont is realigned to Font by the VCL
+  Result := not ParentFont;
+end;
+
 procedure TLabeledDbGrid.SetWrapAllText(const Value: Boolean);
 begin
   if FWrapAllText <> Value then
@@ -2696,8 +2704,9 @@ begin
   inherited;
   if (Owner is TFrame) and (M <> D) then
   begin
-    //Restore the columns font based on TitleFont
-    TitleFont.Assign(Font);
+    //Realign only the TitleFont size to the scaled Font, preserving the
+    //other attributes (Style, Name, Color) set by the user
+    TitleFont.Height := Font.Height;
     for I := 0 to Columns.Count - 1 do
       Columns[I].Title.Font.Height := TitleFont.Height;
     {$IF DEFINE DXE8+}

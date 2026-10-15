@@ -1,10 +1,12 @@
 ﻿# DBAwareLabeledComponents
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen.svg)](https://opensource.org/licenses/Apache-2.0)
+[![License: Apache](https://img.shields.io/badge/License-Apache%202.0-green.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/EtheaDev/DBAwareLabeledComponents?label=release&color=blue)](https://github.com/EtheaDev/DBAwareLabeledComponents/releases)
+[![Delphi XE3+](https://img.shields.io/badge/Delphi-XE3%2B-e62329.svg)](https://www.embarcadero.com/products/delphi)
+[![Platform: VCL](https://img.shields.io/badge/Platform-VCL-8a2be2.svg)](https://docwiki.embarcadero.com/RADStudio/en/Main_Page)
+
 
 An extended TDBGrid plus classic Delphi-VCL Editors with Boundary-Label (DB-Aware and Standard) including NumberBox
-
-### Actual official version 1.4.0 (VCL)
 
 ## New Setup for automatic installation of components
 
@@ -81,6 +83,11 @@ A complete Demo is available in Demo Folder.
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
 ### RELEASE NOTES
+15 Oct 2026: ver.1.4.1
+- Fixed TLabeledDbGrid.TitleFont not stored in the DFM (e.g. Bold style set in the Object Inspector was lost at runtime)
+- Fixed TLabeledDbGrid inside a TFrame: scaling no longer resets the TitleFont style, name and color
+- Demo: added "Bold Column Titles" option, executables in Bin32/Bin64 folders, new BuildDemo.ps1 script
+
 10 Jun 2026: ver.1.4.0
 - Added WrapColumnTitles to TLabeledDbGrid: word-wrap of column titles
 - Added TitleLines to TLabeledDbGrid: fixed title-row height (in text lines), with titles always vertically centered
