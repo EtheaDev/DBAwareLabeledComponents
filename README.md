@@ -16,6 +16,16 @@ The Installer automatically detect your Delphi versions, install sources, build 
 
 ![Setup](./Images/Setup.png)
 
+## Installation with DPM (Delphi Package Manager)
+
+The library is also published on [delphi.dev](https://delphi.dev/packages/etheadev.dbawarelabeledcomponents) as the package **EtheaDev.DBAwareLabeledComponents** (Delphi XE3 to 13, Win32 and Win64): you can install it with [DPM, the Delphi Package Manager](https://delphi.dev), as an alternative to the Setup. From the IDE, right click on your project in the Project Manager and choose *Manage DPM Packages*, or from the command line:
+
+```
+dpm install EtheaDev.DBAwareLabeledComponents <path of your project>.dproj
+```
+
+DPM downloads the package, builds it for the Delphi version and the platforms of your project and adds it to the project.
+
 ## Documentation
 
 Follow the [Project Site](https://ethea.it/docs/dbawarelabeledcomponents/) to known how to use those components to modernize your Delphi VCL applications and the features of the advanced DbGrid.
@@ -83,6 +93,9 @@ A complete Demo is available in Demo Folder.
 Related links: https://www.embarcadero.com/ - https://learndelphi.org/
 
 ### RELEASE NOTES
+11 Nov 2026: ver.1.4.2
+- Compatibility with Delphi 13.2
+
 15 Oct 2026: ver.1.4.1
 - Fixed TLabeledDbGrid.TitleFont not stored in the DFM (e.g. Bold style set in the Object Inspector was lost at runtime)
 - Fixed TLabeledDbGrid inside a TFrame: scaling no longer resets the TitleFont style, name and color
@@ -186,4 +199,9 @@ for all Delphi versions (from XE3)
 - TLabeledRadioGroup
 - TLabeledImage
 - TLabeledColorBox
- 
+
+## License
+
+Copyright (c) 2021-2026 Ethea S.r.l.
+
+Licensed under the [Apache License, Version 2.0](LICENSE) (the "License"): you may not use this software except in compliance with the License. Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.

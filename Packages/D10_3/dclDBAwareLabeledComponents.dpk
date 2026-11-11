@@ -29,7 +29,7 @@ package dclDBAwareLabeledComponents;
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
 {$LIBSUFFIX '260'}
 {$DESIGNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   DesignIDE,

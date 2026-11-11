@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A Delphi **VCL component library** (Apache 2.0, by Ethea S.r.l.). It provides an
 advanced `TLabeledDbGrid` plus a full set of standard and DB-aware VCL editors
 that each carry an attached "boundary label" (like the stock `TLabeledEdit`,
-but for ~30 control types and with 12 label positions). Current version: 1.4.1.
+but for ~30 control types and with 12 label positions). Current version: 1.4.2.
 
 There is **no application to run and no automated test suite** — the deliverable
 is the set of design-time/run-time packages that get installed into the RAD
@@ -130,3 +130,20 @@ Units are grouped by the VCL family they extend; all are namespaced `Vcl.*`:
    `Packages\<ver>\DBAwareLabeledComponents.dpk`.
 5. Bump `ComponentsVersion` in the registry unit and `LibraryVersion` in
    `Setup\Setup.iss`, and add a RELEASE NOTES entry in `README.md`.
+
+## DPM package (delphi.dev)
+
+The library is also published as a DPM package (Delphi Package Manager, https://delphi.dev,
+organization EtheaDev): spec `EtheaDev.DBAwareLabeledComponents.dspec` in the root (id `EtheaDev.DBAwareLabeledComponents`). It is packed from the GitHub
+clone and pushed by `D:\ETHEA\GitHub_EtheaDev\_sync\sync_project.py DBAwareLabeledComponents --release`; `version`
+is aligned to the README release notes automatically and `repositoryCommit: '#HASH#'` is replaced
+at pack time: don't edit them by hand.
+
+**Keep the dspec aligned with the packages and the Setup**: when a package folder is added or
+removed (new Delphi version), a `.dpk` is added/renamed, a new kind of file is needed by the
+packages (`.dfm`, `.res`, `.dcr`, ...), or a platform is enabled/disabled in a runtime `.dproj`,
+update `targetPlatforms` / `templates` (`source`, `build`, `design`) in the same commit. Check
+with `python D:\ETHEA\GitHub_EtheaDev\_sync\dpm_tools.py DBAwareLabeledComponents`: the publishing script refuses
+to commit/release while the check fails.
+
+- Delphi XE3, XE6, XE8, 10.0 to 13 (the package folders that exist), Win32/Win64.

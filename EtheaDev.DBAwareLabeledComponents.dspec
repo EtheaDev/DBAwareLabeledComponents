@@ -1,0 +1,85 @@
+# DPM package spec file (https://delphi.dev)
+# The version and the commit are written by _sync\sync_project.py at every release.
+min dpm client version: 1.0.0
+metadata:
+  id: EtheaDev.DBAwareLabeledComponents
+  version: 1.4.2
+  description: 'An advanced TDBGrid (TLabeledDBGrid) and a complete set of VCL editors, DB-aware and standard, with an integrated bound label.'
+  authors:
+    - Carlo Barazzetta
+  projectUrl: https://www.ethea.it/docs/dbawarelabeledcomponents/
+  repositoryUrl: https://github.com/EtheaDev/DBAwareLabeledComponents
+  repositoryCommit: '#HASH#'
+  license: Apache-2.0
+  copyright: Ethea S.r.l.
+  tags:
+    - vcl
+    - db-aware
+    - dbgrid
+    - label
+    - editors
+  frameworks:
+    - VCL
+  readme: README.md
+variables:
+  packagesource: /Packages/D$compilermajornoprefix$
+targetPlatforms:
+  - compiler: delphixe3
+    platforms:
+      - win32
+      - win64
+  - compiler: delphixe6
+    platforms:
+      - win32
+      - win64
+  - compiler from: delphixe8
+    compiler to: delphi10.0
+    platforms:
+      - win32
+      - win64
+  - compiler: delphi10.1
+    platforms:
+      - win32
+      - win64
+    variables:
+      packagesource: /Packages/D10_1
+  - compiler: delphi10.2
+    platforms:
+      - win32
+      - win64
+    variables:
+      packagesource: /Packages/D10_2
+  - compiler: delphi10.3
+    platforms:
+      - win32
+      - win64
+    variables:
+      packagesource: /Packages/D10_3
+  - compiler: delphi10.4
+    platforms:
+      - win32
+      - win64
+    variables:
+      packagesource: /Packages/D10_4
+  - compiler from: delphi11.0
+    compiler to: delphi13.0
+    platforms:
+      - win32
+      - win64
+templates:
+  - name: default
+    source:
+      - src: /Source/*.pas
+      - src: /Source/*.inc
+      - src: /Source/*.dfm
+        copyToLib: true
+      - src: /Source/*.res
+        copyToLib: true
+      - src: /Packages/*.dcr
+      - src: /Packages/*.res
+      - src: $packageSource$/*.dpk
+      - src: $packageSource$/*.dproj
+    build:
+      - project: $packageSource$/DBAwareLabeledComponents.dproj
+    design:
+      - project: $packageSource$/dclDBAwareLabeledComponents.dproj

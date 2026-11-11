@@ -28,7 +28,7 @@ package DBAwareLabeledComponents;
 {$DESCRIPTION 'Ethea: Dataaware Labeled Components'}
 {$LIBSUFFIX '170'}
 {$RUNONLY}
-{$IMPLICITBUILD ON}
+{$IMPLICITBUILD OFF}
 
 requires
   rtl,

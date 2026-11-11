@@ -68,7 +68,7 @@ uses
   ;
 
 const
-  ComponentsVersion = '1.4.1';
+  ComponentsVersion = '1.4.2';
   Component_Docs_URL = 'https://ethea.it/docs/dbawarelabeledcomponents/Overview.html';
   {$IFDEF D11+}
   ABOUT_RES_NAME = 'DBAWARESPLASH48PNG';
